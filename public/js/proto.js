@@ -18,27 +18,17 @@ $(function() {
             if (err) {
                 return;
             }
-            async.waterfall([
-                // イベントデータの取得
-                function(callback) {
-                    LiveTerminal.Event.live(function(err, event) {
-                        liveEvent = event;
-                        callback(null, event)
-                    });
-                },
-                function(event, callback) {
-                    LiveTerminal.Zap.subscribe(event._id, function(zap) {
-                        console.log(zap);
-                    });
-                    switchScreen('#login-screen', '#main-screen', main);
-                    callback();
-                }
-            ], function(err) {
+            var liveEvent = liveTerminal.getLiveEvent(function(err, event) {
                 if (err) {
                     alert('エラーが発生しました:' + err.message);
+                    return;
                 }
+                liveEvent = event;
+                event.subscrive('zap', function(zap) {
+                    console.log(zap);
+                });
+                switchScreen('#login-screen', '#main-screen', main);
             });
-            
         });
     });
     function main() {

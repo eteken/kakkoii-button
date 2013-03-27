@@ -9,33 +9,14 @@
     
     var serverUrl = location.protocol + '//' + location.host;
     
-    var LTEvent = function() {
+    var LTEvent = function(data) {
+        _.extend(this, data);
     };
-    LTEvent.live = function(callback) {
-        $.ajax({
-            dataType: 'json',
-            url: '/events/live'
-        }).done(function(result) {
-            callback(null, result);
-        }).fail(function(error) {
-            callback(error);
-        });
-    };
-    LTEvent.get = function(id, callback) {
-        $.ajax({
-            dataType: 'json',
-            url: '/events/' + encodeURI(id)
-        }).done(function(result) {
-            callback(null, result);
-        }).fail(function(error) {
-            callback(error);
-        });
-    };
-    var Zap = function() {
-    };
-    Zap.subscribe = function(eventId, fn) {
-        var sock = socket();
-        sock.on('zap', fn);
+    LTEvent.prototype = {
+        subscribe: function(name, callback) {
+            var sock = socket();
+            sock.on(name, fn);
+        }
     };
 
     var LiveTerminal = function() {
@@ -69,11 +50,27 @@
                     callback(new Error('auth error'));
                 }
             }, watchInterval);
+        },
+        getLiveEvent: function(callback) {
+            $.ajax({
+                dataType: 'json',
+                url: '/events/live'
+            }).done(function(result) {
+                callback(null, new LTEvent(result));
+            }).fail(function(error) {
+                callback(error);
+            });
+        },
+        getEvent: function(id, callback) {
+            $.ajax({
+                dataType: 'json',
+                url: '/events/' + encodeURI(id)
+            }).done(function(result) {
+                callback(null, new LTEvent(result));
+            }).fail(function(error) {
+                callback(error);
+            });
         }
     };
-    
-    LiveTerminal.Event = LTEvent;
-    LiveTerminal.Zap = Zap;
-
     _global.LiveTerminal = LiveTerminal;
 })(this);
