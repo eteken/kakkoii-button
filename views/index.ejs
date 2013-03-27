@@ -1,11 +1,21 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+<head>
+    <title>カッコいいやつらアプリ</title>
+    <link rel="stylesheet" href="/css/style.css"/>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="/js/lib/jquery.oauthpopup.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/index.js"></script>
+    
+</head>
+<body>
+<a href="#" id="loginCommand">Twitterでログイン</a>
+<button id="coolButton"><img src="/img/cool-icon.png" width="22"> (いいね!)</button>
+<style>
+  #coolButton * {
+    vertical-align: middle;
+  }
+</style>
+</body>
 </html>

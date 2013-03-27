@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<meta charset="UTF-8">
+<title>イベントをつくる</title>
+
+<div>
+</div>
+<form action="/events" method="POST">
+  <div class="field">
+    <label for="title">タイトル</label>
+    <input id="title" name="title">
+  </div>
+  <div class="field">
+    <label for="start">開始日時</label>
+    <input id="start" name="start" type="datetime" value="2013-03-24T00:00:00">
+  </div>
+  <div class="field">
+    <label for="end">終了日時</label>
+    <input id="end" name="end" type="datetime" value="2013-04-11T23:59:59">
+  </div>
+  <button>送信</button>
+</form>

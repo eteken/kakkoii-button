@@ -1,0 +1,41 @@
+@charset "utf-8";
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+#splash-screen {
+    background: url('/img/logo.png') center center no-repeat;
+    width: 100%;
+    height: 100%;
+}
+
+#lt-logo {
+    position: absolute;
+    top: 58%;
+    left: 50%;
+}
+
+
+#login-screen {
+    display: none;
+}
+#login-screen-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -55px 0 0 -79px;
+    font-size: .8em;
+    width: 158px;
+    height: 110px;
+}
+#main-screen {
+    display: none;
+}
+.zap-chart {
+    width: 96%;
+}

@@ -1,8 +1,3 @@
+exports.initialize = function(app) {
 
-/*
- * GET home page.
- */
-
-exports.index = function(req, res){
-  res.render('index', { title: 'Express' });
 };

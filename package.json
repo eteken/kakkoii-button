@@ -13,6 +13,9 @@
         "passport": "*",
         "passport-twitter": "*",
         "mongoose": "*",
-        "socket.io": "*"
+        "socket.io": "*",
+        "connect": "*",
+        "session.socket.io": "*",
+        "underscore": "*"
     }
 }
