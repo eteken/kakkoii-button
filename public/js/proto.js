@@ -41,7 +41,7 @@ $(function() {
                 }
                 liveEvent = event;
                 liveEvent.onZapSent = function(zap) {
-                    showMessageDialog('#zap-button', zap.uuid);
+                    showMessageDialog('#zap-button', { relatedZapUUID: zap.uuid });
                 };
                 event.subscribe('zap', function(zap) {
                     console.log(zap);
@@ -109,9 +109,9 @@ $(function() {
         if (message.length === 0) {
             return;
         }
-        var relatedZapUUID = dialog.data('relatedZapUUID') || undefined;
+        var options = dialog.data('options') || {};
 
-        liveEvent.sendMessage(message, relatedZapUUID);
+        liveEvent.sendMessage(message, options.relatedZapUUID);
         input.val('');
         hideMessageDialog();
     });
@@ -119,7 +119,7 @@ $(function() {
         hideMessageDialog();
     });
     
-    function showMessageDialog(target, relatedZapUUID) {
+    function showMessageDialog(target, options) {
         var dialog = $('#message-dialog');
         dialog.addClass('active');
         var width = dialog.outerWidth();
@@ -133,14 +133,18 @@ $(function() {
 
 //        $('#message-dialog-inner:before').css('left', buttonPos.left);
 //        $('#message-dialog-inner:after').css('left', buttonPos.left);
-        if (relatedZapUUID) {
-            dialog.data('relatedZapUUID', relatedZapUUID);
-        }
+        options = options || {};
+        dialog.data('options', options);
         dialog.show();
+        if (!options.relatedZapUUID) {
+            setTimeout(function() {
+                dialog.find('.message-input').focus();
+            }, 0);
+        }
     }
     function hideMessageDialog() {
         $('#message-dialog')
-            .removeData('relatedZapUUID')
+            .removeData('options')
             .hide();
     }
 });
