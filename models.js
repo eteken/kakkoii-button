@@ -2,14 +2,22 @@ var config = require('./config');
 var mongoose = require('mongoose');
 var db = mongoose.connect(config.database.url);
 
-var Cool = new mongoose.Schema({
+var Zap = new mongoose.Schema({
     count: { type: Number, required: true },
-    message: String,
     created: { type: Date, 'default': Date.now, index: true },
     updated: { type: Date, 'default': Date.now },
     eventId: { type: String, index: true, required: true },
     userId: { type: String, index: true, required: true },
     uuid: { type: String, index: { unique: true }, required: true }
+}, {
+    'autoIndex': false
+});
+var Message = new mongoose.Schema({
+    text: { type: String, required: true },
+    timestamp: { type: Date, 'default': Date.now, index: true },
+    eventId: { type: String, index: true, required: true },
+    userId: { type: String, index: true, required: true },
+    relatedZapUUID: { type: String, index: true }
 }, {
     'autoIndex': false
 });
@@ -51,7 +59,8 @@ var OAuthTokens = new mongoose.Schema({
 });
 
 module.exports = {
-    Cool: db.model('Cool', Cool),
+    Zap: db.model('Zap', Zap),
+    Message: db.model('Message', Message),
     Event: db.model('Event', Event),
     OAuthTokens: db.model('OAuthTokens', OAuthTokens),
     User: db.model('User', User)

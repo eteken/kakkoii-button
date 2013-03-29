@@ -1,24 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>カッコいいやつら | LiveTerminal(Beta)</title>
-    <link rel="stylesheet" href="/css/lib/bootstrap-responsive.min.css"/>
+    <title>カッコいいやつら | Zapper(Beta)</title>
+    <link rel="stylesheet" href="/css/lib/jquery.powertip.css"/>
     <link rel="stylesheet" href="/css/proto.css"/>
+
     <!--
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     -->
     <script src="/js/lib/jquery-1.9.1.min.js"></script>
     <script src="/js/lib/lodash.mobile.min.js"></script>
     <script src="/js/lib/async.js"></script>
-    <script src="/js/lib/bootstrap.min.js"></script>
-    <script src="/js/LiveTerminal.js"></script>
+    <script src="/js/lib/jquery.powertip-1.1.0.min.js"></script>
+
+    <script src="/js/zapper.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     
     <script src="/js/proto.js"></script>
     <script>
     <%
        /* TODO ビューに依存する、こんな処理はしてはいけない。 */
-       /* LiveTerminalクラスが自らクッキーを参照し、ユーザ情報を取得し無くてはならない。 */
+       /* Zapperクラスが自らクッキーを参照し、ユーザ情報を取得し無くてはならない。 */
        if (user) {
     %>
         var __lt_oauth_succeeded__ = true;
@@ -30,7 +32,7 @@
 </head>
 <body>
   <section id="splash-screen">
-    <img id="lt-logo" src="/img/LiveTerminal.png" width="150">
+    <img id="lt-logo" src="/img/zapper.png" width="150">
   </section>
   <section id="login-screen">
     <div id="login-screen-content">
@@ -38,8 +40,75 @@
       <a href="#" id="login-command"><img src="/img/sign-in-with-twitter-gray.png"></a>
     </div>
   </section>
+  <script id="message-listitem-template" type="text/underscore-template">
+    <li class="clearfix zap-message-listitem">
+      <img class="user-thumbnail zap-author" src="{{= author.photos[0] }}">
+      <p class="zap-message">
+        {{- text }}
+      </p>
+    </li>
+  </script>
   <section id="main-screen">
+    <ol class="zap-messages">
+<!--
+      <li class="clearfix">
+        <img class="user-thumbnail zap-author" src="">
+        <p class="zap-message">
+          おなかすいたなーー<br>
+          おなかすいたなーー<br>
+          おなかすいたなーー<br>
+        </p>
+      </li>
+      <li class="clearfix">
+        <img class="user-thumbnail zap-author" src="">
+        <p class="zap-message">
+          こんにちはー
+        </p>
+      </li>
+      <li class="clearfix">
+        <img class="user-thumbnail zap-author" src="">
+        <p class="zap-message">
+          スーパーミリオンヘアー！！
+        </p>
+      </li>
+-->
+    </ol>
     <img class="zap-chart" src="/img/demo-chart.png">
+    <div id="message-dialog">
+      <div id="message-dialog-inner">
+        <textarea class="message-input" placeholder="メッセージ"></textarea>
+        <div>
+          <button class="send-message-button">送信する</button>
+          <button class="cancel-button">キャンセル</button>
+        </div>
+      </div>
+    </div>
+
+    <footer id="command-area">
+      <!--
+      <div style="display: table-row">
+      <img class="user-thumbnail" src="">
+      <span class="user-name"></span>
+      <div class="command-buttons">
+        <button class="command-button">(いいね!)</button>
+        <button class="command-button">ツイート</button>
+      </div>
+      </div>
+      -->
+      <div id="display-messages-field">
+        <input type="checkbox" id="display-messages" checked>
+        <label for="display-messages">メッセージを表示する</label>
+      </div>
+
+      
+      <table width="100%" style="border-collapse: collapse;">
+        <tr>
+          <td width=48 padding=0><img class="user-thumbnail" src=""></td>
+          <td padding=0><button id="zap-button" class="command-button" data-powertiptarget="message-dialog">(いいね!)</button></td>
+          <td padding=0><button id="tweet-button" class="command-button" data-powertiptarget="message-dialog">ツイート</button></td>
+        </tr>
+      </table>
+    </footer>
   </section>
 </body>
 </html>

@@ -213,15 +213,26 @@ var SessionSockets = require('session.socket.io')
 sessionSockets.on('connection', function (err, socket, session) {
     var user = session.user;
     var oauthToken = session.oauthToken;
-    socket.on('cool', function (cool) {
+    socket.on('zap', function (zap) {
         var now = Date.now();
-        cool.created = now;
-        cool.updated = now;
-        cool.userId = user._id;
-        new models.Cool(cool).save(function (err) {
-            socket.broadcast.emit('cool', cool);
-            socket.emit('cool', cool);
+        zap.created = now;
+        zap.updated = now;
+        zap.userId = user._id;
+        new models.Zap(zap).save(function (err) {
+            zap.author = user;
+            socket.broadcast.emit('zap', zap);
+            socket.emit('zap', zap);
 //            postToTwitter(user, oauthToken, '紅茶でも飲むか・・');
+        });
+    });
+    socket.on('message', function(message) {
+        var user = session.user;
+        message.userId = user._id;
+        message.timestamp = new Date();
+        new models.Message(message).save(function(err) {
+            message.author = user;
+            socket.broadcast.emit('message', message);
+            socket.emit('message', message);
         });
     });
     socket.on('disconnect', function () {
