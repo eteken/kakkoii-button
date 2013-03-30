@@ -61,27 +61,17 @@ passport.use(new TwitterStrategy({
                                          });
                                          user.lastLogin = now;
                                          user.updated = now;
-                                         user.save(function(err) {
-                                             if (err) {
-                                                 done(err);
-                                                 return;
+                                         
+                                         user.oauthTokens = {
+                                             twitter: {
+                                                 token: token,
+                                                 tokenSecret: tokenSecret
                                              }
-                                             models.OAuthTokens.findOneAndUpdate(
-                                                 { serviceId_userId: 'twitter_' + user._id },
-                                                 {
-                                                     userId: user._id,
-                                                     serviceId_userId: 'twitter_' + user._id,
-                                                     token: token,
-                                                     tokenSecret: tokenSecret,
-                                                     updated: now
-                                                 },
-                                                 {
-                                                     upsert: true
-                                                 },
-                                                 function(err, result) {
-                                                     user.oauthToken = result;
-                                                     done(err, user);
-                                                 });
+                                         };
+                                         done(err, user);
+                                         user.save(function(err, result) {
+                                             done(err, result);
+
                                          });
                                      });
                                  }
@@ -236,36 +226,48 @@ var SessionSockets = require('session.socket.io')
 
 sessionSockets.on('connection', function (err, socket, session) {
     var user = session.user;
-    var oauthToken = user.oauthToken;
+    var oauthToken = user.oauthTokens.twitter;
 
-    socket.on('zap', function (zap) {
+    socket.on('zap', function (z) {
         var now = Date.now();
+        var zap = new models.Zap(z);
         zap.created = now;
         zap.updated = now;
-        zap.userId = user._id;
-        new models.Zap(zap).save(function (err) {
-            zap.author = user;
+        zap.author = {
+            _id: user._id,
+            name: user.name,
+            displayName: user.displayName,
+            photo: user.photos[0]
+        };
+        zap.save(function (err) {
             socket.broadcast.emit('zap', zap);
             socket.emit('zap', zap);
         });
     });
-    socket.on('message', function(message) {
-
+    socket.on('message', function(msg) {
+        var now = Date.now();
+        var message = new models.Message(msg);
         message.userId = user._id;
-        message.timestamp = new Date();
-        new models.Message(message).save(function(err) {
+        message.created = now;
+        message.updated = now;
+        message.author = {
+            _id: user._id,
+            name: user.name,
+            displayName: user.displayName,
+            photo: user.photos[0]
+        };
+        message.save(function(err) {
             if (err) {
                 throw err;
             }
-            message.author = user;
             socket.broadcast.emit('message', message);
             socket.emit('message', message);
 
-            postToTwitter(user, oauthToken, message.text);
+//            postToTwitter(user, oauthToken, message.text);
         });
     });
     socket.on('disconnect', function () {
-//        session.destroy();
+        //        session.destroy();
         socket.broadcast.emit('leave', socket.id);
     });
 });

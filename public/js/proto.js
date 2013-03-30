@@ -13,18 +13,40 @@ $(function() {
     var zapper = new Zapper();
     var user;
 
-    if (!zapper.loggedIn) {
-        switchScreen('#splash-screen', '#login-screen');
-    } else {
+    function init(done) {
         zapper.getLiveEvent(function(err, event) {
             if (err) {
                 alert('エラーが発生しました:' + err.message);
                 return;
             }
             liveEvent = event;
+            liveEvent.onZapSent = function(zap) {
+                showMessageDialog('#zap-button', { relatedZapUUID: zap.uuid });
+            };
             event.subscribe('zap', function(zap) {
                 console.log(zap);
             });
+            event.subscribe('message', function(message) {
+                console.log(message);
+                var listItemHtml = messageListItemTemplate(message);
+                var listItem = $.parseHTML(listItemHtml);
+                var lastMessage = $('.zap-message-listitem:first');
+                if (lastMessage.length > 0) {
+                    lastMessage.before(listItem);
+                } else {
+                    $('.zap-messages').append(listItem);
+                }
+            });
+            done();
+        });
+    }
+    if (!zapper.loggedIn) {
+        switchScreen('#splash-screen', '#login-screen');
+    } else {
+        init(function(err) {
+            if (err) {
+                alert('エラーが発生しました');
+            }
             switchScreen('#splash-screen', '#main-screen', main);
         });
     }
@@ -34,29 +56,10 @@ $(function() {
             if (err) {
                 return;
             }
-            zapper.getLiveEvent(function(err, event) {
+            init(function(err) {
                 if (err) {
-                    alert('エラーが発生しました:' + err.message);
-                    return;
+                    alert('エラーが発生しました');
                 }
-                liveEvent = event;
-                liveEvent.onZapSent = function(zap) {
-                    showMessageDialog('#zap-button', { relatedZapUUID: zap.uuid });
-                };
-                event.subscribe('zap', function(zap) {
-                    console.log(zap);
-                });
-                event.subscribe('message', function(message) {
-                    var listItemHtml = messageListItemTemplate(message);
-                    var listItem = $.parseHTML(listItemHtml);
-                    var lastMessage = $('.zap-message-listitem:first');
-                    if (lastMessage.length > 0) {
-                        lastMessage.before(listItem);
-                    } else {
-                        $('.zap-messages').append(listItem);
-                    }
-//                    console.log(message);
-                });
                 switchScreen('#login-screen', '#main-screen', main);
             });
         });

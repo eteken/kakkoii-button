@@ -8,16 +8,27 @@ var Zap = new mongoose.Schema({
     created: { type: Date, 'default': Date.now, index: true },
     updated: { type: Date, 'default': Date.now },
     eventId: { type: String, index: true, required: true },
-    userId: { type: String, index: true, required: true },
+    author: {
+        number: { type: Number, required: true, index: true },
+        name: { type: String, required: true },
+        displayName: { type: String, required: true },
+        photos: { type: String, required: true }
+    },
     uuid: { type: String, index: { unique: true }, required: true }
 }, {
     'autoIndex': false
 });
 var Message = new mongoose.Schema({
     text: { type: String, required: true },
-    timestamp: { type: Date, 'default': Date.now, index: true },
+    created: { type: Date, 'default': Date.now, index: true },
+    updated: { type: Date, 'default': Date.now },
     eventId: { type: String, index: true, required: true },
-    userId: { type: String, index: true, required: true },
+    author: {
+        _id: { type: mongoose.Schema.Types.ObjectId, required: true, index: true },
+        name: { type: String, required: true },
+        displayName: { type: String, required: true },
+        photo: { type: String, required: true }
+    },
     relatedZapUUID: { type: String, index: true }
 }, {
     'autoIndex': false
@@ -46,23 +57,15 @@ var User = new mongoose.Schema({
     lastLogin: { type: Date, 'default': Date.now },
     created: { type: Date, 'default': Date.now, index: true },
     updated: { type: Date, 'default': Date.now },
-    photos: [String]
+    photos: [String],
+    oauthTokens: mongoose.Schema.Types.Mixed
 }, {
     'autoIndex': false
-});
-
-var OAuthTokens = new mongoose.Schema({
-    userId: { type: String, required: true, index: true },
-    serviceId_userId: { type: String, required: true, index: { unique: true }},
-    token: { type: String, required: true },
-    tokenSecret: { type: String, required: true },
-    updated: { type: Date, 'default': Date.now }
 });
 
 module.exports = {
     Zap: db.model('Zap', Zap),
     Message: db.model('Message', Message),
     Event: db.model('Event', Event),
-    OAuthTokens: db.model('OAuthTokens', OAuthTokens),
     User: db.model('User', User)
 };
