@@ -5,11 +5,15 @@ var express = require('express')
 , passport = require('passport')
 , config = require('./config')
 , models = require('./models')
+, mongoose = require('mongoose')
 , routes = require('./routes')
 , util = require('util')
+, _ = require('underscore')._
 , TwitterStrategy = require('passport-twitter').Strategy
+, MongoStore = require('connect-mongo')(express)
 , TWITTER_CONSUMER_KEY = config.twitter.consumerKey
 , TWITTER_CONSUMER_SECRET = config.twitter.consumerSecret;
+
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -19,11 +23,11 @@ var express = require('express')
 //   have a database of user records, the complete Twitter profile is serialized
 //   and deserialized.
 passport.serializeUser(function (user, done) {
-    done(null, user);
+    done(null, user._id);
 });
 
-passport.deserializeUser(function (obj, done) {
-    done(null, obj);
+passport.deserializeUser(function (id, done) {
+    models.User.findById(id, done);
 });
 
 
@@ -75,10 +79,8 @@ passport.use(new TwitterStrategy({
                                                      upsert: true
                                                  },
                                                  function(err, result) {
-                                                     done(err, {
-                                                         user: user,
-                                                         oauthToken: result
-                                                     });
+                                                     user.oauthToken = result;
+                                                     done(err, user);
                                                  });
                                          });
                                      });
@@ -88,7 +90,9 @@ passport.use(new TwitterStrategy({
 
 var app = express();
 var cookieParser = express.cookieParser('kakkoii.tv')
-, sessionStore = new connect.middleware.session.MemoryStore();
+, sessionStore = new MongoStore({
+    db: mongoose.connection.db
+});
 
 // configure Express
 app.configure(function () {
@@ -100,7 +104,13 @@ app.configure(function () {
     app.use(express.bodyParser());
     app.use(express.methodOverride());
     app.use(cookieParser);
-    app.use(express.session({ store: sessionStore, secret: 'kakkoii.tv'}));
+    app.use(express.session({
+        store: sessionStore,
+        secret: 'kakkoii.tv',
+        cookie: {
+            maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
+        }
+    }));
     // Initialize Passport!  Also use passport.session() middleware, to support
     // persistent login sessions (recommended).
     app.use(passport.initialize());
@@ -151,10 +161,12 @@ app.get('/auth/twitter',
 app.get('/auth/twitter/callback',
         passport.authenticate('twitter', { failureRedirect: '/login' }),
         function (req, res) {
-            console.log('aaa '+ req.user.user);
-            req.session.user = req.user.user;
-            req.session.oauthToken = req.user.oauthToken;
-            var userStr = JSON.stringify(req.user.user);
+            req.session.user = req.user;
+            // セッション内のuserオブジェクトには、OAuthのトークン情報が含まれてしまっているので除去する
+            var clone = _.clone(req.user);
+            delete clone.oauthToken;
+            var userStr = JSON.stringify(clone);
+            
             res.end('<script>opener.__lt_oauth_succeeded__=true;' +
                     'opener.__lt_logged_in_user__=' + userStr + ';' +
                     'window.close();</script>');
@@ -200,6 +212,18 @@ app.post('/events', function(req, res) {
     });
 });
 
+app.get('/events/:id/messages', function(req, res) {
+    models.Message.find(
+        { eventId: req.param('id') },
+        null,
+        { timestamp: 0 },
+        function(err, messages) {
+            if (err) {
+                throw err;
+            }
+            res.json(messages);
+        });
+});
 
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
@@ -212,7 +236,8 @@ var SessionSockets = require('session.socket.io')
 
 sessionSockets.on('connection', function (err, socket, session) {
     var user = session.user;
-    var oauthToken = session.oauthToken;
+    var oauthToken = user.oauthToken;
+
     socket.on('zap', function (zap) {
         var now = Date.now();
         zap.created = now;
@@ -222,21 +247,25 @@ sessionSockets.on('connection', function (err, socket, session) {
             zap.author = user;
             socket.broadcast.emit('zap', zap);
             socket.emit('zap', zap);
-//            postToTwitter(user, oauthToken, '紅茶でも飲むか・・');
         });
     });
     socket.on('message', function(message) {
-        var user = session.user;
+
         message.userId = user._id;
         message.timestamp = new Date();
         new models.Message(message).save(function(err) {
+            if (err) {
+                throw err;
+            }
             message.author = user;
             socket.broadcast.emit('message', message);
             socket.emit('message', message);
+
+            postToTwitter(user, oauthToken, message.text);
         });
     });
     socket.on('disconnect', function () {
-        session.destroy();
+//        session.destroy();
         socket.broadcast.emit('leave', socket.id);
     });
 });

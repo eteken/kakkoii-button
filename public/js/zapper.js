@@ -64,6 +64,7 @@
             };
         },
         sendMessage: function(message, relatedZapUUID) {
+            var self = this;
             getSocket(function(sock) {
                 sock.emit('message', {
                     eventId: self._id,
@@ -112,11 +113,12 @@
             }, watchInterval);
         },
         getLiveEvent: function(callback) {
+            var self = this;
             $.ajax({
                 dataType: 'json',
                 url: '/events/live'
             }).done(function(result) {
-                callback(null, new zEvent(result));
+                callback(null, new zEvent(self, result));
             }).fail(function(error) {
                 callback(error);
             });
@@ -126,7 +128,7 @@
                 dataType: 'json',
                 url: '/events/' + encodeURI(id)
             }).done(function(result) {
-                callback(null, new zEvent(result));
+                callback(null, new zEvent(self, result));
             }).fail(function(error) {
                 callback(error);
             });

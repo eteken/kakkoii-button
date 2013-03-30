@@ -1,6 +1,7 @@
 var config = require('./config');
 var mongoose = require('mongoose');
-var db = mongoose.connect(config.database.url);
+var dbUrl = 'mongodb://' + config.database.host + '/' + config.database.name;
+var db = mongoose.connect(dbUrl);
 
 var Zap = new mongoose.Schema({
     count: { type: Number, required: true },

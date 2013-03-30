@@ -16,6 +16,7 @@
         "socket.io": "*",
         "connect": "*",
         "session.socket.io": "*",
-        "underscore": "*"
+        "underscore": "*",
+        "connect-mongo": "*"
     }
 }
