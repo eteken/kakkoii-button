@@ -5,14 +5,13 @@ var db = mongoose.connect(dbUrl);
 
 var Zap = new mongoose.Schema({
     count: { type: Number, required: true },
-    created: { type: Date, 'default': Date.now, index: true },
-    updated: { type: Date, 'default': Date.now },
+    timestamp: { type: Date, 'default': Date.now, index: true },
     eventId: { type: String, index: true, required: true },
     author: {
-        number: { type: Number, required: true, index: true },
+        _id: { type: mongoose.Schema.Types.ObjectId, required: true, index: true },
         name: { type: String, required: true },
         displayName: { type: String, required: true },
-        photos: { type: String, required: true }
+        photo: { type: String, required: true }
     },
     uuid: { type: String, index: { unique: true }, required: true }
 }, {
@@ -20,8 +19,7 @@ var Zap = new mongoose.Schema({
 });
 var Message = new mongoose.Schema({
     text: { type: String, required: true },
-    created: { type: Date, 'default': Date.now, index: true },
-    updated: { type: Date, 'default': Date.now },
+    timestamp: { type: Date, 'default': Date.now, index: true },
     eventId: { type: String, index: true, required: true },
     author: {
         _id: { type: mongoose.Schema.Types.ObjectId, required: true, index: true },

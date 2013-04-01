@@ -17,6 +17,7 @@
         "connect": "*",
         "session.socket.io": "*",
         "underscore": "*",
-        "connect-mongo": "*"
+        "connect-mongo": "*",
+        "async": "*"
     }
 }

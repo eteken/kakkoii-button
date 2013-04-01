@@ -8,12 +8,15 @@ var express = require('express')
 , mongoose = require('mongoose')
 , routes = require('./routes')
 , util = require('util')
+, async = require('async')
 , _ = require('underscore')._
 , TwitterStrategy = require('passport-twitter').Strategy
 , MongoStore = require('connect-mongo')(express)
 , TWITTER_CONSUMER_KEY = config.twitter.consumerKey
 , TWITTER_CONSUMER_SECRET = config.twitter.consumerSecret;
 
+var ZAP_INITIAL_LOAD_MINUTES = 5;
+var MESSAGES_PAGE_COUNT = 100;
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -39,43 +42,41 @@ passport.use(new TwitterStrategy({
     consumerKey: TWITTER_CONSUMER_KEY,
     consumerSecret: TWITTER_CONSUMER_SECRET,
     callbackURL: "http://localhost:3000/auth/twitter/callback"
-},
-                                 function (token, tokenSecret, profile, done) {
-                                     // console.log(JSON.stringify(profile));
-                                     var now = Date.now();
-                                     models.User.findOne({ number: profile.id }, function(err, original) {
-                                         if (err) {
-                                             done(err);
-                                             return;
-                                         }
-                                         var user = original;
-                                         if (!original) {
-                                             user = new models.User();
-                                             user.created = now;
-                                         }
-                                         user.number = profile.id;
-                                         user.name = profile.username;
-                                         user.displayName = profile.displayName;
-                                         user.photos = profile.photos.map(function (entry) {
-                                             return entry.value;
-                                         });
-                                         user.lastLogin = now;
-                                         user.updated = now;
-                                         
-                                         user.oauthTokens = {
-                                             twitter: {
-                                                 token: token,
-                                                 tokenSecret: tokenSecret
-                                             }
-                                         };
-                                         done(err, user);
-                                         user.save(function(err, result) {
-                                             done(err, result);
+}, function (token, tokenSecret, profile, done) {
+    // console.log(JSON.stringify(profile));
+    var now = Date.now();
+    models.User.findOne({ number: profile.id }, function(err, original) {
+        if (err) {
+            done(err);
+            return;
+        }
+        var user = original;
+        if (!original) {
+            user = new models.User();
+            user.created = now;
+        }
+        user.number = profile.id;
+        user.name = profile.username;
+        user.displayName = profile.displayName;
+        user.photos = profile.photos.map(function (entry) {
+            return entry.value;
+        });
+        user.lastLogin = now;
+        user.updated = now;
+        
+        user.oauthTokens = {
+            twitter: {
+                token: token,
+                tokenSecret: tokenSecret
+            }
+        };
+        done(err, user);
+        user.save(function(err, result) {
+            done(err, result);
 
-                                         });
-                                     });
-                                 }
-                                ));
+        });
+    });
+}));
 
 
 var app = express();
@@ -119,10 +120,59 @@ app.configure('development', function () {
 });
 
 app.get('/', function (req, res) {
-    console.log(JSON.stringify(req.user));
-    res.render('index', { user: req.user });
+    var eventId = req.param('eventId');
+    async.waterfall([
+        function(callback) {
+            models.Event.findById(eventId).exec(callback);
+        },
+        function(event, callback) {
+            async.parallel([
+                // zapの取得（最新のN分ぶんのみ）
+                function(callback) {
+                    var to = Date.now();
+                    var from = to - (ZAP_INITIAL_LOAD_MINUTES * 60 * 1000);
+                    models.Zap.find(
+                        {
+                            eventId: event.id,
+                            timestamp: {
+                                $gt: from,
+                                $lte: to
+                            }
+                        },
+                        'count timestamp author',
+                        { sort: 'timestamp' },
+                        callback);
+                },
+                // メッセージの取得（最新のN件のみ）
+                function(callback) {
+                    /*
+                    models.Message.find(
+                        { eventId: event._id },
+                        'text timestamp author zap seq',
+                        { sort: '-seq', limit: MESSAGES_PAGE_COUNT },
+                        callback);
+                        */
+                    models.Message.find({ eventId: event._id })
+                        .select('text timestamp author zap seq')
+                        .sort('-seq')
+                        .exec(callback);
+                    
+                }
+            ], function(err, results) {
+                if (err) {
+                    throw err;
+                }
+                res.render('index', {
+                    event: event,
+                    zaps: results[0],
+                    messages: results[1],
+                    user: req.user
+                });
+            });
+        }
+    ]);
 });
-
+/*
 app.get('/account', ensureAuthenticated, function (req, res) {
     res.render('account', { user: req.user });
 });
@@ -130,7 +180,7 @@ app.get('/account', ensureAuthenticated, function (req, res) {
 app.get('/login', function (req, res) {
     res.render('login', { user: req.user });
 });
-
+*/
 // GET /auth/twitter
 //   Use passport.authenticate() as route middleware to authenticate the
 //   request.  The first step in Twitter authentication will involve redirecting
@@ -234,8 +284,7 @@ sessionSockets.on('connection', function (err, socket, session) {
     socket.on('zap', function (z) {
         var now = Date.now();
         var zap = new models.Zap(z);
-        zap.created = now;
-        zap.updated = now;
+        zap.timestamp = now;
         zap.author = {
             _id: user._id,
             name: user.name,
@@ -243,6 +292,9 @@ sessionSockets.on('connection', function (err, socket, session) {
             photo: user.photos[0]
         };
         zap.save(function (err) {
+            if (err) {
+                throw err;
+            }
             socket.broadcast.emit('zap', zap);
             socket.emit('zap', zap);
         });
@@ -251,8 +303,7 @@ sessionSockets.on('connection', function (err, socket, session) {
         var now = Date.now();
         var message = new models.Message(msg);
         message.userId = user._id;
-        message.created = now;
-        message.updated = now;
+        message.timestamp = now;
         message.author = {
             _id: user._id,
             name: user.name,
@@ -270,7 +321,6 @@ sessionSockets.on('connection', function (err, socket, session) {
         });
     });
     socket.on('disconnect', function () {
-        //        session.destroy();
         socket.broadcast.emit('leave', socket.id);
     });
 });

@@ -36,6 +36,8 @@
             clearInterval(self._zapEndWatcher);
 
             if (self._currentZapCount + 1 === self.maxZapCount) {
+                self._currentZapUUID = undefined;
+                self._currentZapCount = 0;
                 throw new Error('Zap count must be less than ' + self.maxZapCount);
             }
             var uuid = self._currentZapUUID;
@@ -54,9 +56,9 @@
                     if (typeof self.onZapSent === 'function') {
                         self.onZapSent(zap);
                     }
+                    self._currentZapUUID = undefined;
+                    self._currentZapCount = 0;
                 });
-                self._currentZapUUID = undefined;
-                self._currentZapCount = 0;
             }, ZAP_REPEAT_MAX_INTERVAL);
             return {
                 uuid: uuid,
@@ -118,7 +120,7 @@
                 dataType: 'json',
                 url: '/events/latest'
             }).done(function(result) {
-                callback(null, new zEvent(self, result));
+                callback(null, self.event(result));
             }).fail(function(error) {
                 callback(error);
             });
@@ -128,10 +130,13 @@
                 dataType: 'json',
                 url: '/events/' + encodeURI(id)
             }).done(function(result) {
-                callback(null, new zEvent(self, result));
+                callback(null, self.event(result));
             }).fail(function(error) {
                 callback(error);
             });
+        },
+        event: function(eventObj) {
+            return new zEvent(this, eventObj);
         }
     };
     _global.Zapper = Zapper;
