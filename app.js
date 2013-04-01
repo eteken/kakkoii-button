@@ -172,10 +172,13 @@ app.get('/*.html', function(req, res) {
     res.render(req.params[0]);
 });
 
-app.get('/events/live', function(req, res) {
+app.get('/events/latest', function(req, res) {
     var now = new Date();
     models.Event.findOne(
-        { start: { $lte: now }, end: { $gte: now } },
+        {},
+        {
+            sort: '-start'
+        },
         function(err, doc) {
             res.json(doc);
         });

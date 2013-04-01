@@ -112,11 +112,11 @@
                 }
             }, watchInterval);
         },
-        getLiveEvent: function(callback) {
+        getLatestEvent: function(callback) {
             var self = this;
             $.ajax({
                 dataType: 'json',
-                url: '/events/live'
+                url: '/events/latest'
             }).done(function(result) {
                 callback(null, new zEvent(self, result));
             }).fail(function(error) {

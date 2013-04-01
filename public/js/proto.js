@@ -14,7 +14,7 @@ $(function() {
     var user;
 
     function init(done) {
-        zapper.getLiveEvent(function(err, event) {
+        zapper.getLatestEvent(function(err, event) {
             if (err) {
                 alert('エラーが発生しました:' + err.message);
                 return;
