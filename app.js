@@ -121,6 +121,7 @@ app.configure('development', function () {
 
 app.get('/', function (req, res) {
     var eventId = req.param('eventId');
+    console.log('eventId:' + eventId);
     async.waterfall([
         function(callback) {
             models.Event.findById(eventId).exec(callback);
