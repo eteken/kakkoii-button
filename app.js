@@ -145,16 +145,10 @@ app.get('/', function (req, res) {
                 },
                 // メッセージの取得（最新のN件のみ）
                 function(callback) {
-                    /*
-                    models.Message.find(
-                        { eventId: event._id },
-                        'text timestamp author zap seq',
-                        { sort: '-seq', limit: MESSAGES_PAGE_COUNT },
-                        callback);
-                        */
                     models.Message.find({ eventId: event._id })
                         .select('text timestamp author zap seq')
                         .sort('-seq')
+                        .limit(MESSAGES_PAGE_COUNT)
                         .exec(callback);
                     
                 }
@@ -163,7 +157,7 @@ app.get('/', function (req, res) {
                     throw err;
                 }
                 res.render('index', {
-                    event: event,
+                    event: event.toObject({getters: true}),
                     zaps: results[0],
                     messages: results[1],
                     user: req.user
@@ -278,6 +272,8 @@ var SessionSockets = require('session.socket.io')
 , sessionSockets = new SessionSockets(io, sessionStore, cookieParser);
 
 sessionSockets.on('connection', function (err, socket, session) {
+    console.log('connect');
+    
     var user = session.user;
     var oauthToken = user.oauthTokens.twitter;
 
@@ -295,8 +291,9 @@ sessionSockets.on('connection', function (err, socket, session) {
             if (err) {
                 throw err;
             }
-            socket.broadcast.emit('zap', zap);
-            socket.emit('zap', zap);
+            io.sockets.json.emit('zap', zap);
+//            socket.broadcast.emit('zap', zap);
+//            socket.emit('zap', zap);
         });
     });
     socket.on('message', function(msg) {
@@ -314,8 +311,9 @@ sessionSockets.on('connection', function (err, socket, session) {
             if (err) {
                 throw err;
             }
-            socket.broadcast.emit('message', message);
-            socket.emit('message', message);
+//            socket.broadcast.emit('message', message);
+            io.sockets.json.emit('message', message);
+//            socket.emit('message', message);
 
 //            postToTwitter(user, oauthToken, message.text);
         });

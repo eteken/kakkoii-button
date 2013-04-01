@@ -58,7 +58,7 @@ var Event = new mongoose.Schema({
 
 Event.virtual('isLive').get(function() {
     var now = Date.now();
-    return start.getTime() <= now && now <= end.getTime();
+    return this.start.getTime() <= now && now <= this.end.getTime();
 });
 
 var Guest = new mongoose.Schema({

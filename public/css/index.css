@@ -58,9 +58,8 @@ html, body {
 #main-screen {
     display: none;
 }
-.zap-chart {
-    width: 96%;
-    display: none;
+#zap-chart {
+/*    display: none; */
 }
 
 .user-thumbnail {

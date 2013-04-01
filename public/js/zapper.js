@@ -1,16 +1,11 @@
 (function(_global) {
-    var _socket;
-    function getSocket(callback) {
-        if (!_socket) {
-            _socket = io.connect(serverUrl);
-            _socket.on('connect', function() {
-                callback(_socket);
-            });
-        }
-        setTimeout(function() {
-            callback(_socket);
-        }, 0);
-    }
+    var sock = io.connect(serverUrl);
+    sock.on('connect', function() {
+        console.log('connected');
+    });
+    sock.on('disconnect', function() {
+        console.log('disconnected');
+    });
     var genUuid = (function(){
         var S4 = function() {
             return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
@@ -46,19 +41,17 @@
             }
             self._currentZapCount++;
             self._zapEndWatcher = setTimeout(function() {
-                getSocket(function(sock) {
-                    var zap = {
-                        eventId: self._id,
-                        count: self._currentZapCount,
-                        uuid: uuid
-                    };
-                    sock.emit('zap', zap);
-                    if (typeof self.onZapSent === 'function') {
-                        self.onZapSent(zap);
-                    }
-                    self._currentZapUUID = undefined;
-                    self._currentZapCount = 0;
-                });
+                var zap = {
+                    eventId: self._id,
+                    count: self._currentZapCount,
+                    uuid: uuid
+                };
+                sock.emit('zap', zap);
+                if (typeof self.onZapSent === 'function') {
+                    self.onZapSent(zap);
+                }
+                self._currentZapUUID = undefined;
+                self._currentZapCount = 0;
             }, ZAP_REPEAT_MAX_INTERVAL);
             return {
                 uuid: uuid,
@@ -67,18 +60,14 @@
         },
         sendMessage: function(message, relatedZapUUID) {
             var self = this;
-            getSocket(function(sock) {
-                sock.emit('message', {
-                    eventId: self._id,
-                    text: message,
-                    relatedZapUUID: relatedZapUUID
-                });
+            sock.emit('message', {
+                eventId: self._id,
+                text: message,
+                relatedZapUUID: relatedZapUUID
             });
         },
         subscribe: function(name, callback) {
-            getSocket(function(sock) {
-                sock.on(name, callback);
-            });
+            sock.on(name, callback);
         }
     };
 

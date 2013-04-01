@@ -12,10 +12,11 @@
     <script src="/js/lib/lodash.mobile.min.js"></script>
     <script src="/js/lib/async.js"></script>
     <script src="/js/lib/jquery.powertip-1.1.0.min.js"></script>
-
-    <script src="/js/zapper.js"></script>
+    <script src="/js/lib/Chart.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     
+    <script src="/js/common.js"></script>
+    <script src="/js/zapper.js"></script>
     <script src="/js/index.js"></script>
     <script>
       var __lt_event__ = <%- JSON.stringify(event) %>;
@@ -52,7 +53,7 @@
   <section id="main-screen">
     <ol class="zap-messages">
     </ol>
-    <img class="zap-chart" src="/img/demo-chart.png">
+    <canvas id="zap-chart" width="800" height="300"></canvas>
     <div id="message-dialog">
       <div id="message-dialog-inner">
         <textarea class="message-input" placeholder="メッセージ"></textarea>
