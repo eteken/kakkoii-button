@@ -15,20 +15,18 @@ $(function() {
     var zapper = new Zapper();
     var user;
     var messages;
-    var zaps;
-    var ZAP_CHART_REFRESH_INTERVAL = 2; //seconds
+    var zaps = [];
+    var ZAP_CHART_REFRESH_INTERVAL = 1; //seconds
     var ZAP_CHART_REFRESH_INTERVAL_MILLIS = ZAP_CHART_REFRESH_INTERVAL * 1000; //seconds
     var ZAP_CHART_COUNT_OF_POINTS = 10;
     
     function init(done) {
-        console.log('init');
         currentEvent = zapper.event(__lt_event__);
         currentEvent.onZapSent = function(zap) {
             showMessageDialog('#zap-button', { relatedZapUUID: zap.uuid });
         };
         currentEvent.subscribe('zap', function(zap) {
             zaps.push(zap);
-            console.log(zap);
         });
         currentEvent.subscribe('message', function(message) {
             messages.push(message);
@@ -53,7 +51,8 @@ $(function() {
     }
     function adjustChartSize() {
         var chartWidth = $(window).width();
-        var chartHeight = Math.floor(chartWidth * 3 / 4);
+        //var chartHeight = Math.floor(chartWidth * 3 / 4);
+        var chartHeight = 400;
         $('#zap-chart').attr({
             width: chartWidth,
             height: chartHeight
@@ -70,22 +69,32 @@ $(function() {
     var chart = new Chart(chartCtx);
 
     var chartRangeInMillis =  ZAP_CHART_COUNT_OF_POINTS * ZAP_CHART_REFRESH_INTERVAL_MILLIS;
-    var labels = new Array(ZAP_CHART_COUNT_OF_POINTS).map(function() { return '' });
+    var labels = [];
+    for (var i = 0; i < ZAP_CHART_COUNT_OF_POINTS; i++) {
+        labels.push('');
+    }
     
     function renderZapsOnLive() {
+        if (zaps.length === 0) {
+            return;
+        }
+        zaps.sort(function(a, b) {
+            return a.timestamp - b.timestamp;
+        });
         var now = new Date();
         var endTime = new Date(
             now.getFullYear(), now.getMonth(), now.getDate(),
-            now.getHours(), now.getMinutes(), now.getSeconds()).getTime();
+            now.getHours(), now.getMinutes(), now.getSeconds() + 1).getTime();
         var startTime = new Date(endTime - chartRangeInMillis).getTime();
         var i, j, k = zaps.length - 1;
         var counts = [];
+        
         for (i = endTime; i >= startTime; i -= ZAP_CHART_REFRESH_INTERVAL_MILLIS) {
             var count = 0;
             for (j = k; j >= 0; j--) {
                 var zap = zaps[j];
                 var timestamp = Date.parse(zap.timestamp);
-                if (i >= timestamp && i - timestamp < ZAP_CHART_REFRESH_INTERVAL_MILLIS) {
+                if (i >= timestamp && i - timestamp <= ZAP_CHART_REFRESH_INTERVAL_MILLIS) {
                     count += zap.count;
                 } else {
                     // 次のループの開始位置を進めておく
@@ -95,6 +104,9 @@ $(function() {
             }
             counts.push(count);
         }
+
+        counts.reverse();
+        console.log(counts.join(','));
         // この時点で、jにはグラフに描画した最も古いzapのインデックスが入っている。
         // メモリリークを防ぐために、配列を切り詰める
         zaps = zaps.slice(j);
@@ -114,10 +126,10 @@ $(function() {
         };
         chart.Bar(data, {
 //            bezierCurve: false,
-//            scaleOverride : true,
-            scaleSteps : 1,
-            scaleStepWidth : 100,
-            scaleStartValue : 1,
+            scaleOverride : true,
+            scaleSteps : 10,
+            scaleStepWidth : 1,
+            scaleStartValue : 0,
             animation: false
         });
     }
