@@ -124,8 +124,9 @@ $(function() {
                 }
             ]
         };
-        chart.Bar(data, {
-//            bezierCurve: false,
+        chart.Line(data, {
+            pointDot: false,
+            bezierCurve: true,
             scaleOverride : true,
             scaleSteps : 10,
             scaleStepWidth : 1,

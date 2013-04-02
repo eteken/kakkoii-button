@@ -1,4 +1,5 @@
 var express = require('express')
+//, process = require('process')
 , connect = require('connect')
 , http = require('http')
 , OAuth = require('oauth').OAuth
@@ -17,6 +18,19 @@ var express = require('express')
 
 var ZAP_INITIAL_LOAD_MINUTES = 5;
 var MESSAGES_PAGE_COUNT = 100;
+
+var URL = 'http://localhost:3000';
+(function() {
+    var args = process.argv;
+    if (args.length > 2) {
+        for (var i = 0; i < args.length; i++) {
+            if (args[i].match(/^\-\-url\=(.+)$/)) {
+                URL = RegExp.$1;
+                break;
+            }
+        }
+    }
+})();
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -41,7 +55,7 @@ passport.deserializeUser(function (id, done) {
 passport.use(new TwitterStrategy({
     consumerKey: TWITTER_CONSUMER_KEY,
     consumerSecret: TWITTER_CONSUMER_SECRET,
-    callbackURL: "http://localhost:3000/auth/twitter/callback"
+    callbackURL: URL + "/auth/twitter/callback"
 }, function (token, tokenSecret, profile, done) {
     // console.log(JSON.stringify(profile));
     var now = Date.now();
