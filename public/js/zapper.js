@@ -81,10 +81,11 @@
         init: function(options, callback) {
             var self = this;
             // WebSocket接続まで出来たら、認証成功とする
+            console.log('init');
             sock = io.connect(serverUrl);
             sock.on('connect', function() {
                 console.log('connected');
-                callback(null, self.user);
+                callback(null);
             });
             sock.on('disconnect', function() {
                 console.log('disconnected');

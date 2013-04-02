@@ -234,6 +234,7 @@ app.get('/auth/twitter/callback',
 
 app.get('/auth/succeeded', function(req, res) {
     // セッション内のuserオブジェクトには、OAuthのトークン情報が含まれてしまっているので除去する
+    req.session.user = req.user;
     var clone = _.clone(req.user);
     delete clone.oauthToken;
     var userStr = JSON.stringify(clone);
@@ -308,14 +309,13 @@ var SessionSockets = require('session.socket.io')
 , sessionSockets = new SessionSockets(io, sessionStore, cookieParser);
 
 sessionSockets.on('connection', function (err, socket, session) {
+    console.log('connected.' + socket.id + ' session: ' + !!session);
     // セッションがない場合は、どうする？接続切りたいが
-    if (!session) {
-        socket.disconnect(true);
-        return;
+    var user, oauthToken;
+    if (session) {
+        user = session.user;
+        oauthToken = user.oauthTokens.twitter;
     }
-    var user = session.user;
-    var oauthToken = user.oauthTokens.twitter;
-
     socket.on('zap', function (z) {
         var now = Date.now();
         var zap = new models.Zap(z);
