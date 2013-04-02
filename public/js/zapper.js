@@ -1,11 +1,6 @@
 (function(_global) {
-    var sock = io.connect(serverUrl);
-    sock.on('connect', function() {
-        console.log('connected');
-    });
-    sock.on('disconnect', function() {
-        console.log('disconnected');
-    });
+    var sock;
+
     var genUuid = (function(){
         var S4 = function() {
             return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
@@ -83,6 +78,17 @@
                 delete window.__lt_logged_in_user__;
             }
         },
+        init: function(options, callback) {
+            // WebSocket接続まで出来たら、認証成功とする
+            sock = io.connect(serverUrl);
+            sock.on('connect', function() {
+                console.log('connected');
+                callback(null, self.user);
+            });
+            sock.on('disconnect', function() {
+                console.log('disconnected');
+            });
+        },
         login: function(options, callback) {
             var self = this;
             options = options || {};
@@ -97,7 +103,7 @@
                 clearInterval(watch);
                 if (window.__lt_oauth_succeeded__) {
                     self._prepareAuthInfo();
-                    callback(null, self.user);
+                    self.init(options, callback);
                 } else {
                     callback(new Error('auth error'));
                 }

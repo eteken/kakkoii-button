@@ -32,6 +32,8 @@ var URL = 'http://localhost:3000';
     }
 })();
 
+console.log('URL: ' + URL);
+
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
 //   serialize users into and deserialize users out of the session.  Typically,
@@ -216,7 +218,7 @@ app.get('/auth/twitter/callback',
             delete clone.oauthToken;
             var userStr = JSON.stringify(clone);
             
-            res.end('<script>opener.__lt_oauth_succeeded__=true;' +
+            res.send('<script>opener.__lt_oauth_succeeded__=true;' +
                     'opener.__lt_logged_in_user__=' + userStr + ';' +
                     'window.close();</script>');
             //        res.redirect('/');
@@ -225,7 +227,7 @@ app.get('/auth/twitter/callback',
 app.get('/logout', function (req, res) {
     req.session.destroy();
     req.logout();
-    res.end('ログアウトしました。');
+    res.end('Logout successfully.');
 });
 
 app.get('/*.html', function(req, res) {
@@ -288,10 +290,10 @@ var SessionSockets = require('session.socket.io')
 , sessionSockets = new SessionSockets(io, sessionStore, cookieParser);
 
 sessionSockets.on('connection', function (err, socket, session) {
-    console.log('connect');
     // セッションがない場合は、どうする？接続切りたいが
     if (!session) {
-        //socket.
+        socket.disconnect(true);
+        return;
     }
     var user = session.user;
     var oauthToken = user.oauthTokens.twitter;

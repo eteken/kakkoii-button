@@ -21,33 +21,38 @@ $(function() {
     var ZAP_CHART_COUNT_OF_POINTS = 10;
     
     function init(done) {
-        currentEvent = zapper.event(__lt_event__);
-        $('#main-screen > h1').text(currentEvent.title);
-        currentEvent.onZapSent = function(zap) {
-            $('#zap-button').text('(いいね!)').removeAttr('disabled');
-            showMessageDialog('#zap-button', { relatedZapUUID: zap.uuid, autoCloseSeconds: 3 });
-        };
-        currentEvent.subscribe('zap', function(zap) {
-            zaps.push(zap);
-        });
-        currentEvent.subscribe('message', function(message) {
-            messages.push(message);
-            renderMessages([message]);
-        });
-        messages = __lt_messages__;
-        delete window.__lt_messages__;
+        zapper.init({}, function(err) {
+            if (err) {
+                done(err);
+            }
+            currentEvent = zapper.event(__lt_event__);
+            $('#main-screen > h1').text(currentEvent.title);
+            currentEvent.onZapSent = function(zap) {
+                $('#zap-button').text('(いいね!)').removeAttr('disabled');
+                showMessageDialog('#zap-button', { relatedZapUUID: zap.uuid, autoCloseSeconds: 3 });
+            };
+            currentEvent.subscribe('zap', function(zap) {
+                zaps.push(zap);
+            });
+            currentEvent.subscribe('message', function(message) {
+                messages.push(message);
+                renderMessages([message]);
+            });
+            messages = __lt_messages__;
+            delete window.__lt_messages__;
 
-        // ライブ中は頻繁に更新、チャートはどんどん流れていく
-//      if (currentEvent.isLive) {
+            // ライブ中は頻繁に更新、チャートはどんどん流れていく
+            //      if (currentEvent.isLive) {
             setInterval(renderZapsOnLive, ZAP_CHART_REFRESH_INTERVAL_MILLIS);
-//        }
-        // それ以外の時は、チャートはmessageイベントが到着した時しか更新しない。
-        // チャートは、全体表示。
-//        else {
-//            renderZaps();
-//        }
-        renderMessages(messages);
-        done();
+            //        }
+            // それ以外の時は、チャートはmessageイベントが到着した時しか更新しない。
+            // チャートは、全体表示。
+            //        else {
+            //            renderZaps();
+            //        }
+            renderMessages(messages);
+            done();
+        });
     }
     function adjustChartSize() {
         var chartWidth = $(window).width();
