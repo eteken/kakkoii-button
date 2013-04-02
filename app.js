@@ -209,8 +209,9 @@ app.get('/auth/twitter/callback',
         });
 
 app.get('/logout', function (req, res) {
+    req.session.destroy();
     req.logout();
-    res.redirect('/');
+    res.end('ログアウトしました。');
 });
 
 app.get('/*.html', function(req, res) {
@@ -274,7 +275,10 @@ var SessionSockets = require('session.socket.io')
 
 sessionSockets.on('connection', function (err, socket, session) {
     console.log('connect');
-    
+    // セッションがない場合は、どうする？接続切りたいが
+    if (!session) {
+        //socket.
+    }
     var user = session.user;
     var oauthToken = user.oauthTokens.twitter;
 

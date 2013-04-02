@@ -30,7 +30,7 @@
             var self = this;
             clearInterval(self._zapEndWatcher);
 
-            if (self._currentZapCount + 1 === self.maxZapCount) {
+            if (self._currentZapCount === self.maxZapCount) {
                 self._currentZapUUID = undefined;
                 self._currentZapCount = 0;
                 throw new Error('Zap count must be less than ' + self.maxZapCount);

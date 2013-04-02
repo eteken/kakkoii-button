@@ -24,7 +24,8 @@ $(function() {
         currentEvent = zapper.event(__lt_event__);
         $('#main-screen > h1').text(currentEvent.title);
         currentEvent.onZapSent = function(zap) {
-            showMessageDialog('#zap-button', { relatedZapUUID: zap.uuid });
+            $('#zap-button').text('(いいね!)').removeAttr('disabled');
+            showMessageDialog('#zap-button', { relatedZapUUID: zap.uuid, autoCloseSeconds: 3 });
         };
         currentEvent.subscribe('zap', function(zap) {
             zaps.push(zap);
@@ -245,11 +246,9 @@ $(function() {
 
     $('#zap-button').click(function() {
         var zap = currentEvent.zap();
-
-        console.log('zapId:' + zap.id);
-        console.log('zapCount:' + zap.count);
+        $(this).text('(いいね!)×' + zap.count);
         if (zap.count === zapper.maxZapCount) {
-            console.log('もういっぱいです');
+            $(this).attr('disabled', 'disabled');
         }
     });
     $('#tweet-button').click(function() {
@@ -293,6 +292,25 @@ $(function() {
             setTimeout(function() {
                 dialog.find('.message-input').focus();
             }, 0);
+        }
+        var count = dialog.find('.count');
+        if (options.autoCloseSeconds > 0) {
+            var start = Date.now();
+            var seconds = options.autoCloseSeconds;
+            
+            (function updateCount() {
+                var now = Date.now();
+                var elapsedTime = now - start;
+                if (elapsedTime > seconds * 1000) {
+                    hideMessageDialog();
+                } else {
+                    var elapsedSeconds = Math.floor(elapsedTime / 1000);
+                    count.text(seconds - elapsedSeconds);
+                    setTimeout(updateCount, 200);
+                }
+            })();
+        } else {
+            count.text('');
         }
     }
     function hideMessageDialog() {
