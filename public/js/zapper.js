@@ -79,6 +79,7 @@
             }
         },
         init: function(options, callback) {
+            var self = this;
             // WebSocket接続まで出来たら、認証成功とする
             sock = io.connect(serverUrl);
             sock.on('connect', function() {
@@ -103,7 +104,8 @@
                 clearInterval(watch);
                 if (window.__lt_oauth_succeeded__) {
                     self._prepareAuthInfo();
-                    self.init(options, callback);
+                    callback(null, self.user);
+//                    self.init(options, callback);
                 } else {
                     callback(new Error('auth error'));
                 }

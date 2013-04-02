@@ -107,6 +107,7 @@ app.configure(function () {
     app.set('views', __dirname + '/views');
     app.set('view engine', 'ejs');
     app.use(express.favicon());
+    app.use(express.static(__dirname + '/public'));
     app.use(express.logger('dev'));
     app.use(express.bodyParser());
     app.use(express.methodOverride());
@@ -128,7 +129,6 @@ app.configure(function () {
     });
     app.use(app.router);
     app.use(require('less-middleware')({ src: __dirname + '/public' }));
-    app.use(express.static(__dirname + '/public'));
 });
 
 app.configure('development', function () {
@@ -138,11 +138,20 @@ app.configure('development', function () {
 app.get('/', function (req, res) {
     var eventId = req.param('eventId');
     console.log('eventId:' + eventId);
+    if (!eventId) {
+        //TODO
+        res.send(404);
+        return;
+    }
     async.waterfall([
         function(callback) {
             models.Event.findById(eventId).exec(callback);
         },
         function(event, callback) {
+            if (!event) {
+                res.send(404);
+                return;
+            }
             async.parallel([
                 // zapの取得（最新のN分ぶんのみ）
                 function(callback) {
@@ -210,19 +219,28 @@ app.get('/auth/twitter',
 //   login page.  Otherwise, the primary route function function will be called,
 //   which, in this example, will redirect the user to the home page.
 app.get('/auth/twitter/callback',
-        passport.authenticate('twitter', { failureRedirect: '/login' }),
+        passport.authenticate('twitter', { successRedirect: '/auth/succeeded' })/*,
         function (req, res) {
             req.session.user = req.user;
             // セッション内のuserオブジェクトには、OAuthのトークン情報が含まれてしまっているので除去する
-            var clone = _.clone(req.user);
+            var clone = _.clone(req.session.user);
             delete clone.oauthToken;
             var userStr = JSON.stringify(clone);
-            
-            res.send('<script>opener.__lt_oauth_succeeded__=true;' +
-                    'opener.__lt_logged_in_user__=' + userStr + ';' +
-                    'window.close();</script>');
-            //        res.redirect('/');
-        });
+            res.write('<script>opener.__lt_oauth_succeeded__=true;' +
+                     'opener.__lt_logged_in_user__=' + userStr + ';' +
+                     'window.close();</script>');
+//            res.redirect('/auth/succeeded');
+        }*/);
+
+app.get('/auth/succeeded', function(req, res) {
+    // セッション内のuserオブジェクトには、OAuthのトークン情報が含まれてしまっているので除去する
+    var clone = _.clone(req.user);
+    delete clone.oauthToken;
+    var userStr = JSON.stringify(clone);
+    res.send('<script>opener.__lt_oauth_succeeded__=true;' +
+             'opener.__lt_logged_in_user__=' + userStr + ';' +
+             'window.close();</script>');
+});
 
 app.get('/logout', function (req, res) {
     req.session.destroy();
