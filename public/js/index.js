@@ -22,6 +22,7 @@ $(function() {
     
     function init(done) {
         currentEvent = zapper.event(__lt_event__);
+        $('#main-screen > h1').text(currentEvent.title);
         currentEvent.onZapSent = function(zap) {
             showMessageDialog('#zap-button', { relatedZapUUID: zap.uuid });
         };
@@ -32,9 +33,7 @@ $(function() {
             messages.push(message);
             renderMessages([message]);
         });
-        zaps = __lt_zaps__;
         messages = __lt_messages__;
-        delete window.__lt_zaps__;
         delete window.__lt_messages__;
 
         // ライブ中は頻繁に更新、チャートはどんどん流れていく
