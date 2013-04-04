@@ -1,4 +1,6 @@
 (function(_global) {
+    var sock;
+    /*
     var sock = io.connect(serverUrl);
     sock.on('connect', function() {
         console.log('connected');
@@ -6,6 +8,7 @@
     sock.on('disconnect', function() {
         console.log('disconnected');
     });
+    */
     var genUuid = (function(){
         var S4 = function() {
             return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
@@ -75,6 +78,25 @@
         this._prepareAuthInfo();
     };
     Zapper.prototype = {
+        init: function(callback) {
+            if (!sock || !sock.connected) {
+                console.log('Socket.IO disconnected. Try connecting...');
+                sock = io.connect(serverUrl);
+                sock.on('connect', function() {
+                    console.log('connected');
+                    callback();
+                });
+                sock.on('disconnect', function() {
+                    console.log('disconnected');
+                });
+                sock.on('error', function(err) {
+                    alert('Socket.IO Error:' + err.message);
+                    console.error(err);
+                });
+            } else {
+                callback();
+            }
+        },
         _prepareAuthInfo: function() {
             if (window.__lt_oauth_succeeded__) {
                 this.loggedIn = true;

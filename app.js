@@ -1,4 +1,5 @@
 var express = require('express')
+, Session = express.session.Session
 , connect = require('connect')
 , http = require('http')
 , OAuth = require('oauth').OAuth
@@ -84,6 +85,7 @@ var cookieParser = express.cookieParser('kakkoii.tv')
 , sessionStore = new MongoStore({
     db: mongoose.connection.db
 });
+var SESSION_SECRET = 'kakkoii.tv';
 
 // configure Express
 app.configure(function () {
@@ -97,7 +99,7 @@ app.configure(function () {
     app.use(cookieParser);
     app.use(express.session({
         store: sessionStore,
-        secret: 'kakkoii.tv',
+        secret: SESSION_SECRET,
         cookie: {
             maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
         }
@@ -270,15 +272,48 @@ var io = require('socket.io').listen(server);
 server.listen(app.get('port'), function () {
     console.log("Express server listening on port " + app.get('port'));
 });
-var SessionSockets = require('session.socket.io')
-, sessionSockets = new SessionSockets(io, sessionStore, cookieParser);
 
-sessionSockets.on('connection', function (err, socket, session) {
-    console.log('connect');
+io.set('authorization', function(handshakeData, callback) {
+    var cookie = handshakeData.headers.cookie;
+    if (!cookie) {
+        return callback(new Error('Cannot find cookie'), false);
+    }
+    cookie = require('cookie').parse(decodeURIComponent(cookie));
+    cookie = connect.utils.parseSignedCookies(cookie, SESSION_SECRET);
+    var sessionId = cookie['connect.sid'];
+    if (!sessionId) {
+        return callback(new Error('Cannot obtain sessionId'));
+    }
+    sessionStore.get(sessionId, function(err, session) {
+        if (err) {
+            callback('Cannot get session: ' + err.message, false);
+        } else if (!session) {
+            console.log('session not found');
+            callback('session not found', false);
+        } else {
+            console.log('Session found! ID:' + sessionId);
+            handshakeData.cookie = cookie;
+            handshakeData.sessionId = sessionId;
+            handshakeData.session = new Session(handshakeData, session);
+            callback(null, true);
+        }
+    });
+});
+
+//var SessionSockets = require('session.socket.io')
+//, sessionSockets = new SessionSockets(io, sessionStore, cookieParser);
+
+//sessionSockets.on('connection', function (err, socket, session) {
+io.sockets.on('connection', function(socket) {
+    console.log('connected');
+    var session = socket.handshake.session;
     // セッションがない場合は、どうする？接続切りたいが
     if (!session) {
-        //socket.
+        console.log('Session not found. Disconnect:' + socket.id);
+        socket.disconnect(true);
+        return;
     }
+    console.log('Session found. Keep connection.');
     var user = session.user;
     var oauthToken = user.oauthTokens.twitter;
 

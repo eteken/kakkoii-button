@@ -18,7 +18,8 @@
         "session.socket.io": "*",
         "underscore": "*",
         "connect-mongo": "*",
-        "async": "*"
+        "async": "*",
+        "cookie": "*"
     },
     "engines": {
         "node": "0.8.x"
