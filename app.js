@@ -46,10 +46,9 @@ passport.use(new TwitterStrategy({
 }, function (token, tokenSecret, profile, done) {
     // console.log(JSON.stringify(profile));
     var now = Date.now();
-    models.User.findOne({ number: profile.id }, function(err, original) {
+    return models.User.findOne({ number: profile.id }, function(err, original) {
         if (err) {
-            done(err);
-            return;
+            return done(err);
         }
         var user = original;
         if (!original) {
@@ -71,11 +70,7 @@ passport.use(new TwitterStrategy({
                 tokenSecret: tokenSecret
             }
         };
-        done(err, user);
-        user.save(function(err, result) {
-            done(err, result);
-
-        });
+        user.save(done);
     });
 }));
 
@@ -196,8 +191,8 @@ app.get('/auth/twitter',
 //   login page.  Otherwise, the primary route function function will be called,
 //   which, in this example, will redirect the user to the home page.
 app.get('/auth/twitter/callback',
-        passport.authenticate('twitter', { failureRedirect: '/login' }),
-        function (req, res) {
+        passport.authenticate('twitter', { failureRedirect: '/auth/failed' }),
+        function(req, res) {
             req.session.user = req.user;
             // セッション内のuserオブジェクトには、OAuthのトークン情報が含まれてしまっているので除去する
             var clone = _.clone(req.user);
@@ -207,7 +202,10 @@ app.get('/auth/twitter/callback',
             res.end('<script>opener.__lt_oauth_succeeded__=true;' +
                     'opener.__lt_logged_in_user__=' + userStr + ';' +
                     'window.close();</script>');
-            //        res.redirect('/');
+        });
+app.get('/auth/failed',
+        function(req, res) {
+            res.end('<script>opener.__lt_oauth_succeeded__=false;window.close();</script>');
         });
 
 app.get('/logout', function (req, res) {
