@@ -111,7 +111,7 @@ app.configure(function () {
         next();
     });
     app.use(app.router);
-    app.use(require('less-middleware')({ src: __dirname + '/public' }));
+//    app.use(require('less-middleware')({ src: __dirname + '/public' }));
     app.use(express.static(__dirname + '/public'));
 });
 
@@ -211,7 +211,7 @@ app.get('/auth/twitter/callback',
 app.get('/logout', function (req, res) {
     req.session.destroy();
     req.logout();
-    res.end('ログアウトしました。');
+    res.end('<!DOCTYPE html><meta charset="UTF-8"><title>ログアウトに成功しました</title><h1>ログアウトに成功しました。</h1>');
 });
 
 app.get('/*.html', function(req, res) {
