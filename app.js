@@ -314,9 +314,9 @@ io.set('authorization', function(handshakeData, callback) {
             callback('session not found', false);
         } else {
             console.log('Session found! ID:' + sessionId);
-            handshakeData.cookie = cookie;
-            handshakeData.sessionId = sessionId;
-            handshakeData.session = new Session(handshakeData, session);
+//            handshakeData.cookie = cookie;
+//            handshakeData.sessionId = sessionId;
+            handshakeData.session = session;
             callback(null, true);
         }
     });
