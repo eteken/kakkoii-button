@@ -587,19 +587,34 @@ function postToTwitter(user, oauthToken, message) {
             return console.log('Cannot find event. ID:' + message.eventId);
         }
         var footer = [];
+        var footerLen = 0;
         if (event.hashtag) {
-            footer.push('#' + event.hashtag);
+            var hashtag = '#' + event.hashtag;
+            footer.push(hashtag);
+            footerLen += hashtag.length;
+            footerLen += 1; // space
         }
         if (event.shortLink) {
-            footer.push(event.shortLink);
+            var shortLink = event.shortLink;
+            footer.push(shortLink);
+            var twitterShortUrlLength;
+            if (shortLink.indexOf('https') === 0) {
+                twitterShortUrlLength = 23; // Twitterの短縮URLはHTTP:22文字、HTTPS:23文字
+            } else {
+                twitterShortUrlLength = 22;
+            }
+            footerLen += (shortLink.length < twitterShortUrlLength ? twitterShortUrlLength : shortLink.length);
+            footerLen += 1; // space
         }
         footer = footer.join(' ');
-        var maxMessageLen = 140 - footer.length - 1; // 1 is space
+        var maxMessageLen = 140 - footerLen;
         var messageText = message.text;
         if (messageText.length > maxMessageLen) {
             messageText = messageText.substring(0, maxMessageLen - 1) + '…';
         }
         messageText += ' ' + footer;
+        console.log('maxMessageLen:' + maxMessageLen);
+        console.log(messageText);
         var oauth = new OAuth(
             null, // requestUrl,
             null, // accessUrl
