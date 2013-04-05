@@ -303,21 +303,22 @@ io.set('authorization', function(handshakeData, callback) {
     }
     cookie = require('cookie').parse(decodeURIComponent(cookie));
     cookie = connect.utils.parseSignedCookies(cookie, SESSION_SECRET);
-    var sessionId = cookie['connect.sid'];
-    if (!sessionId) {
-        return callback(new Error('Cannot obtain sessionId'));
+    var sessionID = cookie['connect.sid'];
+    if (!sessionID) {
+        return callback(new Error('Cannot obtain sessionID'));
     }
-    sessionStore.get(sessionId, function(err, session) {
+    sessionStore.get(sessionID, function(err, session) {
         if (err) {
             callback('Cannot get session: ' + err.message, false);
         } else if (!session) {
             console.log('session not found');
             callback('session not found', false);
         } else {
-            console.log('Session found! ID:' + sessionId);
-//            handshakeData.cookie = cookie;
-//            handshakeData.sessionId = sessionId;
-            handshakeData.session = session;
+            console.log('Session found! ID:' + sessionID);
+            handshakeData.cookie = cookie;
+            handshakeData.sessionID = sessionID;
+            handshakeData.sessionStore = sessionStore;
+            handshakeData.session = new Session(handshakeData, session);
             callback(null, true);
         }
     });
