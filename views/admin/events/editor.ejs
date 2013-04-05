@@ -40,6 +40,15 @@
     <label for="link">リンク</label>
     <input id="link" name="link" type="url" value="<%= event.link || '' %>">
   </div>
+  <div class="field">
+    <label for="shortLink">リンク(短縮URL)</label>
+    <% if (event.shortLink) { %>
+      <output id="shortLink">
+        <a target="_blank" href="<%= event.shortLink %>"><%= event.shortLink %></a>
+      </output>
+    <% } %>
+    
+  </div>
   <button>送信</button>
   <a href="/admin/events/">一覧にもどる</a>
 </form>

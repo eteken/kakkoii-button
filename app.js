@@ -3,6 +3,7 @@ var express = require('express')
 , Session = express.session.Session
 , connect = require('connect')
 , http = require('http')
+, https = require('https')
 , OAuth = require('oauth').OAuth
 , passport = require('passport')
 , config = require('./config')
@@ -33,6 +34,31 @@ var URL = 'http://localhost:3000';
 })();
 
 console.log('URL: ' + URL);
+
+var shortenUrl = (function() {
+    var apiUrl = 'https://api-ssl.bitly.com/v3/shorten';
+    var accessToken = encodeURIComponent(config.bitly.accessToken);
+    
+    return function(url, done) {
+        url = encodeURIComponent(url);
+        var accessUrl = [apiUrl, '?access_token=', accessToken, '&longUrl=', url].join('');
+        https.get(accessUrl, function(res) {
+            if (res.statusCode !== 200) {
+                return done(new Error('Error status code:' + res.statusCode));
+            }
+            res.setEncoding('utf-8');
+            res.on('data', function(body) {
+                var result = JSON.parse(body);
+                if (result.status_code !== 200) {
+                    return done(new Error('Error status code:' + result.status_code));
+                }
+                done(null, result.data.url);
+            });
+        }).on('error', function(e) {
+            done(e);
+        });
+    };
+})();
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -293,18 +319,8 @@ app.get('/admin/events/edit', function(req, res) {
 
 app.post('/admin/events/:id', function(req, res) {
     var eventId = req.param('id');
-    saveEvent(req.body, eventId,  function(err, event) {
-        if (err) {
-            return res.send(500, err);
-        }
-        addUserMessage(res, 'info', 'イベントの更新に成功しました');
-        res.render('admin/events/editor', {
-            event: event
-        });
-    });
-});
-app.put('/admin/events', function(req, res) {
-    saveEvent(req.body, null, function(err, event) {
+    var params = req.body;
+    var done = function(err, event) {
         if (err) {
             return res.send(500, err);
         }
@@ -312,7 +328,74 @@ app.put('/admin/events', function(req, res) {
         res.render('admin/events/editor', {
             event: event
         });
-    });
+    };
+    async.waterfall([
+        function(callback) {
+            models.Event.findById(eventId, callback);
+        },
+        function(event, callback) {
+            var linkUpdated = params.link && params.link !== event.link;
+            _.extend(event, params);
+            if (linkUpdated) {
+                async.waterfall([
+                    function(callback) {
+                        shortenUrl(params.link, callback);
+                    },
+                    function(shortUrl, callback) {
+                        event.shortLink = shortUrl;
+                        event.save(callback);
+                    }
+                ], function(err, results) {
+                    if (err) {
+                        callback(err);
+                    } else {
+                        if (results instanceof Array) {
+                            callback(null, results[0]);
+                        } else {
+                            callback(null, results);
+                        }
+                    }
+                });
+            } else {
+                event.save(callback);
+            }
+        }
+    ], done);
+});
+app.put('/admin/events', function(req, res) {
+    var done = function(err, event) {
+        if (err) {
+            return res.send(500, err);
+        }
+        addUserMessage(res, 'info', 'イベントの作成に成功しました');
+        res.render('admin/events/editor', {
+            event: event
+        });
+    };
+    var params = req.body;
+    if (params.link) {
+        async.waterfall([
+            function(callback) {
+                shortenUrl(params.link, callback);
+            },
+            function(shortUrl, callback) {
+                params.shortLink = shortUrl;
+                models.Event.create(params, done);
+            }
+        ], function(err, results) {
+            if (err) {
+                done(err);
+            } else {
+                if (results instanceof Array) {
+                    callback(null, results[0]);
+                } else {
+                    callback(null, results);
+                }
+            }
+        });
+    } else {
+        models.Event.create(params, done);
+    }
 });
 app.delete('/admin/events/:id', function(req, res) {
     var eventId = req.param('id');
@@ -324,15 +407,6 @@ app.delete('/admin/events/:id', function(req, res) {
         res.redirect('/admin/events');
     });
 });
-
-function saveEvent(params, id, done) {
-    var now = new Date();
-    if (id) {
-        models.Event.findOneAndUpdate({_id: id}, params, done);
-    } else {
-        models.Event.create(params, done);
-    }    
-}
 
 function addUserMessage(res, type, msg) {
     var messages = res.locals.messages;
