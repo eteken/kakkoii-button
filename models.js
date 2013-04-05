@@ -110,10 +110,16 @@ Sequence.static('next', function(name, callback) {
     })();
 });
 
+var Setting = new mongoose.Schema({
+    value: { type: mongoose.Schema.Types.Mixed, required: true },
+    updated: { type: Date, 'default': Date.now }
+});
+
 module.exports = models = {
     Zap: db.model('Zap', Zap),
     Message: db.model('Message', Message),
     Event: db.model('Event', Event),
     User: db.model('User', User),
     Sequence: db.model('Sequence', Sequence),
+    Setting: db.model('Setting', Setting)
 };

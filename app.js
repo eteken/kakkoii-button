@@ -35,6 +35,21 @@ var URL = 'http://localhost:3000';
 
 console.log('URL: ' + URL);
 
+// DBから設定を定期的に読みだす
+var appSettings = {};
+setInterval(function() {
+    models.Setting.find({}, function(err, results) {
+        if (err) {
+            return console.error(err);
+        }
+        if (results.length === 0) {
+            appSettings = {};
+        } else {
+            appSettings = results[0].value;
+        }
+    });
+}, 5000);
+
 var shortenUrl = (function() {
     var apiUrl = 'https://api-ssl.bitly.com/v3/shorten';
     var accessToken = encodeURIComponent(config.bitly.accessToken);
@@ -152,6 +167,7 @@ app.configure(function () {
     app.use(function(req, res, next){
         res.locals.user = req.session.user || null;
         res.locals.messages = {};
+        res.locals.appSettings = appSettings
         next();
     });
     app.use(partials());
@@ -287,6 +303,38 @@ app.get('/events/latest', function(req, res) {
 });
 app.all('/admin/*', express.basicAuth('admin', 'kakkoii.tv.0'));
 
+app.get(/^\/admin\/$/, function(req, res) {
+    res.redirect('/admin/index.html');
+});
+
+app.get('/admin/settings', function(req, res) {
+    return res.render('admin/settings/index');
+});
+app.post('/admin/settings', function(req, res) {
+    var done = function(err, result) {
+        if (err) {
+            return res.send(500, err);
+        }
+        appSettings = result.value;
+        res.locals.appSettings = appSettings;
+        addUserMessage(res, 'info', '設定を保存しました');
+        return res.render('admin/settings/index');
+    };
+    models.Setting.findOne({}, function(err, result) {
+        if (err) {
+            return res.send(500, err);
+        }
+        if (!result) {
+            models.Setting.create({
+                value: req.body
+            }, done);
+        } else {
+            result.value = req.body;
+            result.updated = new Date();
+            result.save(done);
+        }
+    });
+});
 app.get('/admin/events', function(req, res) {
     models.Event.find().sort('-start').exec(function(err, events) {
         if (err) {
@@ -519,7 +567,7 @@ io.sockets.on('connection', function(socket) {
                 throw err;
             }
             io.sockets.json.emit('message', message);
-//            postToTwitter(user, oauthToken, message.text);
+            postToTwitter(user, oauthToken, message);
         });
     });
     socket.on('disconnect', function () {
@@ -528,29 +576,55 @@ io.sockets.on('connection', function(socket) {
 });
 
 function postToTwitter(user, oauthToken, message) {
-    var oauth = new OAuth(
-        null, // requestUrl,
-        null, // accessUrl
-        TWITTER_CONSUMER_KEY, // consumerKey,
-        TWITTER_CONSUMER_SECRET, // consumerSecret
-        '1.0', // version
-        null, // authorize_callback
-        'HMAC-SHA1', // signatureMethod
-        null, // nonceSize
-        null // customHeaders
-    );
-    oauth.post(
-        'https://api.twitter.com/1.1/statuses/update.json', // url,
-        oauthToken.token, // oauth_token,
-        oauthToken.tokenSecret, // oauth_token_secret,
-        {status: message}, // post_body,
-        null, // post_content_type,
-        function(error, data, response) { //callback
-            if (error)
-                console.log('status:' + error.statusCode);
-            console.log('data:' + data);
+    if (!appSettings.tweetWithMessage) {
+        return;
+    }
+    models.Event.findById(message.eventId, function(err, event) {
+        if (err) {
+            return console.error(err);
         }
-    );
+        if (!event) {
+            return console.log('Cannot find event. ID:' + message.eventId);
+        }
+        var footer = [];
+        if (event.hashtag) {
+            footer.push('#' + event.hashtag);
+        }
+        if (event.shortLink) {
+            footer.push(event.shortLink);
+        }
+        footer = footer.join(' ');
+        var maxMessageLen = 140 - footer.length - 1; // 1 is space
+        var messageText = message.text;
+        if (messageText.length > maxMessageLen) {
+            messageText = messageText.substring(0, maxMessageLen - 1) + '…';
+        }
+        messageText += ' ' + footer;
+        var oauth = new OAuth(
+            null, // requestUrl,
+            null, // accessUrl
+            TWITTER_CONSUMER_KEY, // consumerKey,
+            TWITTER_CONSUMER_SECRET, // consumerSecret
+            '1.0', // version
+            null, // authorize_callback
+            'HMAC-SHA1', // signatureMethod
+            null, // nonceSize
+            null // customHeaders
+        );
+        oauth.post(
+            'https://api.twitter.com/1.1/statuses/update.json', // url,
+            oauthToken.token, // oauth_token,
+            oauthToken.tokenSecret, // oauth_token_secret,
+            {status: messageText}, // post_body,
+            null, // post_content_type,
+            function(error, data, response) { //callback
+                if (error)
+                    console.log('status:' + error.statusCode);
+                console.log('data:' + data);
+            }
+        );
+        
+    });
 }
 
 // Simple route middleware to ensure user is authenticated.
