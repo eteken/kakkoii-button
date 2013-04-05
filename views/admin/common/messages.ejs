@@ -1,0 +1,18 @@
+<% if (messages) { %>
+  <div class="messages">
+    <% if (messages.info) { %>
+      <ul class="info">
+        <% messages.info.forEach(function(message) { %>
+          <li><%= message %></li>
+        <% }); %>
+      </ul>
+    <% } %>
+    <% if (messages.error) { %>
+      <ul class="error">
+        <% messages.error.forEach(function(message) { %>
+          <li><%= message %></li>
+        <% }); %>
+      </ul>
+    <% } %>
+  </div>
+<% } %>

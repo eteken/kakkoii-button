@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<meta charset="UTF-8">
+<title>イベント一覧</title>
+<link rel=stylesheet href="/css/admin/common.css">
+
+<h1>イベント一覧</h1>
+
+<table class="list">
+  <tr>
+    <th>
+      ID
+    </th>
+    <th>
+      タイトル
+    </th>
+    <th>
+      開始日時
+    </th>
+    <th>
+      終了日時
+    </th>
+    <th>
+      ハッシュタグ
+    </th>
+    <th>
+      リンク
+    </th>
+  </tr>
+  <% events.forEach(function(event) { %>
+    <tr>
+      <td>
+        <a target="zapper" href="/?eventId=<%= event.id %>"><%= event.id %></a>
+      </td>
+      <td>
+        <a href="/admin/events/edit?id=<%= event.id %>"><%= event.title || '' %></a>
+      </td>
+      <td>
+        <%= fmtDate(event.start) %>
+      </td>
+      <td>
+        <%= fmtDate(event.end) %>
+      </td>
+      <td>
+        <%= event.hashtag || '' %>
+      </td>
+      <td>
+        <% if (event.link) { %>
+          <a target="_blank" href="<%= event.link %>"><%= event.link %></a>
+        <% } %>
+      </td>
+    </tr>
+  <% }); %>
+</table>

@@ -1,3 +1,0 @@
-exports.initialize = function(app) {
-
-};

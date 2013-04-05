@@ -50,6 +50,8 @@ var Event = new mongoose.Schema({
     title: { type: String, required: true },
     start: { type: Date, required: true },
     end: { type: Date, required: true },
+    hashtag: { type: String },
+    link: { type: String },
     created: { type: Date, 'default': Date.now },
     updated: { type: Date, 'default': Date.now },
 }, {

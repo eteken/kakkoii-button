@@ -1,4 +1,5 @@
 var express = require('express')
+, partials = require('express-partials')
 , Session = express.session.Session
 , connect = require('connect')
 , http = require('http')
@@ -7,7 +8,6 @@ var express = require('express')
 , config = require('./config')
 , models = require('./models')
 , mongoose = require('mongoose')
-, routes = require('./routes')
 , util = require('util')
 , async = require('async')
 , _ = require('underscore')._
@@ -97,6 +97,10 @@ var cookieParser = express.cookieParser('kakkoii.tv')
 });
 var SESSION_SECRET = 'kakkoii.tv';
 
+app.locals.fmtDate = function(date) {
+    return date ? date.toISOString() : '';
+};
+
 // configure Express
 app.configure(function () {
     app.set('port', process.env.PORT || 3000);
@@ -121,11 +125,12 @@ app.configure(function () {
     app.use(passport.session());
     app.use(function(req, res, next){
         res.locals.user = req.session.user || null;
+        res.locals.messages = {};
         next();
     });
+    app.use(partials());
     app.use(app.router);
 //    app.use(require('less-middleware')({ src: __dirname + '/public' }));
-    app.use(express.static(__dirname + '/public'));
 });
 
 app.configure('development', function () {
@@ -254,27 +259,92 @@ app.get('/events/latest', function(req, res) {
             res.json(doc);
         });
 });
+app.all('/admin/*', express.basicAuth('admin', 'kakkoii.tv.0'));
 
-app.post('/events', function(req, res) {
-    var now = new Date();
-    var event = new models.Event();
-    var reqBody = req.body;
-    event.title = reqBody.title;
-    event.start = new Date(reqBody.start);
-    event.end = new Date(reqBody.end);
-    event.created = now;
-    event.updated = now;
-    event.save(function(err, result) {
+app.get('/admin/events', function(req, res) {
+    models.Event.find().sort('-start').exec(function(err, events) {
         if (err) {
-            res.status(500);
-            return;
+            return res.send(500, err);
         }
-        res.render('events/create', {
-            messages: ['作成に成功しました'],
+        return res.render('admin/events/index', {
+            events: events
+        });
+    });
+});
+app.get('/admin/events/create', function(req, res) {
+    return res.render('admin/events/editor', {
+        event: {}
+    });
+});
+app.get('/admin/events/edit', function(req, res) {
+    var eventId = req.param('id');
+    models.Event.findById(eventId).exec(function(err, event) {
+        if (err) {
+            return res.send(500, err);
+        }
+        if (!event) {
+            return res.send(404);
+        }
+        return res.render('admin/events/editor', {
             event: event
         });
     });
 });
+
+app.post('/admin/events/:id', function(req, res) {
+    var eventId = req.param('id');
+    saveEvent(req.body, eventId,  function(err, event) {
+        if (err) {
+            return res.send(500, err);
+        }
+        addUserMessage(res, 'info', 'イベントの更新に成功しました');
+        res.render('admin/events/editor', {
+            event: event
+        });
+    });
+});
+app.put('/admin/events', function(req, res) {
+    saveEvent(req.body, null, function(err, event) {
+        if (err) {
+            return res.send(500, err);
+        }
+        addUserMessage(res, 'info', 'イベントの作成に成功しました');
+        res.render('admin/events/editor', {
+            event: event
+        });
+    });
+});
+app.delete('/admin/events/:id', function(req, res) {
+    var eventId = req.param('id');
+    models.Event.findByIdAndRemove(eventId, function(err) {
+        if (err) {
+            return res.send(500, err);
+        }
+        addUserMessage(res, 'info', 'イベントの削除に成功しました');
+        res.redirect('/admin/events');
+    });
+});
+
+function saveEvent(params, id, done) {
+    var now = new Date();
+    if (id) {
+        models.Event.findOneAndUpdate({_id: id}, params, done);
+    } else {
+        models.Event.create(params, done);
+    }    
+}
+
+function addUserMessage(res, type, msg) {
+    var messages = res.locals.messages;
+    if (!messages) {
+        res.local.messages = messages = {};
+    }
+    var arr = messages[type];
+    if (!arr) {
+        messages[type] = arr = [];
+    }
+    arr.push(msg);
+}
 
 app.get('/events/:id/messages', function(req, res) {
     models.Message.find(
@@ -324,10 +394,6 @@ io.set('authorization', function(handshakeData, callback) {
     });
 });
 
-//var SessionSockets = require('session.socket.io')
-//, sessionSockets = new SessionSockets(io, sessionStore, cookieParser);
-
-//sessionSockets.on('connection', function (err, socket, session) {
 io.sockets.on('connection', function(socket) {
     console.log('connected');
     var session = socket.handshake.session;
@@ -361,8 +427,6 @@ io.sockets.on('connection', function(socket) {
                 throw err;
             }
             io.sockets.json.emit('zap', zap);
-//            socket.broadcast.emit('zap', zap);
-//            socket.emit('zap', zap);
         });
     });
     socket.on('message', function(msg) {
@@ -380,10 +444,7 @@ io.sockets.on('connection', function(socket) {
             if (err) {
                 throw err;
             }
-//            socket.broadcast.emit('message', message);
             io.sockets.json.emit('message', message);
-//            socket.emit('message', message);
-
 //            postToTwitter(user, oauthToken, message.text);
         });
     });

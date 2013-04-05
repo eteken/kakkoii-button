@@ -1,0 +1,49 @@
+<%
+   var isNew = !event._id;
+   var title = 'イベントを' + (isNew ? '新規作成' : '編集');
+   var formAction = '/admin/events' + (isNew ? '' : '/' + event._id);
+%>
+
+<!DOCTYPE html>
+
+<meta charset="UTF-8">
+<title><%= title %></title>
+<link rel="stylesheet" href="/css/admin/common.css">
+
+<h1><%= title %></h1>
+<%- partial('admin/common/messages') %>
+<form action="<%= formAction %>" method="POST">
+  <% if (isNew) { %>
+  <input type="hidden" name="_method" value="put">
+  <% } %>
+  <div class="field">
+    <label for="id">ID</label>
+    <output id="id"><%= event._id || '' %></output>
+  </div>
+  <div class="field">
+    <label for="title">タイトル</label>
+    <input id="title" name="title" value="<%= event.title || '' %>">
+  </div>
+  <div class="field">
+    <label for="start">開始日時</label>
+    <input id="start" name="start" type="datetime" value="<%= fmtDate(event.start) %>">
+  </div>
+  <div class="field">
+    <label for="end">終了日時</label>
+    <input id="end" name="end" type="datetime" value="<%= fmtDate(event.end) %>">
+  </div>
+  <div class="field">
+    <label for="hashtag">ハッシュタグ</label>
+    #<input id="hashtag" name="hashtag" type="text" value="<%= event.hashtag || '' %>">
+  </div>
+  <div class="field">
+    <label for="link">リンク</label>
+    <input id="link" name="link" type="url" value="<%= event.link || '' %>">
+  </div>
+  <button>送信</button>
+  <a href="/admin/events/">一覧にもどる</a>
+</form>
+<form action="/admin/events/<%= event._id %>" method="post">
+  <input type="hidden" name="_method" value="delete">
+  <button>削除</button>
+</form>
