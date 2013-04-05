@@ -219,6 +219,7 @@ app.get('/auth/twitter/callback',
         passport.authenticate('twitter', { failureRedirect: '/auth/failed' }),
         function(req, res) {
             req.session.user = req.user;
+            console.log('User object is persisted to session:' + JSON.stringify(req.session.user));
             // セッション内のuserオブジェクトには、OAuthのトークン情報が含まれてしまっているので除去する
             var clone = _.clone(req.session.user);
             delete clone.oauthToken;
@@ -337,6 +338,11 @@ io.sockets.on('connection', function(socket) {
     }
     console.log('Session found. Keep connection.');
     var user = session.user;
+    if (!user) {
+        console.log('User not found in session. Session ID: ' + session.id);
+        socket.disconnect(true);
+        return;
+    }
     var oauthToken = user.oauthTokens.twitter;
 
     socket.on('zap', function (z) {
