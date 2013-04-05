@@ -120,6 +120,7 @@
                 if (window.__lt_oauth_succeeded__) {
                     self._prepareAuthInfo();
                     callback(null, self.user);
+//                    self.init(options, callback);
                 } else {
                     callback(new Error('auth error'));
                 }

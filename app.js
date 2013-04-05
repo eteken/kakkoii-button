@@ -19,6 +19,21 @@ var express = require('express')
 var ZAP_INITIAL_LOAD_MINUTES = 5;
 var MESSAGES_PAGE_COUNT = 100;
 
+var URL = 'http://localhost:3000';
+(function() {
+    var args = process.argv;
+    if (args.length > 2) {
+        for (var i = 0; i < args.length; i++) {
+            if (args[i].match(/^\-\-url\=(.+)$/)) {
+                URL = RegExp.$1;
+                break;
+            }
+        }
+    }
+})();
+
+console.log('URL: ' + URL);
+
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
 //   serialize users into and deserialize users out of the session.  Typically,
@@ -42,7 +57,7 @@ passport.deserializeUser(function (id, done) {
 passport.use(new TwitterStrategy({
     consumerKey: TWITTER_CONSUMER_KEY,
     consumerSecret: TWITTER_CONSUMER_SECRET,
-    callbackURL: "http://localhost:3000/auth/twitter/callback"
+    callbackURL: URL + "/auth/twitter/callback"
 }, function (token, tokenSecret, profile, done) {
     // console.log(JSON.stringify(profile));
     var now = Date.now();
@@ -88,6 +103,7 @@ app.configure(function () {
     app.set('views', __dirname + '/views');
     app.set('view engine', 'ejs');
     app.use(express.favicon());
+    app.use(express.static(__dirname + '/public'));
     app.use(express.logger('dev'));
     app.use(express.bodyParser());
     app.use(express.methodOverride());
@@ -119,11 +135,20 @@ app.configure('development', function () {
 app.get('/', function (req, res) {
     var eventId = req.param('eventId');
     console.log('eventId:' + eventId);
+    if (!eventId) {
+        //TODO
+        res.send(404);
+        return;
+    }
     async.waterfall([
         function(callback) {
             models.Event.findById(eventId).exec(callback);
         },
         function(event, callback) {
+            if (!event) {
+                res.send(404);
+                return;
+            }
             async.parallel([
                 // zapの取得（最新のN分ぶんのみ）
                 function(callback) {
@@ -165,13 +190,13 @@ app.get('/', function (req, res) {
     ]);
 });
 /*
-app.get('/account', ensureAuthenticated, function (req, res) {
-    res.render('account', { user: req.user });
-});
+  app.get('/account', ensureAuthenticated, function (req, res) {
+  res.render('account', { user: req.user });
+  });
 
-app.get('/login', function (req, res) {
-    res.render('login', { user: req.user });
-});
+  app.get('/login', function (req, res) {
+  res.render('login', { user: req.user });
+  });
 */
 // GET /auth/twitter
 //   Use passport.authenticate() as route middleware to authenticate the
@@ -195,10 +220,9 @@ app.get('/auth/twitter/callback',
         function(req, res) {
             req.session.user = req.user;
             // セッション内のuserオブジェクトには、OAuthのトークン情報が含まれてしまっているので除去する
-            var clone = _.clone(req.user);
+            var clone = _.clone(req.session.user);
             delete clone.oauthToken;
             var userStr = JSON.stringify(clone);
-            
             res.end('<script>opener.__lt_oauth_succeeded__=true;' +
                     'opener.__lt_logged_in_user__=' + userStr + ';' +
                     'window.close();</script>');

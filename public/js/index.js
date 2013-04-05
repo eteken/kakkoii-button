@@ -23,8 +23,7 @@ $(function() {
     function init(done) {
         zapper.init(function(err) {
             if (err) {
-                done(err);
-                return;
+                return done(err);
             }
             currentEvent = zapper.event(__lt_event__);
             $('#main-screen > h1').text(currentEvent.title);
@@ -130,8 +129,9 @@ $(function() {
                 }
             ]
         };
-        chart.Bar(data, {
-//            bezierCurve: false,
+        chart.Line(data, {
+            pointDot: false,
+            bezierCurve: true,
             scaleOverride : true,
             scaleSteps : 10,
             scaleStepWidth : 1,
