@@ -314,7 +314,7 @@ io.set('authorization', function(handshakeData, callback) {
             console.log('session not found');
             callback('session not found', false);
         } else {
-            console.log('Session found! ID:' + sessionID);
+            console.log('Session found! ' + JSON.stringify(session));
             handshakeData.cookie = cookie;
             handshakeData.sessionID = sessionID;
             handshakeData.sessionStore = sessionStore;
