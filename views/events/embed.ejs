@@ -7,6 +7,18 @@
     <link rel="stylesheet" href="/css/lib/bootstrap.min.css">
     <link rel="stylesheet" href="/css/lib/bootstrap-responsive.min.css">
 <!--    <script src="/js/lib/bootstrap.min.js"></script> -->
+    <script>
+      var __lt_event__ = <%- JSON.stringify(event) %>;
+      var __lt_messages__ = <%- JSON.stringify(messages) %>;
+      <%
+         if (user) {
+      %>
+      var __lt_oauth_succeeded__ = true;
+      var __lt_logged_in_user__ = <%- JSON.stringify(user) %>;
+      <%
+         }
+      %>
+    </script>
   </head>
   <body>
     <div class="container-fluid">
@@ -15,220 +27,27 @@
           <iframe id="ustream-player" src="http://www.ustream.tv/embed/13891999" scrolling="no" frameborder="0" style="border: 0px none transparent;"></iframe>
         </div>
         <div class="span4 messages">
-          <article class="message">
-            <header>
-              <div class="author-icon-column">
-                <img src="https://si0.twimg.com/profile_images/1825924611/___12-02-11_9.18___7_bigger.jpg" class="author-icon">
-              </div>
-              <div class="author">
-                <div class="author-inner">
-                  <h1 class="author-displayName">白石 俊平</h1>
-                  <span class="author-name">
-                    <a href="">@Shumpei</a>
-                  </span>
+          <script id="message-template" type="text/x-template">
+            <article class="message">
+              <header>
+                <div class="author-icon-column">
+                  <img src="{{= author.photo }}" class="author-icon">
                 </div>
-              </div>
-              <div class="timestamp">1時間前</div>
-            </header>
-            <div class="text">
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-            </div>
-          </article>
-
-
-          <article class="message">
-            <header>
-              <div class="author-icon-column">
-                <img src="https://si0.twimg.com/profile_images/1825924611/___12-02-11_9.18___7_bigger.jpg" class="author-icon">
-              </div>
-              <div class="author">
-                <div class="author-inner">
-                  <h1 class="author-displayName">白石 俊平</h1>
-                  <span class="author-name">
-                    <a href="">@Shumpei</a>
-                  </span>
+                <div class="author">
+                  <div class="author-inner">
+                    <h1 class="author-displayName">{{= author.displayName }}</h1>
+                    <span class="author-name">
+                      <a href="http://twitter.com/{{= author.name }}">@{{= author.name }}</a>
+                    </span>
+                  </div>
                 </div>
+                <div class="timestamp">{{= timestamp }}</div>
+              </header>
+              <div class="text">
+                {{= text }}
               </div>
-              <div class="timestamp">1時間前</div>
-            </header>
-            <div class="text">
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-            </div>
-          </article>
-          <article class="message">
-            <header>
-              <div class="author-icon-column">
-                <img src="https://si0.twimg.com/profile_images/1825924611/___12-02-11_9.18___7_bigger.jpg" class="author-icon">
-              </div>
-              <div class="author">
-                <div class="author-inner">
-                  <h1 class="author-displayName">白石 俊平</h1>
-                  <span class="author-name">
-                    <a href="">@Shumpei</a>
-                  </span>
-                </div>
-              </div>
-              <div class="timestamp">1時間前</div>
-            </header>
-            <div class="text">
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-            </div>
-          </article>
-          <article class="message">
-            <header>
-              <div class="author-icon-column">
-                <img src="https://si0.twimg.com/profile_images/1825924611/___12-02-11_9.18___7_bigger.jpg" class="author-icon">
-              </div>
-              <div class="author">
-                <div class="author-inner">
-                  <h1 class="author-displayName">白石 俊平</h1>
-                  <span class="author-name">
-                    <a href="">@Shumpei</a>
-                  </span>
-                </div>
-              </div>
-              <div class="timestamp">1時間前</div>
-            </header>
-            <div class="text">
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-            </div>
-          </article>
-          <article class="message">
-            <header>
-              <div class="author-icon-column">
-                <img src="https://si0.twimg.com/profile_images/1825924611/___12-02-11_9.18___7_bigger.jpg" class="author-icon">
-              </div>
-              <div class="author">
-                <div class="author-inner">
-                  <h1 class="author-displayName">白石 俊平</h1>
-                  <span class="author-name">
-                    <a href="">@Shumpei</a>
-                  </span>
-                </div>
-              </div>
-              <div class="timestamp">1時間前</div>
-            </header>
-            <div class="text">
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-            </div>
-          </article>
-          <article class="message">
-            <header>
-              <div class="author-icon-column">
-                <img src="https://si0.twimg.com/profile_images/1825924611/___12-02-11_9.18___7_bigger.jpg" class="author-icon">
-              </div>
-              <div class="author">
-                <div class="author-inner">
-                  <h1 class="author-displayName">白石 俊平</h1>
-                  <span class="author-name">
-                    <a href="">@Shumpei</a>
-                  </span>
-                </div>
-              </div>
-              <div class="timestamp">1時間前</div>
-            </header>
-            <div class="text">
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-            </div>
-          </article>
-          <article class="message">
-            <header>
-              <div class="author-icon-column">
-                <img src="https://si0.twimg.com/profile_images/1825924611/___12-02-11_9.18___7_bigger.jpg" class="author-icon">
-              </div>
-              <div class="author">
-                <div class="author-inner">
-                  <h1 class="author-displayName">白石 俊平</h1>
-                  <span class="author-name">
-                    <a href="">@Shumpei</a>
-                  </span>
-                </div>
-              </div>
-              <div class="timestamp">1時間前</div>
-            </header>
-            <div class="text">
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-            </div>
-          </article>
-          <article class="message">
-            <header>
-              <div class="author-icon-column">
-                <img src="https://si0.twimg.com/profile_images/1825924611/___12-02-11_9.18___7_bigger.jpg" class="author-icon">
-              </div>
-              <div class="author">
-                <div class="author-inner">
-                  <h1 class="author-displayName">白石 俊平</h1>
-                  <span class="author-name">
-                    <a href="">@Shumpei</a>
-                  </span>
-                </div>
-              </div>
-              <div class="timestamp">1時間前</div>
-            </header>
-            <div class="text">
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-            </div>
-          </article>
-          <article class="message">
-            <header>
-              <div class="author-icon-column">
-                <img src="https://si0.twimg.com/profile_images/1825924611/___12-02-11_9.18___7_bigger.jpg" class="author-icon">
-              </div>
-              <div class="author">
-                <div class="author-inner">
-                  <h1 class="author-displayName">白石 俊平</h1>
-                  <span class="author-name">
-                    <a href="">@Shumpei</a>
-                  </span>
-                </div>
-              </div>
-              <div class="timestamp">1時間前</div>
-            </header>
-            <div class="text">
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-            </div>
-          </article>
-          <article class="message">
-            <header>
-              <div class="author-icon-column">
-                <img src="https://si0.twimg.com/profile_images/1825924611/___12-02-11_9.18___7_bigger.jpg" class="author-icon">
-              </div>
-              <div class="author">
-                <div class="author-inner">
-                  <h1 class="author-displayName">白石 俊平</h1>
-                  <span class="author-name">
-                    <a href="">@Shumpei</a>
-                  </span>
-                </div>
-              </div>
-              <div class="timestamp">1時間前</div>
-            </header>
-            <div class="text">
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-              あいうえおかきくけこさしすせそたちつてとなにぬねの
-            </div>
-          </article>
-
-
+            </article>
+          </script>
         </div>
       </div>
       <div class="row-fluid">
@@ -240,11 +59,20 @@
           <textarea id="message"></textarea>
           <button id="post-message-button">つぶやく</button>
           <button id="zap-button">(いいね!)</button>
-          <p class="notice">
-            これらのボタンを使用するには、ツイッターアカウントが必要です。
-          </p>
         </div>
       </div>
+      <div id="login-button-container">
+        <a href="#" id="login-button"><img src="/img/sign-in-with-twitter-gray.png"></a>
+        <p class="notice">
+          これらのボタンを使用するには、ツイッターアカウントが必要です。
+        </p>
+      </div>
     </div>
+    <script src="/js/lib/jquery-1.9.1.min.js"></script>
+    <script src="/js/lib/jquery.cookie.js"></script>
+    <script src="/js/lib/lodash.mobile.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/zapper.js"></script>
+    <script src="/js/events/embed.js"></script>
   </body>
 </html>

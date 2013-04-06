@@ -102,3 +102,14 @@ $controls-width: 90%;
 #control-panel {
     text-align: center;
 }
+
+#login-button-container {
+    display: none;
+    background-color: rgba(255, 255, 255, .7);
+    position: absolute;
+    text-align: center;
+    padding-top: 50px;
+}
+#login-button {
+    vertical-align: center;
+}

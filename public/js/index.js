@@ -187,15 +187,6 @@ $(function() {
         }
         var msgList = $('.zap-messages');
         msgList.html(buf.join('') + msgList.html());
-/*
-        var listItemHtml = 
-        var listItem = $.parseHTML(listItemHtml);
-        var lastMessage = $('.zap-message-listitem:first');
-        if (lastMessage.length > 0) {
-            lastMessage.before(listItem);
-        } else {
-            $('.zap-messages').append(listItem);
-        }*/
     }
     
     if (!zapper.loggedIn) {

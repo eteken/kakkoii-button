@@ -59,62 +59,6 @@ var shortenUrl = (function() {
     };
 })();
 
-// Passport session setup.
-//   To support persistent login sessions, Passport needs to be able to
-//   serialize users into and deserialize users out of the session.  Typically,
-//   this will be as simple as storing the user ID when serializing, and finding
-//   the user by ID when deserializing.  However, since this example does not
-//   have a database of user records, the complete Twitter profile is serialized
-//   and deserialized.
-passport.serializeUser(function (user, done) {
-    done(null, user._id);
-});
-
-passport.deserializeUser(function (id, done) {
-    models.User.findById(id, done);
-});
-
-
-// Use the TwitterStrategy within Passport.
-//   Strategies in passport require a `verify` function, which accept
-//   credentials (in this case, a token, tokenSecret, and Twitter profile), and
-//   invoke a callback with a user object.
-passport.use(new TwitterStrategy({
-    consumerKey: TWITTER_CONSUMER_KEY,
-    consumerSecret: TWITTER_CONSUMER_SECRET,
-    callbackURL: URL + "/auth/twitter/callback"
-}, function (token, tokenSecret, profile, done) {
-    // console.log(JSON.stringify(profile));
-    var now = Date.now();
-    return models.User.findOne({ number: profile.id }, function(err, original) {
-        if (err) {
-            return done(err);
-        }
-        var user = original;
-        if (!original) {
-            user = new models.User();
-            user.created = now;
-        }
-        user.number = profile.id;
-        user.name = profile.username;
-        user.displayName = profile.displayName;
-        user.photos = profile.photos.map(function (entry) {
-            return entry.value;
-        });
-        user.lastLogin = now;
-        user.updated = now;
-        
-        user.oauthTokens = {
-            twitter: {
-                token: token,
-                tokenSecret: tokenSecret
-            }
-        };
-        user.save(done);
-    });
-}));
-
-
 var app = express();
 var cookieParser = express.cookieParser('kakkoii.tv')
 , sessionStore = new MongoStore({
@@ -177,27 +121,91 @@ var URL = 'http://localhost:' + app.get('port');
 })();
 console.log('URL: ' + URL);
 
+// Passport session setup.
+//   To support persistent login sessions, Passport needs to be able to
+//   serialize users into and deserialize users out of the session.  Typically,
+//   this will be as simple as storing the user ID when serializing, and finding
+//   the user by ID when deserializing.  However, since this example does not
+//   have a database of user records, the complete Twitter profile is serialized
+//   and deserialized.
+passport.serializeUser(function (user, done) {
+    done(null, user._id);
+});
+
+passport.deserializeUser(function (id, done) {
+    models.User.findById(id, done);
+});
+
+
+// Use the TwitterStrategy within Passport.
+//   Strategies in passport require a `verify` function, which accept
+//   credentials (in this case, a token, tokenSecret, and Twitter profile), and
+//   invoke a callback with a user object.
+passport.use(new TwitterStrategy({
+    consumerKey: TWITTER_CONSUMER_KEY,
+    consumerSecret: TWITTER_CONSUMER_SECRET,
+    callbackURL: URL + "/auth/twitter/callback"
+}, function (token, tokenSecret, profile, done) {
+    // console.log(JSON.stringify(profile));
+    var now = Date.now();
+    return models.User.findOne({ number: profile.id }, function(err, original) {
+        if (err) {
+            return done(err);
+        }
+        var user = original;
+        if (!original) {
+            user = new models.User();
+            user.created = now;
+        }
+        user.number = profile.id;
+        user.name = profile.username;
+        user.displayName = profile.displayName;
+        user.photos = profile.photos.map(function (entry) {
+            return entry.value;
+        });
+        user.lastLogin = now;
+        user.updated = now;
+        
+        user.oauthTokens = {
+            twitter: {
+                token: token,
+                tokenSecret: tokenSecret
+            }
+        };
+        user.save(done);
+    });
+}));
 
 
 app.get('/', function (req, res) {
     var eventId = req.param('eventId');
-    console.log('eventId:' + eventId);
     if (!eventId) {
         //TODO
         res.send(404);
         return;
     }
+    collectInitialData(eventId, function(err, result) {
+        res.render('index', {
+            event: result.event.toObject({getters: true}),
+//            zaps: result.zaps,
+            messages: result.messages,
+            user: req.user
+        });
+    });
+});
+
+function collectInitialData(eventId, done) {
     async.waterfall([
         function(callback) {
             models.Event.findById(eventId).exec(callback);
         },
         function(event, callback) {
             if (!event) {
-                res.send(404);
-                return;
+                return done(new Error('Event not found'));
             }
             async.parallel([
                 // zapの取得（最新のN分ぶんのみ）
+                /*
                 function(callback) {
                     var to = Date.now();
                     var from = to - (ZAP_INITIAL_LOAD_MINUTES * 60 * 1000);
@@ -213,6 +221,7 @@ app.get('/', function (req, res) {
                         { sort: 'timestamp' },
                         callback);
                 },
+                */
                 // メッセージの取得（最新のN件のみ）
                 function(callback) {
                     models.Message.find({ eventId: event._id })
@@ -224,18 +233,18 @@ app.get('/', function (req, res) {
                 }
             ], function(err, results) {
                 if (err) {
-                    throw err;
+                    done(err);
+                } else {
+                    done(null, {
+                        event: event,
+//                        zaps: results[0],
+                        messages: results[0]
+                    });
                 }
-                res.render('index', {
-                    event: event.toObject({getters: true}),
-                    zaps: results[0],
-                    messages: results[1],
-                    user: req.user
-                });
             });
         }
     ]);
-});
+}
 /*
   app.get('/account', ensureAuthenticated, function (req, res) {
   res.render('account', { user: req.user });
@@ -481,7 +490,19 @@ app.get('/events/:id/messages', function(req, res) {
         });
 });
 app.get('/events/embed', function(req, res) {
-    res.render('events/embed');
+    var eventId = req.param('id');
+    if (!eventId) {
+        res.send(404);
+        return;
+    }
+    collectInitialData(eventId, function(err, result) {
+        res.render('events/embed', {
+            event: result.event.toObject({getters: true}),
+//            zaps: result.zaps,
+            messages: result.messages,
+            user: req.user
+        });
+    });
 });
 
 var server = require('http').createServer(app);
