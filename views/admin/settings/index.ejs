@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+
+<meta charset="UTF-8">
+<title>設定</title>
+<link rel=stylesheet href="/css/admin/common.css">
+
+<h1>設定</h1>
+<%- partial('admin/common/messages') %>
+<a href="/admin/">管理画面トップ</a>
+<form action='/admin/settings' method="post">
+  <div class="field">
+    <input type="checkbox" id="tweet" name="tweetWithMessage" <%= appSettings.tweetWithMessage === 'on' ? 'checked' : '' %>>
+    <label for="tweet">
+      メッセージが投稿された際、ツイッターにも投稿する
+    </label>
+  </div>
+  <div class="field">
+    <button>設定を保存</button>
+  </div>
+</form>

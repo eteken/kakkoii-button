@@ -19,22 +19,6 @@ var express = require('express')
 
 var ZAP_INITIAL_LOAD_MINUTES = 5;
 var MESSAGES_PAGE_COUNT = 100;
-
-var URL = 'http://localhost:3000';
-(function() {
-    var args = process.argv;
-    if (args.length > 2) {
-        for (var i = 0; i < args.length; i++) {
-            if (args[i].match(/^\-\-url\=(.+)$/)) {
-                URL = RegExp.$1;
-                break;
-            }
-        }
-    }
-})();
-
-console.log('URL: ' + URL);
-
 // DBから設定を定期的に読みだす
 var appSettings = {};
 setInterval(function() {
@@ -144,7 +128,7 @@ app.locals.fmtDate = function(date) {
 
 // configure Express
 app.configure(function () {
-    app.set('port', process.env.PORT || 3000);
+    app.set('port', process.env.PORT || 3001);
     app.set('views', __dirname + '/views');
     app.set('view engine', 'ejs');
     app.use(express.favicon());
@@ -172,12 +156,28 @@ app.configure(function () {
     });
     app.use(partials());
     app.use(app.router);
-//    app.use(require('less-middleware')({ src: __dirname + '/public' }));
 });
 
 app.configure('development', function () {
     app.use(express.errorHandler());
 });
+
+
+var URL = 'http://localhost:' + app.get('port');
+(function() {
+    var args = process.argv;
+    if (args.length > 2) {
+        for (var i = 0; i < args.length; i++) {
+            if (args[i].match(/^\-\-url\=(.+)$/)) {
+                URL = RegExp.$1;
+                break;
+            }
+        }
+    }
+})();
+console.log('URL: ' + URL);
+
+
 
 app.get('/', function (req, res) {
     var eventId = req.param('eventId');
@@ -479,6 +479,9 @@ app.get('/events/:id/messages', function(req, res) {
             }
             res.json(messages);
         });
+});
+app.get('/events/embed', function(req, res) {
+    res.render('events/embed');
 });
 
 var server = require('http').createServer(app);
