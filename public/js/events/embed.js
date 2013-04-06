@@ -67,12 +67,46 @@ $(function() {
             (function renderMessages() {
                 var buf = [];
                 for (var i = 0, n = messages.length; i < n; i++) {
-                    buf.push(messageTemplate(messages[i]));
+                    var message = messages[i];
+                    message.ts = timestamp2Label(message.timestamp);
+                    buf.push(messageTemplate(message));
                 }
                 $('.messages').html(buf.join(''));
             })();
         });
     }
+    var timestamp2Label = (function() {
+        /*
+        var ONE_SECOND = 1000;
+        var ONE_MINUTE = ONE_SECOND * 60;
+        var ONE_HOUR = ONE_MINUTE * 60;
+        var ONE_DAY = ONE_HOUR * 24;
+        return function(isoString) {
+            var timestamp = Date.parse(isoString);
+            var now = Date.now();
+            var delta = now - timestamp;
+
+            if (delta < ONE_SECOND) {
+                return 'たった今';
+            } else if (delta < ONE_MINUTE) {
+                return Math.floor(delta / ONE_SECOND) + '秒前';
+            } else if (delta < ONE_HOUR) {
+                return Math.floor(delta / ONE_MINUTE) + '分前';
+            } else if (delta < ONE_DAY) {
+                return Math.floor(delta / ONE_HOUR) + '時間前';
+            } else {
+                return Math.floor(delta / ONE_DAY) + '日前';
+            }
+        };
+        */
+        return function(isoString) {
+            console.log(isoString);
+            var timestamp = Date.parse(isoString);
+            var date = new Date();
+            date.setTime(timestamp);
+            return date.getHours() + ':' + date.getMinutes();
+        };
+    })();
 
     $('#zap-button').click(function() {
 
