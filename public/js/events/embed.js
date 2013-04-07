@@ -56,7 +56,7 @@ $(function() {
             });
             currentEvent.subscribe('message', function(message) {
                 messages.push(message);
-                renderMessages([message]);
+                onMessageArrived(message);
             });
 //            zaps = __lt_zaps__;
             messages = __lt_messages__;
@@ -75,6 +75,13 @@ $(function() {
             })();
         });
     }
+    
+    var onMessageArrived = function(message) {
+        message.ts = timestamp2Label(message.timestamp);
+        var html = messageTemplate(message);
+        $('.message:first').before(html);
+    };
+    
     var timestamp2Label = (function() {
         /*
         var ONE_SECOND = 1000;
@@ -100,11 +107,10 @@ $(function() {
         };
         */
         return function(isoString) {
-            console.log(isoString);
             var timestamp = Date.parse(isoString);
             var date = new Date();
             date.setTime(timestamp);
-            return date.getHours() + ':' + date.getMinutes();
+            return _.str.lpad(String(date.getHours()), 2, '0') + ':' + _.str.lpad(String(date.getMinutes()), 2, '0');
         };
     })();
 

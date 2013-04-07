@@ -92,6 +92,8 @@ html, body {
     list-style-type: none;
     padding-left: 0px;
     margin: 0;
+    height: 600px;
+    overflow-y: scroll;
 }
 .zap-messages li {
 /*    max-height: 120px; */
