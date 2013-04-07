@@ -73,13 +73,30 @@ $ustream-player-height: 368px;
 #chart-wrapper {
     text-align: center;
 }
+
+$zapper-icon-size: 32px;
+
 #zap-chart {
     width: $ustream-player-width;
-    height: 220px;
+    height: 220px - $zapper-icon-size - 4;
     vertical-align: center;
     border: 1px solid gray;
 }
 
+#zapper-icons {
+    @extend .clearfix;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    li {
+        float: right;
+        .icon {
+            width: $zapper-icon-size;
+            height: $zapper-icon-size;
+            border-radius: 4px;
+        }
+    }
+}
 $controls-width: 90%;
 #message-input {
     width: $controls-width;

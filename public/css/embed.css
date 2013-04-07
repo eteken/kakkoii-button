@@ -1,11 +1,11 @@
 @charset "utf-8";
-.clearfix, .message {
+.clearfix, .message, #zapper-icons {
   *zoom: 1; }
-  .clearfix :before, .message :before, .clearfix :after, .message :after {
+  .clearfix :before, .message :before, #zapper-icons :before, .clearfix :after, .message :after, #zapper-icons :after {
     display: table;
     line-height: 0;
     content: ""; }
-  .clearfix :after, .message :after {
+  .clearfix :after, .message :after, #zapper-icons :after {
     clear: both; }
 
 html, body {
@@ -58,9 +58,20 @@ body {
 
 #zap-chart {
   width: 608px;
-  height: 220px;
+  height: 184px;
   vertical-align: center;
   border: 1px solid gray; }
+
+#zapper-icons {
+  padding: 0;
+  margin: 0;
+  list-style-type: none; }
+  #zapper-icons li {
+    float: right; }
+    #zapper-icons li .icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px; }
 
 #message-input {
   width: 90%; }
