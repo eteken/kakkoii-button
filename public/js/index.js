@@ -21,7 +21,7 @@ $(function() {
     var ZAP_CHART_COUNT_OF_POINTS = 10;
     
     function init(done) {
-        zapper.init(function(err) {
+        zapper.connect(function(err) {
             if (err) {
                 return done(err);
             }
@@ -242,6 +242,9 @@ $(function() {
     });
 
     $('#zap-button').click(function() {
+        if (!zapper.loggedIn) {
+            return alert('ログインしていません');
+        }
         var zap = currentEvent.zap();
         $(this).text('(いいね!)×' + zap.count);
         if (zap.count === zapper.maxZapCount) {
@@ -252,6 +255,9 @@ $(function() {
         showMessageDialog(this);
     })
     $('#message-dialog .send-message-button').click(function() {
+        if (!zapper.loggedIn) {
+            return alert('ログインしていません');
+        }
         var dialog = $('#message-dialog');
         var input = dialog.find('.message-input');
         var message = input.val();

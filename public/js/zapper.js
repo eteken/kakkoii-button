@@ -78,12 +78,14 @@
         this._prepareAuthInfo();
     };
     Zapper.prototype = {
-        init: function(callback) {
+        connect: function(callback) {
+            var self = this;
             if (!sock || !sock.connected) {
                 console.log('Socket.IO disconnected. Try connecting...');
                 sock = io.connect(serverUrl);
                 sock.on('connect', function() {
                     console.log('connected');
+                    self.initialized = true;
                     callback();
                 });
                 sock.on('disconnect', function() {
@@ -94,6 +96,7 @@
                     console.error(err);
                 });
             } else {
+                self.connected = true;
                 callback();
             }
         },
@@ -125,6 +128,12 @@
                     callback(new Error('auth error'));
                 }
             }, watchInterval);
+        },
+        logout: function() {
+            this.loggedIn = false;
+            this.user = null;
+            delete window.__lt_oauth_succeeded__;
+            delete window.__lt_logged_in_user__;
         },
         getLatestEvent: function(callback) {
             var self = this;

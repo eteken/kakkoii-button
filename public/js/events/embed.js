@@ -64,34 +64,8 @@ $(function() {
     };
     var messageTemplate = _.template($('#message-template').html());
 
-    if (!zapper.loggedIn) {
-        var controlPanel = $('#control-panel');
-        var pos = controlPanel.offset();
-        var width = controlPanel.outerWidth();
-        var height = controlPanel.outerHeight();
-        $('#login-button-container').css({
-            width: width + 'px',
-            height: height + 'px',
-            left: pos.left + 'px',
-            top: pos.top + 'px',
-            display: 'block'
-        });
-        $('#login-button').click(function() {
-            zapper.login(null, function(err, user) {
-                if (err) {
-                    return;
-                }
-                $('#login-button-container').hide();
-//                $('#control-panel :disabled').removeAttr('disabled');
-                init();
-            });
-        });
-    } else {
-        init();
-    }
-
     function init() {
-        zapper.init(function(err) {
+        zapper.connect(function(err) {
             if (err) {
                 console.log(err);
                 alert('エラーが発生しました。' + err.message);
@@ -100,7 +74,6 @@ $(function() {
             currentEvent = zapper.event(__lt_event__);
             currentEvent.onZapSent = function(zap) {
                 $('#zap-button').removeAttr('disabled');
-//                showMessageDialog('#zap-button', { relatedZapUUID: zap.uuid, autoCloseSeconds: 3 });
             };
             currentEvent.subscribe('zap', function(zap) {
                 $zapButton.removeAttr('disabled');
@@ -144,6 +117,37 @@ $(function() {
             })();
         });
     }
+    init();
+    function hideControls() {
+        var controlPanel = $('#control-panel');
+        var pos = controlPanel.offset();
+        var width = controlPanel.outerWidth();
+        var height = controlPanel.outerHeight();
+        $('#login-button-container').css({
+            width: width + 'px',
+            height: height + 'px',
+            left: pos.left + 'px',
+            top: pos.top + 'px',
+            display: 'block'
+        });
+    }
+    $('#login-button').click(function() {
+        zapper.login(null, function(err, user) {
+            if (err) {
+                return;
+            }
+            location.reload(true);
+            /*
+            $('#login-button-container').hide();
+            if (!zapper.connected) {
+                init();
+            }
+            */
+        });
+    });
+    if (!zapper.loggedIn) {
+        hideControls();
+    }
     
     var onMessageArrived = function(message) {
         message.ts = timestamp2Label(message.timestamp);
@@ -184,12 +188,18 @@ $(function() {
     })();
 
     $zapButton.click(function() {
+        if (!zapper.loggedIn) {
+            return alert('ログインしていません');
+        }
         var zap = currentEvent.zap();
         if (zap.count === zapper.maxZapCount) {
             $(this).attr('disabled', 'disabled');
         }
     });
     $postMessageButton.click(function() {
+        if (!zapper.loggedIn) {
+            return alert('ログインしていません');
+        }
         var message = $messageInput.val();
         if (message.length === 0) {
             alert('メッセージを入力して下さい');
@@ -197,6 +207,12 @@ $(function() {
         }
         currentEvent.sendMessage(message);
         $messageInput.val('');
+    });
+    $('#logout-button').click(function() {
+        $.get('/logout', function() {
+            zapper.logout();
+            hideControls();
+        });
     });
     var renderZapsOnLive = (function() {
         var $zapperIcons = $('#zapper-icons');

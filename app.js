@@ -542,8 +542,19 @@ io.set('authorization', function(handshakeData, callback) {
 
 io.sockets.on('connection', function(socket) {
     console.log('connected');
+    // セッションが存在しない場合、
+    // この接続は読み取り専用のセッションとなる。
+    var loggedIn = false;
     var session = socket.handshake.session;
-    // セッションがない場合は、どうする？接続切りたいが
+    var user, oauthToken;
+    if (session) {
+        user = session.user;
+        if (user) {
+            oauthToken = user.oauthTokens.twitter;
+            loggedIn = true;
+        }
+    }
+    /*
     if (!session) {
         console.log('Session not found. Disconnect:' + socket.id);
         socket.disconnect(true);
@@ -557,8 +568,13 @@ io.sockets.on('connection', function(socket) {
         return;
     }
     var oauthToken = user.oauthTokens.twitter;
+    */
 
     socket.on('zap', function (z) {
+        if (!loggedIn) {
+            console.warn('Zapped on unauthorized connection.ID:' + socket.id);
+            return;
+        }
         var now = Date.now();
         var zap = new models.Zap(z);
         zap.timestamp = now;
@@ -576,6 +592,10 @@ io.sockets.on('connection', function(socket) {
         });
     });
     socket.on('message', function(msg) {
+        if (!loggedIn) {
+            console.warn('Sent message on unauthorized connection.ID:' + socket.id);
+            return;
+        }
         var now = Date.now();
         var message = new models.Message(msg);
         message.userId = user._id;

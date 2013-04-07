@@ -37,7 +37,7 @@
                   <div class="author-inner">
                     <h1 class="author-displayName">{{= author.displayName }}</h1>
                     <span class="author-name">
-                      <a href="http://twitter.com/{{= author.name }}">@{{= author.name }}</a>
+                      <a target="_blank" href="https://twitter.com/{{= author.name }}">@{{= author.name }}</a>
                     </span>
                   </div>
                 </div>
@@ -59,6 +59,7 @@
           <textarea id="message-input" placeholder="イベントについて感じたことをなんでも書きましょう！" maxlength="200"></textarea>
           <button id="post-message-button">つぶやく</button>
           <button id="zap-button">(いいね!)</button>
+          <button id="logout-button">ログアウト</button>
         </div>
       </div>
       <div id="login-button-container">
