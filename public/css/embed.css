@@ -62,7 +62,7 @@ body {
   vertical-align: center;
   border: 1px solid gray; }
 
-#message {
+#message-input {
   width: 90%; }
 
 #zap-button, #post-message-button {

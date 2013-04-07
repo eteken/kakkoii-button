@@ -3,7 +3,8 @@ $(function() {
     , currentEvent
     , zaps = []
     , messages = []
-    , ZAP_CHART_REFRESH_INTERVAL_MILLIS = 1000;
+    , ZAP_CHART_REFRESH_INTERVAL_MILLIS = 1000
+    , $messageInput = $('#message-input');
 
     // テンプレート設定
     _.templateSettings = {
@@ -116,5 +117,14 @@ $(function() {
 
     $('#zap-button').click(function() {
 
+    });
+    $('#post-message-button').click(function() {
+        var message = $messageInput.val();
+        if (message.length === 0) {
+            alert('メッセージを入力して下さい');
+            return;
+        }
+        currentEvent.sendMessage(message);
+        $messageInput.val('');
     });
 });
