@@ -4,7 +4,9 @@ $(function() {
     , zaps = []
     , messages = []
     , ZAP_CHART_REFRESH_INTERVAL_MILLIS = 1000
-    , $messageInput = $('#message-input');
+    , $messageInput = $('#message-input')
+    , $zapButton = $('#zap-button')
+    , $postMessageButton = $('#post-message-button');
 
     // テンプレート設定
     _.templateSettings = {
@@ -53,6 +55,8 @@ $(function() {
 //                showMessageDialog('#zap-button', { relatedZapUUID: zap.uuid, autoCloseSeconds: 3 });
             };
             currentEvent.subscribe('zap', function(zap) {
+                $zapButton.removeAttr('disabled');
+                console.log(zap);
                 zaps.push(zap);
             });
             currentEvent.subscribe('message', function(message) {
@@ -115,10 +119,13 @@ $(function() {
         };
     })();
 
-    $('#zap-button').click(function() {
-
+    $zapButton.click(function() {
+        var zap = currentEvent.zap();
+        if (zap.count === zapper.maxZapCount) {
+            $(this).attr('disabled', 'disabled');
+        }
     });
-    $('#post-message-button').click(function() {
+    $postMessageButton.click(function() {
         var message = $messageInput.val();
         if (message.length === 0) {
             alert('メッセージを入力して下さい');
