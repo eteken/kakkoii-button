@@ -44,6 +44,7 @@ $(function() {
             }
             user = zapper.user;
             currentEvent = zapper.event(__lt_event__);
+            $('#user-icon img').attr('src', user.photos[0]);
             $('#zapper-main h1:first').text(currentEvent.title);
             currentEvent.onZapSent = function(zap) {
                 var backgroundUrl = 'url("/img/btnBg_00.png")';
