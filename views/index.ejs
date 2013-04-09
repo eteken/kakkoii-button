@@ -54,12 +54,13 @@
         <div id="icons-row">
           <div class="left">
             <a id="msg-notifier" href="" class="icon-container">
+              <div class="msg-count"></div>
               <img src="/img/msg_on.png" class="icon">
             </a>
           </div>
           <div class="center"></div>
           <div class="right">
-            <a id="logout-button" href="" class="icon-container">
+            <a id="logout-button" href="#" class="icon-container">
               <img src="/img/logout.png" class="icon">
             </a>
             <a id="user-icon" href="" class="icon-container">
@@ -81,7 +82,7 @@
             </button>
           </div>
         </div>
-        <div id="message-dialog">
+        <section id="message-dialog">
           <div id="message-dialog-inner">
             <textarea class="message-input" placeholder="メッセージ"></textarea>
             <div class="count"></div>
@@ -91,8 +92,33 @@
               <button class="send-message-button">送信する</button>
             </div>
           </div>
-        </div>
+        </section>
+<!--
+        <section id="messages">
+          <script id="message-template" type="text/x-template">
+            <article class="message">
+              <header>
+                <div class="author-icon-column">
+                  <img src="{{= author.photo }}" class="author-icon">
+                </div>
+                <div class="author">
+                  <div class="author-inner">
+                    <h1 class="author-displayName">{{= author.displayName }}</h1>
+                    <span class="author-name">
+                      <a target="_blank" href="https://twitter.com/{{= author.name }}">@{{= author.name }}</a>
+                    </span>
+                  </div>
+                </div>
+                <div class="timestamp">{{= ts }}</div>
+              </header>
+              <div class="text">
+                {{= text }}
+              </div>
+            </article>
+          </script>
+        </section>
       </div>
     </section>
+-->
   </body>
 </html>

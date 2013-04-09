@@ -9,6 +9,8 @@ $(function() {
     , zapper = new Zapper()
     , user
     , messages
+    , messageCount = 0
+    , $messageCount = $('#msg-notifier .msg-count')
     , $messageDialog = $('#message-dialog')
     , $messageInput = $messageDialog.find('.message-input')
     , $autoCloseCount = $messageDialog.find('.count')
@@ -59,18 +61,29 @@ $(function() {
             currentEvent.subscribe('zap', function(zap) {
                 zaps.push(zap);
             });
+            */
             currentEvent.subscribe('message', function(message) {
                 messages.push(message);
-                renderMessages([message]);
+                messageCount++;
+                updateMessageCount();
+//                renderMessages([message]);
             });
             messages = __lt_messages__;
+            messageCount = messages.length;
+            updateMessageCount();
             delete window.__lt_messages__;
 
-            renderMessages(messages);
-            */
+//            renderMessages(messages);
         });
     }
-
+    function updateMessageCount() {
+        if (!messageCount) {
+            $messageCount.text('').hide();
+        } else {
+            $messageCount.text(messageCount).show();
+        }
+        
+    }
     (function preloadImages() {
         var imgNames = [
             'btnBg_00.png',
@@ -111,7 +124,7 @@ $(function() {
 
 
 
-    $('#message-dialog .send-message-button').click(function() {
+    $('#message-dialog .send-message-button').fastClick(function() {
         if (!zapper.loggedIn) {
             return alert('ログインしていません');
         }
@@ -127,7 +140,7 @@ $(function() {
         input.val('');
         hideMessageDialog();
     });
-    $('#message-dialog .cancel-button').click(function() {
+    $('#message-dialog .cancel-button').fastClick(function() {
         hideMessageDialog();
     });
     var autoCloseTimer;
@@ -152,9 +165,14 @@ $(function() {
         clearTimeout(autoCloseTimer);
         $autoCloseCount.text('');
     });
-    $('#msg-button').click(function() {
+    $('#msg-button').fastClick(function() {
         showMessageDialog(this);
-    })    
+    });
+    $('#logout-button').fastClick(function() {
+        $.get('/logout', function() {
+            location.reload();
+        });
+    });
     function showMessageDialog(target, options) {
         $messageDialog.addClass('active');
         options = options || {};

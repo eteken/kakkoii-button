@@ -121,8 +121,28 @@ $header-height: $title-row-height + $icons-row-height;
         height: $icons-row-height;
     }
 }
-#msg-notifier .icon {
-    width: 20px;
+#msg-notifier {
+    $font-size: 8px;
+    font-size: $font-size;
+    position: relative;
+    .msg-count {
+        $line-height: $font-size + 4px;
+        position: absolute;
+        margin: 0;
+        padding: 1px;
+        border-radius: 2px;
+        top: 0;
+        right: -0.5em;
+        min-width: 1em;
+        max-width: 4em;
+        height: $line-height;
+        line-height: $line-height;
+        background-color: #e50012;
+        color: white;
+    }
+    .icon {
+        width: 20px;
+    }
 }
 #logout-button .icon {
     width: 20px;

@@ -96,8 +96,24 @@ body {
     float: left;
     height: 34px; }
 
-#msg-notifier .icon {
-  width: 20px; }
+#msg-notifier {
+  font-size: 8px;
+  position: relative; }
+  #msg-notifier .msg-count {
+    position: absolute;
+    margin: 0;
+    padding: 1px;
+    border-radius: 2px;
+    top: 0;
+    right: -0.5em;
+    min-width: 1em;
+    max-width: 4em;
+    height: 12px;
+    line-height: 12px;
+    background-color: #e50012;
+    color: white; }
+  #msg-notifier .icon {
+    width: 20px; }
 
 #logout-button .icon {
   width: 20px; }
