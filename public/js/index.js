@@ -9,6 +9,9 @@ $(function() {
     , zapper = new Zapper()
     , user
     , messages
+    , $messageDialog = $('#message-dialog')
+    , $messageInput = $messageDialog.find('.message-input')
+    , $autoCloseCount = $messageDialog.find('.count')
     , $buttonsContainer = $('#buttons-container');
 
     function switchScreen(next, callback) {
@@ -50,7 +53,7 @@ $(function() {
                 var backgroundUrl = 'url("/img/btnBg_00.png")';
                 $buttonsContainer.css('backgroundImage', backgroundUrl);
                 $('#zap-button').text('(いいね!)').removeAttr('disabled');
-//                showMessageDialog('#zap-button', { relatedZapUUID: zap.uuid, autoCloseSeconds: 3 });
+                showMessageDialog('#zap-button', { relatedZapUUID: zap.uuid, autoCloseSeconds: 3 });
             };
             /*
             currentEvent.subscribe('zap', function(zap) {
@@ -67,6 +70,7 @@ $(function() {
             */
         });
     }
+
     (function preloadImages() {
         var imgNames = [
             'btnBg_00.png',
@@ -104,4 +108,74 @@ $(function() {
         var backgroundUrl = 'url("/img/btnBg_' + _.str.lpad(String(zapCount), 2, '0') + '.png")';
         $buttonsContainer.css('backgroundImage', backgroundUrl);
     });
+
+
+
+    $('#message-dialog .send-message-button').click(function() {
+        if (!zapper.loggedIn) {
+            return alert('ログインしていません');
+        }
+        var dialog = $('#message-dialog');
+        var input = dialog.find('.message-input');
+        var message = input.val();
+        if (message.length === 0) {
+            return;
+        }
+        var options = dialog.data('options') || {};
+
+        currentEvent.sendMessage(message, options.relatedZapUUID);
+        input.val('');
+        hideMessageDialog();
+    });
+    $('#message-dialog .cancel-button').click(function() {
+        hideMessageDialog();
+    });
+    var autoCloseTimer;
+    function autoCloseMessageDialog(seconds) {
+        var start = Date.now();
+        
+        (function updateCount() {
+            var now = Date.now();
+            var elapsedTime = now - start;
+            if (elapsedTime > seconds * 1000) {
+                hideMessageDialog();
+            } else {
+                var elapsedSeconds = Math.floor(elapsedTime / 1000);
+                $autoCloseCount.text(seconds - elapsedSeconds);
+                autoCloseTimer = setTimeout(updateCount, 200);
+                console.log(autoCloseTimer);
+            }
+        })();
+    }
+    $messageInput.on('focus', function() {
+        console.log(autoCloseTimer);
+        clearTimeout(autoCloseTimer);
+        $autoCloseCount.text('');
+    });
+    
+    function showMessageDialog(target, options) {
+        $messageDialog.addClass('active');
+        options = options || {};
+        $messageDialog.data('options', options);
+        $messageInput.val('');
+        $autoCloseCount.text('');
+        $messageDialog.show();
+        // メッセージボタンを直接クリックされた
+        if (!options.relatedZapUUID) {
+            // テキストエリアにフォーカスする
+            setTimeout(function() {
+                $messageInput.focus();
+            }, 0);
+        }
+        // ダイアログを自動で閉じる
+        if (options.autoCloseSeconds > 0) {
+            var seconds = options.autoCloseSeconds;
+            autoCloseMessageDialog(seconds);
+        }
+    }
+    function hideMessageDialog() {
+        $messageDialog
+            .removeData('options')
+            .removeClass('active');
+    }
 });

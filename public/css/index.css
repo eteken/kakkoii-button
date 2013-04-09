@@ -157,3 +157,70 @@ body {
     background-color: transparent;
     width: 126.0px;
     height: 38.15px; }
+
+#message-dialog {
+  box-sizing: border-box;
+  position: absolute;
+  background: black;
+  width: 300px;
+  margin-bottom: 20px;
+  margin-left: -150px;
+  border: 2px solid #5c5c5c;
+    border-radius: 2px;
+  top: 20px;
+  left: 50%;
+  z-index: 10000000;
+  padding: 8px;
+  display: none;
+  /*
+  #message-dialog-inner {
+      width: 284px;
+      margin: 0 auto;
+  }
+  */
+  clear: both; }
+  #message-dialog .message-input {
+    height: 48px;
+    width: 100%;
+    border-radius: 3px;
+    display: block; }
+  #message-dialog.active {
+    display: block; }
+  #message-dialog:after {
+    content: '';
+    position: absolute;
+    border-top: 10px solid black;
+    border-right: 5px solid transparent;
+    border-left: 5px solid transparent;
+    bottom: -8px;
+    left: 150px; }
+  #message-dialog:before {
+    content: '';
+    position: absolute;
+    border-top: 10px solid #5c5c5c;
+    border-right: 5px solid transparent;
+    border-left: 5px solid transparent;
+    bottom: -12px;
+    left: 150px; }
+  #message-dialog .send-message-button {
+    background-color: #1aafe7;
+    color: white;
+    border: 2px solid #149cd0;
+    border-radius: 3px; }
+  #message-dialog .cancel-button {
+    background-color: black;
+    color: white;
+    border: 2px solid #5c5c5c;
+    border-radius: 3px; }
+  #message-dialog .dialog-buttons {
+    text-align: right; }
+  #message-dialog .remained-chars {
+    color: white;
+    font-size: .9em; }
+  #message-dialog .count {
+    color: lightgray;
+    float: left;
+    font-size: 1.6em;
+    font-weight: bold;
+    font-style: italic;
+    font-family: serif; }
