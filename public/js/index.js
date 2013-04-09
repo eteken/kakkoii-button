@@ -152,7 +152,9 @@ $(function() {
         clearTimeout(autoCloseTimer);
         $autoCloseCount.text('');
     });
-    
+    $('#msg-button').click(function() {
+        showMessageDialog(this);
+    })    
     function showMessageDialog(target, options) {
         $messageDialog.addClass('active');
         options = options || {};
