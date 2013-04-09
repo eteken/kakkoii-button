@@ -43,7 +43,7 @@ body {
   display: none;
   width: 100%;
   height: 100%;
-  background: url("/img/bodyBg2x.png") no-repeat;
+  background: url("/img/bodyBg.png") no-repeat;
     background-size: 100% 100%; }
 
 #title-row {
@@ -124,7 +124,7 @@ body {
   position: absolute;
   left: 50%;
   bottom: 20px;
-  background: url("/img/btnBg_00_2x.png") no-repeat;
+  background: url("/img/btnBg_00.png") no-repeat;
     background-size: contain; }
 
 #zap-button-container {
@@ -133,6 +133,8 @@ body {
   height: 113.5px;
   background-size: contain;
   margin: 56px auto 0; }
+  #zap-button-container:active {
+    background-image: url("/img/zapBtn_on.png"); }
   #zap-button-container #zap-button {
     margin-top: 26.05px;
     text-indent: -9999px;
@@ -147,6 +149,8 @@ body {
   height: 113.5px;
   background-size: contain;
   margin: 0 auto; }
+  #msg-button-container:active {
+    background-image: url("/img/msgBtn_on.png"); }
   #msg-button-container #msg-button {
     text-indent: -9999px;
     border: 0 solid transparent;
