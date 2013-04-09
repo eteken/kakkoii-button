@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>カッコいいやつら | Zapper(Beta)</title>
+    <link rel="stylesheet" href="/css/lib/jquery.powertip.css"/>
+    <link rel="stylesheet" href="/css/index.css"/>
+
+    <!--
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    -->
+    <script src="/js/lib/jquery-1.9.1.min.js"></script>
+    <script src="/js/lib/underscore-min.js"></script>
+    <script src="/js/lib/async.js"></script>
+    <script src="/js/lib/jquery.powertip-1.1.0.min.js"></script>
+    <script src="/js/lib/Chart.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    
+    <script src="/js/common.js"></script>
+    <script src="/js/zapper.js"></script>
+    <script src="/js/index.js"></script>
+    <script>
+      var __lt_event__ = <%- JSON.stringify(event) %>;
+      var __lt_messages__ = <%- JSON.stringify(messages) %>;
+    <%
+       if (user) {
+    %>
+        var __lt_oauth_succeeded__ = true;
+        var __lt_logged_in_user__ = <%- JSON.stringify(user) %>;
+    <%
+       }
+    %>
+    </script>
+</head>
+<body>
+  <section id="splash-screen">
+    <img id="lt-logo" src="/img/zapper.png" width="150">
+  </section>
+  <section id="login-screen">
+    <div id="login-screen-content">
+      <p>ご利用には、ツイッターでのログインが必要です。</p>
+      <a href="#" id="login-command"><img src="/img/sign-in-with-twitter-gray.png"></a>
+    </div>
+  </section>
+  <script id="message-listitem-template" type="text/underscore-template">
+    <li class="clearfix zap-message-listitem">
+      <img class="user-thumbnail zap-author" src="{{= author.photo }}">
+      <p class="zap-message">
+        {{= text }}
+      </p>
+    </li>
+  </script>
+  <section id="main-screen">
+    <h1></h1>
+    <ol class="zap-messages">
+    </ol>
+    <canvas id="zap-chart" width="800" height="300"></canvas>
+    <div id="message-dialog">
+      <div id="message-dialog-inner">
+        <textarea class="message-input" placeholder="メッセージ"></textarea>
+        <div>
+          <span class="count"></span>
+          <button class="send-message-button">送信する</button>
+          <button class="cancel-button">キャンセル</button>
+        </div>
+      </div>
+    </div>
+
+    <footer id="command-area">
+      <!--
+      <div style="display: table-row">
+      <img class="user-thumbnail" src="">
+      <span class="user-name"></span>
+      <div class="command-buttons">
+        <button class="command-button">(いいね!)</button>
+        <button class="command-button">ツイート</button>
+      </div>
+      </div>
+      -->
+      <div id="display-messages-field">
+        <a href="/logout">ログアウト</a>
+        <input type="checkbox" id="display-messages" checked>
+        <label for="display-messages">メッセージを表示する</label>
+      </div>
+
+      
+      <table width="100%" style="border-collapse: collapse;">
+        <tr>
+          <td width=48 padding=0><img class="user-thumbnail" src=""></td>
+          <td padding=0><button id="zap-button" class="command-button" data-powertiptarget="message-dialog">(いいね!)</button></td>
+          <td padding=0><button id="tweet-button" class="command-button" data-powertiptarget="message-dialog">ツイート</button></td>
+        </tr>
+      </table>
+    </footer>
+  </section>
+</body>
+</html>

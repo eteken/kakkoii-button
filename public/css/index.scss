@@ -1,0 +1,207 @@
+@charset "UTF-8";
+
+@import "common.scss";
+
+html, body {
+    width: 100%;
+    height: 100%;
+}
+body {
+    margin: 0;
+    padding: 0;
+}
+
+// =========== スプラッシュ画面 ============//
+
+#splash-screen {
+    background: url('/img/splash-bg.png') no-repeat center center {
+        size: contain;
+    };
+    width: 100%;
+    height: 100%;
+}
+
+// =========== ログイン画面 ============//
+#login-screen {
+    display: none;
+}
+#login-screen-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -55px 0 0 -79px;
+    font-size: .8em;
+    width: 158px;
+    height: 110px;
+}
+
+
+
+// =========== メイン画面 ============//
+#zapper-main {
+    display: none;
+    width: 100%;
+    height: 100%;
+    background: url('/img/bodyBg2x.png') no-repeat {
+        // TODO: これだと、ヘッダの高さが可変になってしまう
+        // ヘッダは独立した部品とし、高さを固定にすべき
+        size: 100% 100%;
+    }
+}
+@mixin header-row($h) {
+    @extend .clearfix;
+    // ヘッダのレイアウトは、ここの高さに依存している。
+    height: $h;
+    line-height: $h;
+    width: 100%;
+}
+$title-row-height: 52px;
+$icons-row-height: 34px;
+$header-height: $title-row-height + $icons-row-height;
+
+#title-row {
+    @include header-row($title-row-height);
+    #zapper-header-container {
+        margin: 0;
+        float: left;
+        width: 100%;
+        h1 {
+            margin: 0 40px;
+            text-align: center;
+            font: {
+                size: 1.1em;
+                weight: normal;
+            }
+            color: #c7c7c7;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+    #settings-button {
+        $w: 40px;
+        display: inline-block;
+        text-align: center;
+        width: $w;
+        margin-left: -$w;
+        float: left;
+        img {
+            vertical-align: middle;
+        }
+    }
+}
+
+#icons-row {
+    @include header-row($icons-row-height);
+    $icon-width: 32px;
+    .icon-container {
+        display: inline-block;
+        width: $icon-width;
+        text-align: center;
+        float: left;
+        .icon {
+            vertical-align: middle;
+        }
+    }
+    .left, .right {
+        // どちらにもアイコンを2つおける
+        width: $icon-width * 2;
+        float: left;
+        height: $icons-row-height;
+    }
+    .left {
+        margin-right: -$icon-width * 2;
+    }
+    .right {
+        margin-left: -$icon-width * 2;
+    }
+    .center {
+        width: 100%;
+        float: left;
+        height: $icons-row-height;
+    }
+}
+#msg-notifier .icon {
+    width: 20px;
+}
+#logout-button .icon {
+    width: 20px;
+}
+#user-icon .icon {
+    width: 32px;
+}
+#zapper-main-header {
+    z-index: 1;
+//    margin-top: -($title-row-height + $icons-row-height);
+}
+#zapper-main .main {
+    position: absolute;
+    top: $header-height;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+}
+#buttons-container {
+    $button-size: 275px;
+    
+    text-align: center;
+    height: $button-size;
+    width: $button-size;
+    margin-left: -$button-size / 2;
+    position: absolute;
+    left: 50%;
+    bottom: 20px;
+    background: url('/img/btnBg_00_2x.png') no-repeat {
+        size: contain;
+    }
+}
+// ボタンの元画像の縦横比
+$zap-button-original-aspect: 227 / 360;
+$zap-button-container-width: 180px;
+$zap-button-container-height: $zap-button-container-width * $zap-button-original-aspect;
+$zap-button-margin-top: 56px;
+
+// ボタンの元画像の縦横比
+$msg-button-original-aspect: 109 / 360;
+$msg-button-container-width: 180px;
+$msg-button-container-height: $msg-button-container-width * $zap-button-original-aspect;
+$msg-button-margin-top: $zap-button-margin-top + $zap-button-container-height;
+
+#zap-button-container {
+    background: url('/img/zapBtn_off.png') no-repeat;
+    width: $zap-button-container-width;
+    height: $zap-button-container-height;
+    background-size: contain;
+    margin: $zap-button-margin-top auto 0;
+
+    #zap-button {
+        $button-width: $zap-button-container-width * .7;
+        $button-height: $button-width * $zap-button-original-aspect;
+        margin-top: $zap-button-container-height - $button-height - 8;
+        text-indent: -9999px;
+        border: 0 solid transparent;
+//        background-color: rgba(255, 255, 255, .5);
+        background-color: transparent;
+        width: $button-width;
+        height: $button-height;
+    }
+}
+#msg-button-container {
+    background: url('/img/msgBtn_off.png') no-repeat;
+    width: $msg-button-container-width;
+    height: $msg-button-container-height;
+    background-size: contain;
+    margin: 0 auto;
+
+    #msg-button {
+        $button-width: $msg-button-container-width * .7;
+        $button-height: $button-width * $msg-button-original-aspect;
+        text-indent: -9999px;
+        border: 0 solid transparent;
+//        background-color: rgba(255, 255, 255, .5);
+        background-color: transparent;
+        width: $button-width;
+        height: $button-height;
+    }
+}
