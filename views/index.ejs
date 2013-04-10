@@ -55,9 +55,9 @@
         </div>
         <div id="icons-row">
           <div class="left">
-            <a id="msg-notifier" href="" class="icon-container">
+            <a id="msg-notifier" href="#" class="icon-container">
               <div class="msg-count"></div>
-              <img src="/img/msg_on.png" class="icon">
+              <span class="icon"></span>
             </a>
           </div>
           <div class="center"></div>
@@ -96,27 +96,7 @@
           </div>
         </section>
         <section id="messages">
-          <script id="message-template" type="text/x-template">
-            <article class="message">
-              <header>
-                <div class="author-icon-column">
-                  <img src="{{= author.photo }}" class="author-icon">
-                </div>
-                <div class="author">
-                  <div class="author-inner">
-                    <h1 class="author-displayName">{{= author.displayName }}</h1>
-                    <span class="author-name">
-                      <a target="_blank" href="https://twitter.com/{{= author.name }}">@{{= author.name }}</a>
-                    </span>
-                  </div>
-                </div>
-                <div class="timestamp">{{= ts }}</div>
-              </header>
-              <div class="text">
-                {{= text }}
-              </div>
-            </article>
-          </script>
+          <% include message-template %>
         </section>
       </div>
     </section>

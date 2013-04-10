@@ -113,7 +113,12 @@ body {
     background-color: #e50012;
     color: white; }
   #msg-notifier .icon {
-    width: 20px; }
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    background: url("/img/msg_off.png") no-repeat center center; }
+  #msg-notifier .icon.active {
+    background-image: url("/img/msg_on.png"); }
 
 #logout-button .icon {
   width: 20px; }
@@ -236,6 +241,7 @@ body {
     font-family: serif; }
 
 #messages {
+  overflow-y: scroll;
   height: 360px;
   box-sizing: border-box;
   position: absolute;
@@ -248,7 +254,8 @@ body {
   left: 8px;
   z-index: 10000000;
   padding: 8px;
-  clear: both; }
+  clear: both;
+  display: none; }
   #messages:after {
     content: '';
     position: absolute;
@@ -265,3 +272,44 @@ body {
     border-left: 5px solid transparent;
     top: -12px;
     left: 10px; }
+
+.message {
+  padding: 4px;
+  border: 1px solid lightgrey;
+  border-bottom: 0;
+  background-color: white;
+  *zoom: 1;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  color: #333; }
+  .message :before, .message :after {
+    display: table;
+    line-height: 0;
+    content: ""; }
+  .message :after {
+    clear: both; }
+  .message .author-icon-column {
+    width: 40px;
+    text-align: center;
+    margin-right: -40px;
+    float: left; }
+  .message .author-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    display: block; }
+  .message .author {
+    float: left;
+    width: 100%; }
+  .message .author-inner {
+    margin: 0 60px 0 40px; }
+  .message .author-displayName {
+    font-size: 1.0em;
+    line-height: 1.1em;
+    margin: 0;
+    padding: 0; }
+  .message .timestamp {
+    width: 60px;
+    margin-left: -60px;
+    float: left; }

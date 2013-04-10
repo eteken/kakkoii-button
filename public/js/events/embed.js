@@ -56,13 +56,6 @@ $(function() {
         };
     })();
 
-    // テンプレート設定
-    _.templateSettings = {
-        evaluate: /\{\{(.+?)\}\}/g,
-        interpolate : /\{\{=(.+?)\}\}/g,
-        escape: /\{\{-(.+?)\}\}/g
-    };
-    var messageTemplate = _.template($('#message-template').html());
 
     function init() {
         zapper.connect(function(err) {
@@ -110,8 +103,7 @@ $(function() {
                 var buf = [];
                 for (var i = 0, n = messages.length; i < n; i++) {
                     var message = messages[i];
-                    message.ts = timestamp2Label(message.timestamp);
-                    buf.push(messageTemplate(message));
+                    buf.push(common.renderMessage(message));
                 }
                 $('.messages').html(buf.join(''));
             })();
@@ -150,43 +142,10 @@ $(function() {
     }
     
     var onMessageArrived = function(message) {
-        message.ts = timestamp2Label(message.timestamp);
-        var html = messageTemplate(message);
+        var html = common.renderMessage(message);
         $('.message:first').before(html);
     };
     
-    var timestamp2Label = (function() {
-        /*
-          var ONE_SECOND = 1000;
-          var ONE_MINUTE = ONE_SECOND * 60;
-          var ONE_HOUR = ONE_MINUTE * 60;
-          var ONE_DAY = ONE_HOUR * 24;
-          return function(isoString) {
-          var timestamp = Date.parse(isoString);
-          var now = Date.now();
-          var delta = now - timestamp;
-
-          if (delta < ONE_SECOND) {
-          return 'たった今';
-          } else if (delta < ONE_MINUTE) {
-          return Math.floor(delta / ONE_SECOND) + '秒前';
-          } else if (delta < ONE_HOUR) {
-          return Math.floor(delta / ONE_MINUTE) + '分前';
-          } else if (delta < ONE_DAY) {
-          return Math.floor(delta / ONE_HOUR) + '時間前';
-          } else {
-          return Math.floor(delta / ONE_DAY) + '日前';
-          }
-          };
-        */
-        return function(isoString) {
-            var timestamp = Date.parse(isoString);
-            var date = new Date();
-            date.setTime(timestamp);
-            return _.str.lpad(String(date.getHours()), 2, '0') + ':' + _.str.lpad(String(date.getMinutes()), 2, '0');
-        };
-    })();
-
     $zapButton.click(function() {
         if (!zapper.loggedIn) {
             return alert('ログインしていません');

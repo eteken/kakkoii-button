@@ -9,8 +9,11 @@ $(function() {
     , zapper = new Zapper()
     , user
     , messages
+    , messagesShown
     , messageCount = 0
     , $messageCount = $('#msg-notifier .msg-count')
+    , $messageNotifyIcon = $('#msg-notifier .icon')
+    , $messages = $('#messages')
     , $messageDialog = $('#message-dialog')
     , $messageInput = $messageDialog.find('.message-input')
     , $autoCloseCount = $messageDialog.find('.count')
@@ -64,22 +67,27 @@ $(function() {
             */
             currentEvent.subscribe('message', function(message) {
                 messages.push(message);
-                messageCount++;
-                updateMessageCount();
-//                renderMessages([message]);
+                if (messagesShown) {
+                    var html = common.renderMessage(message);
+                    $messages.find(':first').before(html);
+                } else {
+                    messageCount++;
+                    updateMessageCount();
+                }
             });
-            messages = __lt_messages__;
+            // メッセージをタイムスタンプの昇順に並べ替える
+            messages = __lt_messages__.reverse();
             messageCount = messages.length;
             updateMessageCount();
-
-            //            renderMessages(messages);
         });
     }
     function updateMessageCount() {
         if (!messageCount) {
             $messageCount.text('').hide();
+            $messageNotifyIcon.removeClass('active');
         } else {
             $messageCount.text(messageCount).show();
+            $messageNotifyIcon.addClass('active');
         }
         
     }
@@ -121,8 +129,28 @@ $(function() {
         $buttonsContainer.css('backgroundImage', backgroundUrl);
     });
 
-
-
+    $('#msg-notifier').fastClick(function() {
+        if (messagesShown) {
+            hideMessages();
+        } else {
+            showMessages();
+        }
+        updateMessageCount();
+        messagesShown = !messagesShown;
+    });
+    function showMessages() {
+        // メッセージを初期表示
+        var buf = [];
+        for (var i = messages.length - 1; i >= 0; i--) {
+            var message = messages[i];
+            buf.push(common.renderMessage(message));
+        }
+        $messages.html(buf.join('')).show();
+        messageCount = 0;
+    }
+    function hideMessages() {
+        $messages.empty().hide();
+    }
     $('#message-dialog .send-message-button').fastClick(function() {
         if (!zapper.loggedIn) {
             return alert('ログインしていません');

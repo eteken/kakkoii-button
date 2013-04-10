@@ -39,3 +39,56 @@
         return timestamp;
     };
 }(Date));
+
+var common = (function() {
+    // テンプレート設定
+    _.templateSettings = {
+        evaluate: /\{\{(.+?)\}\}/g,
+        interpolate : /\{\{=(.+?)\}\}/g,
+        escape: /\{\{-(.+?)\}\}/g
+    };
+    var messageTemplate;
+    var timestamp2Label = (function() {
+        /*
+          var ONE_SECOND = 1000;
+          var ONE_MINUTE = ONE_SECOND * 60;
+          var ONE_HOUR = ONE_MINUTE * 60;
+          var ONE_DAY = ONE_HOUR * 24;
+          return function(isoString) {
+          var timestamp = Date.parse(isoString);
+          var now = Date.now();
+          var delta = now - timestamp;
+
+          if (delta < ONE_SECOND) {
+          return 'たった今';
+          } else if (delta < ONE_MINUTE) {
+          return Math.floor(delta / ONE_SECOND) + '秒前';
+          } else if (delta < ONE_HOUR) {
+          return Math.floor(delta / ONE_MINUTE) + '分前';
+          } else if (delta < ONE_DAY) {
+          return Math.floor(delta / ONE_HOUR) + '時間前';
+          } else {
+          return Math.floor(delta / ONE_DAY) + '日前';
+          }
+          };
+        */
+        return function(isoString) {
+            var timestamp = Date.parse(isoString);
+            var date = new Date();
+            date.setTime(timestamp);
+            return _.str.lpad(String(date.getHours()), 2, '0') + ':' + _.str.lpad(String(date.getMinutes()), 2, '0');
+        };
+    })();
+
+    var renderMessage = function(message) {
+        if (!messageTemplate) {
+            messageTemplate = _.template($('#message-template').html());
+        }
+        message.ts = timestamp2Label(message.timestamp);
+        return messageTemplate(message);
+    };
+
+    return {
+        renderMessage: renderMessage
+    };
+})();

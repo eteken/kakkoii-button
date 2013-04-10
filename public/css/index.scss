@@ -142,6 +142,12 @@ $header-height: $title-row-height + $icons-row-height;
     }
     .icon {
         width: 20px;
+        height: 20px;
+        display: inline-block;
+        background: url('/img/msg_off.png') no-repeat center center;
+    }
+    .icon.active {
+        background-image: url('/img/msg_on.png');
     }
 }
 #logout-button .icon {
@@ -312,6 +318,7 @@ $msg-button-margin-top: $zap-button-margin-top + $zap-button-container-height;
     $bg-color: black;
     $border-color: #5c5c5c;
     $w: 300px;
+    overflow-y: scroll;
     height: 360px;
     box-sizing: border-box;
     position: absolute;
@@ -326,6 +333,7 @@ $msg-button-margin-top: $zap-button-margin-top + $zap-button-container-height;
     z-index: 10000000;
     padding: 8px;
     clear: both;
+    display: none;
     &:after {
         content: '';
         position: absolute;
@@ -346,3 +354,5 @@ $msg-button-margin-top: $zap-button-margin-top + $zap-button-container-height;
         left: 10px;
     }
 }
+
+@import 'message.scss';

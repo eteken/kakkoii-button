@@ -1,16 +1,7 @@
 @charset 'utf-8';
 
-.clearfix {
-    *zoom: 1;
-    :before, :after {
-        display: table;
-        line-height: 0;
-        content: "";
-    }
-    :after {
-        clear: both;
-    }
-}
+@import 'common.scss';
+@import 'message.scss';
 
 html, body {
     width: 100%;
@@ -31,44 +22,6 @@ $ustream-player-height: 368px;
 .messages {
     height: $ustream-player-height;
     overflow-y: scroll;
-}
-.message {
-    padding: 4px;
-    border: 1px solid lightgray;
-    border-bottom: 0;
-    @extend .clearfix;
-    $author-icon-column-width: 40px;
-    $timestamp-column-width: 60px;
-    .author-icon-column {
-        width: $author-icon-column-width;
-        text-align: center;
-        margin-right: -$author-icon-column-width;
-        float: left;
-    }
-    .author-icon {
-        width: 32px;
-        height: 32px;
-        border-radius: 4px;
-        display: block;
-    }
-    .author {
-        float: left;
-        width: 100%;
-    }
-    .author-inner {
-        margin: 0 $timestamp-column-width 0 $author-icon-column-width;
-    }
-    .author-displayName {
-        font-size: 1.0em;
-        line-height: 1.1em;
-        margin: 0;
-        padding: 0;
-    }
-    .timestamp {
-        width: $timestamp-column-width;
-        margin-left: -$timestamp-column-width;
-        float: left;
-    }
 }
 #chart-wrapper {
     text-align: center;
