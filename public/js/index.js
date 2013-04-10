@@ -11,6 +11,7 @@ $(function() {
     , messages
     , messagesShown
     , messageCount = 0
+    , $zapButton = $('#zap-button')
     , $messageCount = $('#msg-notifier .msg-count')
     , $messageNotifyIcon = $('#msg-notifier .icon')
     , $messages = $('#messages')
@@ -115,8 +116,8 @@ $(function() {
             };
         });
     })();
-    
-    $('#zap-button').fastClick(function() {
+
+    function onZapButtonClicked() {
         if (!zapper.loggedIn) {
             return alert('ログインしていません');
         }
@@ -127,8 +128,10 @@ $(function() {
         }
         var backgroundUrl = 'url("/img/btnBg_' + _.str.lpad(String(zapCount), 2, '0') + '.png")';
         $buttonsContainer.css('backgroundImage', backgroundUrl);
-    });
-
+    }
+    $zapButton.fastClick(onZapButtonClicked);
+    $(window).on('shake', onZapButtonClicked);
+    
     $('#msg-notifier').fastClick(function() {
         if (messagesShown) {
             hideMessages();
