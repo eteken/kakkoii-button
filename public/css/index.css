@@ -242,11 +242,10 @@ body {
   background: black;
   width: 300px;
   margin-top: 20px;
-  margin-left: -150px;
   border: 2px solid #5c5c5c;
     border-radius: 2px;
   top: -10px;
-  left: 50%;
+  left: 8px;
   z-index: 10000000;
   padding: 8px;
   clear: both; }

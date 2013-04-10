@@ -318,12 +318,11 @@ $msg-button-margin-top: $zap-button-margin-top + $zap-button-container-height;
     background: $bg-color;
     width: $w;
     margin-top: 20px;
-    margin-left: -$w / 2;
     border: 2px solid $border-color {
         radius: 2px;
     };
     top: -10px;
-    left: 50%;
+    left: 8px;
     z-index: 10000000;
     padding: 8px;
     clear: both;
