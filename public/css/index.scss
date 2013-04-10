@@ -248,12 +248,6 @@ $msg-button-margin-top: $zap-button-margin-top + $zap-button-container-height;
     z-index: 10000000;
     padding: 8px;
     display: none;
-    /*
-    #message-dialog-inner {
-        width: 284px;
-        margin: 0 auto;
-    }
-    */
     clear: both;
     .message-input {
         height: 48px;
@@ -311,5 +305,45 @@ $msg-button-margin-top: $zap-button-margin-top + $zap-button-container-height;
             style: italic;
             family: serif;
         }
+    }
+}
+
+#messages {
+    $bg-color: black;
+    $border-color: #5c5c5c;
+    $w: 300px;
+    height: 360px;
+    box-sizing: border-box;
+    position: absolute;
+    background: $bg-color;
+    width: $w;
+    margin-top: 20px;
+    margin-left: -$w / 2;
+    border: 2px solid $border-color {
+        radius: 2px;
+    };
+    top: -10px;
+    left: 50%;
+    z-index: 10000000;
+    padding: 8px;
+    clear: both;
+    &:after {
+        content: '';
+        position: absolute;
+        border-bottom: 10px solid $bg-color;
+        border-right: 5px solid transparent;
+        border-left: 5px solid transparent;
+        top: -8px;
+        left: 10px;
+    }
+
+    &:before {
+        content: '';
+        position: absolute;
+        border-bottom: 10px solid $border-color;
+        border-right: 5px solid transparent;
+        border-left: 5px solid transparent;
+        top: -12px;
+        left: 10px;
     }
 }
