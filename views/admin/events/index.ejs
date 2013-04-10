@@ -26,14 +26,17 @@
     <th>
       リンク
     </th>
+    <th>
+      各種URL
+    </th>
   </tr>
   <% events.forEach(function(event) { %>
     <tr>
       <td>
-        <a target="zapper" href="/?eventId=<%= event.id %>"><%= event.id %></a>
+        <a href="/admin/events/edit?id=<%= event.id %>"><%= event.id %></a>
       </td>
       <td>
-        <a href="/admin/events/edit?id=<%= event.id %>"><%= event.title || '' %></a>
+        <%= event.title || '' %>
       </td>
       <td>
         <%= fmtDate(event.start) %>
@@ -48,6 +51,11 @@
         <% if (event.link) { %>
           <a target="_blank" href="<%= event.link %>"><%= event.link %></a>
         <% } %>
+      </td>
+      <td>
+        <a target="zapper" href="/?eventId=<%= event.id %>">Zapper</a>
+        <a target="embed" href="/events/embed?id=<%= event.id %>">Embed</a>
+        <a target="embed" href="/events/embed?id=<%= event.id %>&slide=1">Embed(Slide)</a>
       </td>
     </tr>
   <% }); %>
