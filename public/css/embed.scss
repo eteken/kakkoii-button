@@ -117,11 +117,9 @@ $embed-player-height: 368px;
 }
 #zap-chart {
     vertical-align: center;
-    background-color: white;
+//    background-color: white;
 }
 $zapper-icon-size: 32px;
-
-
 #zapper-icons {
     @extend .clearfix;
     height: $zapper-icon-size;
@@ -129,7 +127,8 @@ $zapper-icon-size: 32px;
     position: relative;
     top: -8px;
     margin: 0;
-    background-color: white;
+    overflow: hidden;
+//    background-color: white;
     list-style-type: none;
     li {
         float: left;
@@ -140,10 +139,3 @@ $zapper-icon-size: 32px;
         }
     }
 }
-
-
-/* force a height so the tabs don't jump as content height changes */
-#tabs .tabs-spacer { float: left; height: 200px; }
-.tabs-bottom .ui-tabs-nav { clear: left; padding: 0 .2em .2em .2em; }
-.tabs-bottom .ui-tabs-nav li { top: auto; bottom: 0; margin: 0 .2em 1px 0; border-bottom: auto; border-top: 0; }
-.tabs-bottom .ui-tabs-nav li.ui-tabs-active { margin-top: -1px; padding-top: 1px; }

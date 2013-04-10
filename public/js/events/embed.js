@@ -24,6 +24,7 @@ $(function() {
 
 
     (function() {
+        // JSで無理やり位置合わせ・・・
         function layout() {
             var $messageArea = $('#message-area');
             
@@ -82,15 +83,16 @@ $(function() {
                 labels : chartLabels,
                 datasets : [
                     {
-                        fillColor : "transparent",
-                        strokeColor : "#2add96",
+                        fillColor : "rgba(235, 139, 140, .5)",
+//                        fillColor: 'transparent',
+                        strokeColor : "#e20215",
                         data : counts
                     }
                 ]
             };
             zapChart.Line(data, {
                 pointDot: false,
-                bezierCurve: true,
+//                bezierCurve: false,
                 scaleOverride : true,
                 scaleSteps : scaleSteps,
                 scaleStepWidth : scaleStepWidth,
