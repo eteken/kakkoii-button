@@ -1,35 +1,50 @@
 @charset "UTF-8";
+/* line 1, ../sass/common.scss */
 .clearfix, #title-row, #icons-row {
-  *zoom: 1; }
+  *zoom: 1;
+}
 
+/* line 6, ../sass/common.scss */
 .clearfix:before, #title-row:before, #icons-row:before,
 .clearfix:after,
 #title-row:after,
 #icons-row:after {
   display: table;
   line-height: 0;
-  content: ""; }
+  content: "";
+}
 
+/* line 12, ../sass/common.scss */
 .clearfix:after, #title-row:after, #icons-row:after {
-  clear: both; }
+  clear: both;
+}
 
+/* line 5, ../sass/index.scss */
 html, body {
   width: 100%;
-  height: 100%; }
+  height: 100%;
+}
 
+/* line 9, ../sass/index.scss */
 body {
   margin: 0;
-  padding: 0; }
+  padding: 0;
+}
 
+/* line 16, ../sass/index.scss */
 #splash-screen {
   background: url("/img/splash-bg.png") no-repeat center center;
-    background-size: contain;
+  background-size: contain;
   width: 100%;
-  height: 100%; }
+  height: 100%;
+}
 
+/* line 25, ../sass/index.scss */
 #login-screen {
-  display: none; }
+  display: none;
+}
 
+/* line 28, ../sass/index.scss */
 #login-screen-content {
   position: absolute;
   top: 50%;
@@ -37,108 +52,152 @@ body {
   margin: -55px 0 0 -79px;
   font-size: .8em;
   width: 158px;
-  height: 110px; }
+  height: 110px;
+}
 
+/* line 41, ../sass/index.scss */
 #zapper-main {
   display: none;
   width: 100%;
   height: 100%;
-  background: url("/img/bodyBg.png") top center repeat-x black; }
+  background: url("/img/bodyBg.png") top center repeat-x black;
+}
 
+/* line 58, ../sass/index.scss */
 #title-row {
   height: 66px;
   line-height: 66px;
-  width: 100%; }
-  #title-row #zapper-header-container {
-    margin: 0;
-    float: left;
-    width: 100%; }
-    #title-row #zapper-header-container h1 {
-      margin: 0 40px;
-      text-align: center;
-      font-size: 1.1em;
-      font-weight: normal;
-      color: #c7c7c7;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap; }
-  #title-row #settings-button {
-    display: inline-block;
-    text-align: center;
-    width: 40px;
-    margin-left: -40px;
-    float: left; }
-    #title-row #settings-button img {
-      vertical-align: middle; }
+  width: 100%;
+}
+/* line 60, ../sass/index.scss */
+#title-row #zapper-header-container {
+  margin: 0;
+  float: left;
+  width: 100%;
+}
+/* line 64, ../sass/index.scss */
+#title-row #zapper-header-container h1 {
+  margin: 0 40px;
+  text-align: center;
+  font-size: 1.1em;
+  font-weight: normal;
+  color: #c7c7c7;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* line 77, ../sass/index.scss */
+#title-row #settings-button {
+  display: inline-block;
+  text-align: center;
+  width: 40px;
+  margin-left: -40px;
+  float: left;
+}
+/* line 84, ../sass/index.scss */
+#title-row #settings-button img {
+  vertical-align: middle;
+}
 
+/* line 90, ../sass/index.scss */
 #icons-row {
   height: 34px;
   line-height: 34px;
-  width: 100%; }
-  #icons-row .icon-container {
-    display: inline-block;
-    width: 32px;
-    text-align: center;
-    float: left; }
-    #icons-row .icon-container .icon {
-      vertical-align: middle; }
-  #icons-row .left, #icons-row .right {
-    width: 64px;
-    float: left;
-    height: 34px; }
-  #icons-row .left {
-    margin-right: -64px; }
-  #icons-row .right {
-    margin-left: -64px; }
-  #icons-row .center {
-    width: 100%;
-    float: left;
-    height: 34px; }
+  width: 100%;
+}
+/* line 93, ../sass/index.scss */
+#icons-row .icon-container {
+  display: inline-block;
+  width: 32px;
+  text-align: center;
+  float: left;
+}
+/* line 98, ../sass/index.scss */
+#icons-row .icon-container .icon {
+  vertical-align: middle;
+}
+/* line 102, ../sass/index.scss */
+#icons-row .left, #icons-row .right {
+  width: 64px;
+  float: left;
+  height: 34px;
+}
+/* line 108, ../sass/index.scss */
+#icons-row .left {
+  margin-right: -64px;
+}
+/* line 111, ../sass/index.scss */
+#icons-row .right {
+  margin-left: -64px;
+}
+/* line 114, ../sass/index.scss */
+#icons-row .center {
+  width: 100%;
+  float: left;
+  height: 34px;
+}
 
+/* line 120, ../sass/index.scss */
 #msg-notifier {
   font-size: 8px;
-  position: relative; }
-  #msg-notifier .msg-count {
-    position: absolute;
-    margin: 0;
-    padding: 1px;
-    border-radius: 2px;
-    top: 0;
-    right: -0.5em;
-    min-width: 1em;
-    max-width: 4em;
-    height: 12px;
-    line-height: 12px;
-    background-color: #e50012;
-    color: white; }
-  #msg-notifier .icon {
-    width: 20px;
-    height: 20px;
-    display: inline-block;
-    background: url("/img/msg_off.png") no-repeat center center; }
-  #msg-notifier .icon.active {
-    background-image: url("/img/msg_on.png"); }
+  position: relative;
+}
+/* line 124, ../sass/index.scss */
+#msg-notifier .msg-count {
+  position: absolute;
+  margin: 0;
+  padding: 1px;
+  border-radius: 2px;
+  top: 0;
+  right: -0.5em;
+  min-width: 1em;
+  max-width: 4em;
+  height: 12px;
+  line-height: 12px;
+  background-color: #e50012;
+  color: white;
+}
+/* line 139, ../sass/index.scss */
+#msg-notifier .icon {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  background: url("/img/msg_off.png") no-repeat center center;
+}
+/* line 145, ../sass/index.scss */
+#msg-notifier .icon.active {
+  background-image: url("/img/msg_on.png");
+}
 
+/* line 149, ../sass/index.scss */
 #logout-button .icon {
-  width: 20px; }
+  width: 20px;
+}
 
+/* line 152, ../sass/index.scss */
 #user-icon .icon {
-  width: 32px; }
+  width: 32px;
+}
 
+/* line 155, ../sass/index.scss */
 #zapper-main-header {
   z-index: 1;
   background: url("/img/headBg.png") no-repeat top center;
   background-size: 320px;
-  height: 104px; }
+  height: 104px;
+}
 
+/* line 161, ../sass/index.scss */
 #zapper-main .main {
   position: absolute;
   top: 100px;
   left: 0;
   right: 0;
   bottom: 0;
-  overflow: auto; }
+  overflow: auto;
+}
 
+/* line 169, ../sass/index.scss */
 #buttons-container {
   text-align: center;
   height: 275px;
@@ -147,39 +206,53 @@ body {
   position: absolute;
   left: 50%;
   background: url("/img/btnBg_sprite.png") no-repeat;
-  background-position: 0 0; }
+  background-position: 0 0;
+}
 
+/* line 194, ../sass/index.scss */
 #zap-button-container {
   background: url("/img/zapBtn_off.png") no-repeat;
   width: 180px;
   height: 113.5px;
   background-size: contain;
-  margin: 56px auto 0; }
-  #zap-button-container:active {
-    background-image: url("/img/zapBtn_on.png"); }
-  #zap-button-container #zap-button {
-    margin-top: 26.05px;
-    text-indent: -9999px;
-    border: 0 solid transparent;
-    background-color: transparent;
-    width: 126.0px;
-    height: 79.45px; }
+  margin: 56px auto 0;
+}
+/* line 200, ../sass/index.scss */
+#zap-button-container:active {
+  background-image: url("/img/zapBtn_on.png");
+}
+/* line 203, ../sass/index.scss */
+#zap-button-container #zap-button {
+  margin-top: 26.05px;
+  text-indent: -9999px;
+  border: 0 solid transparent;
+  background-color: transparent;
+  width: 126.0px;
+  height: 79.45px;
+}
 
+/* line 215, ../sass/index.scss */
 #msg-button-container {
   background: url("/img/msgBtn_off.png") no-repeat;
   width: 180px;
   height: 113.5px;
   background-size: contain;
-  margin: 0 auto; }
-  #msg-button-container:active {
-    background-image: url("/img/msgBtn_on.png"); }
-  #msg-button-container #msg-button {
-    text-indent: -9999px;
-    border: 0 solid transparent;
-    background-color: transparent;
-    width: 126.0px;
-    height: 38.15px; }
+  margin: 0 auto;
+}
+/* line 221, ../sass/index.scss */
+#msg-button-container:active {
+  background-image: url("/img/msgBtn_on.png");
+}
+/* line 224, ../sass/index.scss */
+#msg-button-container #msg-button {
+  text-indent: -9999px;
+  border: 0 solid transparent;
+  background-color: transparent;
+  width: 126.0px;
+  height: 38.15px;
+}
 
+/* line 236, ../sass/index.scss */
 #message-dialog {
   box-sizing: border-box;
   position: absolute;
@@ -188,59 +261,79 @@ body {
   margin-bottom: 20px;
   margin-left: -150px;
   border: 2px solid #5c5c5c;
-    border-radius: 2px;
+  border-radius: 2px;
   top: 20px;
   left: 50%;
   z-index: 10000000;
   padding: 8px;
   display: none;
-  clear: both; }
-  #message-dialog .message-input {
-    height: 48px;
-    width: 100%;
-    border-radius: 3px;
-    display: block; }
-  #message-dialog.active {
-    display: block; }
-  #message-dialog:after {
-    content: '';
-    position: absolute;
-    border-top: 10px solid black;
-    border-right: 5px solid transparent;
-    border-left: 5px solid transparent;
-    bottom: -8px;
-    left: 150px; }
-  #message-dialog:before {
-    content: '';
-    position: absolute;
-    border-top: 10px solid #5c5c5c;
-    border-right: 5px solid transparent;
-    border-left: 5px solid transparent;
-    bottom: -12px;
-    left: 150px; }
-  #message-dialog .send-message-button {
-    background-color: #1aafe7;
-    color: white;
-    border: 2px solid #149cd0;
-    border-radius: 3px; }
-  #message-dialog .cancel-button {
-    background-color: black;
-    color: white;
-    border: 2px solid #5c5c5c;
-    border-radius: 3px; }
-  #message-dialog .dialog-buttons {
-    text-align: right; }
-  #message-dialog .remained-chars {
-    color: white;
-    font-size: .9em; }
-  #message-dialog .count {
-    color: lightgray;
-    float: left;
-    font-size: 1.6em;
-    font-weight: bold;
-    font-style: italic;
-    font-family: serif; }
+  clear: both;
+}
+/* line 255, ../sass/index.scss */
+#message-dialog .message-input {
+  height: 48px;
+  width: 100%;
+  border-radius: 3px;
+  display: block;
+}
+/* line 261, ../sass/index.scss */
+#message-dialog.active {
+  display: block;
+}
+/* line 264, ../sass/index.scss */
+#message-dialog:after {
+  content: '';
+  position: absolute;
+  border-top: 10px solid black;
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
+  bottom: -8px;
+  left: 150px;
+}
+/* line 274, ../sass/index.scss */
+#message-dialog:before {
+  content: '';
+  position: absolute;
+  border-top: 10px solid #5c5c5c;
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
+  bottom: -12px;
+  left: 150px;
+}
+/* line 283, ../sass/index.scss */
+#message-dialog .send-message-button {
+  background-color: #1aafe7;
+  color: white;
+  border: 2px solid #149cd0;
+  border-radius: 3px;
+}
+/* line 289, ../sass/index.scss */
+#message-dialog .cancel-button {
+  background-color: black;
+  color: white;
+  border: 2px solid #5c5c5c;
+  border-radius: 3px;
+}
+/* line 295, ../sass/index.scss */
+#message-dialog .dialog-buttons {
+  text-align: right;
+}
+/* line 298, ../sass/index.scss */
+#message-dialog .remained-chars {
+  color: white;
+  font-size: .9em;
+}
+/* line 302, ../sass/index.scss */
+#message-dialog .count {
+  color: lightgray;
+  float: left;
+  font-size: 1.6em;
+  font-weight: bold;
+  font-style: italic;
+  font-family: serif;
+}
 
+/* line 314, ../sass/index.scss */
 #messages {
   overflow-y: scroll;
   height: 360px;
@@ -250,67 +343,133 @@ body {
   width: 300px;
   margin-top: 20px;
   border: 2px solid #5c5c5c;
-    border-radius: 2px;
+  border-radius: 2px;
   top: -10px;
   left: 8px;
   z-index: 10000000;
   padding: 8px;
   clear: both;
-  display: none; }
-  #messages:after {
-    content: '';
-    position: absolute;
-    border-bottom: 10px solid black;
-    border-right: 5px solid transparent;
-    border-left: 5px solid transparent;
-    top: -8px;
-    left: 10px; }
-  #messages:before {
-    content: '';
-    position: absolute;
-    border-bottom: 10px solid #5c5c5c;
-    border-right: 5px solid transparent;
-    border-left: 5px solid transparent;
-    top: -12px;
-    left: 10px; }
+  display: none;
+}
+/* line 334, ../sass/index.scss */
+#messages:after {
+  content: '';
+  position: absolute;
+  border-bottom: 10px solid black;
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
+  top: -8px;
+  left: 10px;
+}
+/* line 344, ../sass/index.scss */
+#messages:before {
+  content: '';
+  position: absolute;
+  border-bottom: 10px solid #5c5c5c;
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
+  top: -12px;
+  left: 10px;
+}
 
+/* line 1, ../sass/message.scss */
 .message {
   padding: 4px;
-  border: 1px solid lightgrey;
+  border: 1px solid lightgray;
   border-bottom: 0;
   background-color: white;
   *zoom: 1;
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   font-size: 14px;
   line-height: 20px;
-  color: #333; }
-  .message :before, .message :after {
-    display: table;
-    line-height: 0;
-    content: ""; }
-  .message :after {
-    clear: both; }
-  .message .author-icon-column {
-    width: 40px;
-    text-align: center;
-    margin-right: -40px;
-    float: left; }
-  .message .author-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 4px;
-    display: block; }
-  .message .author {
-    float: left;
-    width: 100%; }
-  .message .author-inner {
-    margin: 0 60px 0 40px; }
-  .message .author-displayName {
-    font-size: 1.0em;
-    line-height: 1.1em;
-    margin: 0;
-    padding: 0; }
-  .message .timestamp {
-    width: 60px;
-    margin-left: -60px;
-    float: left; }
+  color: #333;
+  position: relative;
+  -webkit-animation-name: slidedown;
+  -webkit-animation-duration: 1s;
+  -moz-animation-name: slidedown;
+  -moz-animation-duration: 1s;
+  animation-name: slidedown;
+  animation-duration: 1s;
+}
+/* line 21, ../sass/message.scss */
+.message :before, .message :after {
+  display: table;
+  line-height: 0;
+  content: "";
+}
+/* line 26, ../sass/message.scss */
+.message :after {
+  clear: both;
+}
+/* line 31, ../sass/message.scss */
+.message .author-icon-column {
+  width: 40px;
+  text-align: center;
+  margin-right: -40px;
+  float: left;
+}
+/* line 37, ../sass/message.scss */
+.message .author-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  display: block;
+}
+/* line 43, ../sass/message.scss */
+.message .author {
+  float: left;
+  width: 100%;
+}
+/* line 47, ../sass/message.scss */
+.message .author-inner {
+  margin: 0 60px 0 40px;
+}
+/* line 50, ../sass/message.scss */
+.message .author-displayName {
+  font-size: 1.0em;
+  line-height: 1.1em;
+  margin: 0;
+  padding: 0;
+}
+/* line 56, ../sass/message.scss */
+.message .timestamp {
+  width: 60px;
+  margin-left: -60px;
+  float: left;
+}
+
+@-webkit-keyframes slidedown {
+  /* line 63, ../sass/message.scss */
+  from {
+    top: -6em;
+  }
+
+  /* line 66, ../sass/message.scss */
+  to {
+    top: 0;
+  }
+}
+
+@-moz-keyframes slidedown {
+  /* line 71, ../sass/message.scss */
+  from {
+    top: -6em;
+  }
+
+  /* line 74, ../sass/message.scss */
+  to {
+    top: 0;
+  }
+}
+
+@keyframes slidedown {
+  /* line 79, ../sass/message.scss */
+  from {
+    top: -6em;
+  }
+
+  /* line 82, ../sass/message.scss */
+  to {
+    top: 0;
+  }
+}

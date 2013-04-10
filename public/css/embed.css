@@ -1,94 +1,176 @@
 @charset "utf-8";
+/* line 1, ../sass/common.scss */
 .clearfix, #zapper-icons {
-  *zoom: 1; }
+  *zoom: 1;
+}
 
+/* line 6, ../sass/common.scss */
 .clearfix:before, #zapper-icons:before,
 .clearfix:after,
 #zapper-icons:after {
   display: table;
   line-height: 0;
-  content: ""; }
+  content: "";
+}
 
+/* line 12, ../sass/common.scss */
 .clearfix:after, #zapper-icons:after {
-  clear: both; }
+  clear: both;
+}
 
+/* line 1, ../sass/message.scss */
 .message {
   padding: 4px;
-  border: 1px solid lightgrey;
+  border: 1px solid lightgray;
   border-bottom: 0;
   background-color: white;
   *zoom: 1;
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   font-size: 14px;
   line-height: 20px;
-  color: #333; }
-  .message :before, .message :after {
-    display: table;
-    line-height: 0;
-    content: ""; }
-  .message :after {
-    clear: both; }
-  .message .author-icon-column {
-    width: 40px;
-    text-align: center;
-    margin-right: -40px;
-    float: left; }
-  .message .author-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 4px;
-    display: block; }
-  .message .author {
-    float: left;
-    width: 100%; }
-  .message .author-inner {
-    margin: 0 60px 0 40px; }
-  .message .author-displayName {
-    font-size: 1.0em;
-    line-height: 1.1em;
-    margin: 0;
-    padding: 0; }
-  .message .timestamp {
-    width: 60px;
-    margin-left: -60px;
-    float: left; }
+  color: #333;
+  position: relative;
+  -webkit-animation-name: slidedown;
+  -webkit-animation-duration: 1s;
+  -moz-animation-name: slidedown;
+  -moz-animation-duration: 1s;
+  animation-name: slidedown;
+  animation-duration: 1s;
+}
+/* line 21, ../sass/message.scss */
+.message :before, .message :after {
+  display: table;
+  line-height: 0;
+  content: "";
+}
+/* line 26, ../sass/message.scss */
+.message :after {
+  clear: both;
+}
+/* line 31, ../sass/message.scss */
+.message .author-icon-column {
+  width: 40px;
+  text-align: center;
+  margin-right: -40px;
+  float: left;
+}
+/* line 37, ../sass/message.scss */
+.message .author-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  display: block;
+}
+/* line 43, ../sass/message.scss */
+.message .author {
+  float: left;
+  width: 100%;
+}
+/* line 47, ../sass/message.scss */
+.message .author-inner {
+  margin: 0 60px 0 40px;
+}
+/* line 50, ../sass/message.scss */
+.message .author-displayName {
+  font-size: 1.0em;
+  line-height: 1.1em;
+  margin: 0;
+  padding: 0;
+}
+/* line 56, ../sass/message.scss */
+.message .timestamp {
+  width: 60px;
+  margin-left: -60px;
+  float: left;
+}
 
+@-webkit-keyframes slidedown {
+  /* line 63, ../sass/message.scss */
+  from {
+    top: -6em;
+  }
+
+  /* line 66, ../sass/message.scss */
+  to {
+    top: 0;
+  }
+}
+
+@-moz-keyframes slidedown {
+  /* line 71, ../sass/message.scss */
+  from {
+    top: -6em;
+  }
+
+  /* line 74, ../sass/message.scss */
+  to {
+    top: 0;
+  }
+}
+
+@keyframes slidedown {
+  /* line 79, ../sass/message.scss */
+  from {
+    top: -6em;
+  }
+
+  /* line 82, ../sass/message.scss */
+  to {
+    top: 0;
+  }
+}
+
+/* line 6, ../sass/embed.scss */
 html, body {
   margin: 0;
   padding: 0;
   width: 100%;
-  height: 100%; }
+  height: 100%;
+}
 
+/* line 12, ../sass/embed.scss */
 body {
-  background-color: #1f1f1f; }
+  background-color: #1f1f1f;
+}
 
+/* line 32, ../sass/embed.scss */
 #left {
   float: left;
   height: 100%;
-  padding-right: 16px; }
+  padding-right: 16px;
+}
 
+/* line 37, ../sass/embed.scss */
 #right {
   width: 296px;
   float: left;
-  height: 100%; }
+  height: 100%;
+}
 
+/* line 43, ../sass/embed.scss */
 #message-area {
   height: 100%;
   background-color: #525252;
-  padding: 8px; }
+  padding: 8px;
+}
 
+/* line 48, ../sass/embed.scss */
 #messages {
   width: 280px;
   height: 100%;
   overflow-y: scroll;
-  margin: 0 auto; }
+  margin: 0 auto;
+}
 
+/* line 56, ../sass/embed.scss */
 #message-input {
   width: 274px;
   height: 48px;
   display: block;
-  margin: 8px auto; }
+  margin: 8px auto;
+}
 
+/* line 62, ../sass/embed.scss */
 #post-message-button {
   width: 280px;
   height: 42.91971px;
@@ -98,10 +180,14 @@ body {
   text-indent: -9999px;
   display: block;
   margin: 8px auto;
-  padding-bottom: 8px; }
-  #post-message-button:active {
-    background-image: url("/img/postBtnWeb_on.png"); }
+  padding-bottom: 8px;
+}
+/* line 72, ../sass/embed.scss */
+#post-message-button:active {
+  background-image: url("/img/postBtnWeb_on.png");
+}
 
+/* line 75, ../sass/embed.scss */
 #zap-button {
   width: 276px;
   height: 64px;
@@ -110,10 +196,14 @@ body {
   border: 0;
   text-indent: -9999px;
   display: block;
-  margin: 8px auto 0; }
-  #zap-button:active {
-    background-image: url("/img/zapBtnWeb_on.png"); }
+  margin: 8px auto 0;
+}
+/* line 84, ../sass/embed.scss */
+#zap-button:active {
+  background-image: url("/img/zapBtnWeb_on.png");
+}
 
+/* line 88, ../sass/embed.scss */
 #logout-button {
   width: 176px;
   height: 25.0px;
@@ -122,25 +212,37 @@ body {
   border: 0;
   text-indent: -9999px;
   display: block;
-  margin: 16px auto 0; }
-  #logout-button:active {
-    background-image: url("/img/logoutBtnWeb_on.png"); }
+  margin: 16px auto 0;
+}
+/* line 97, ../sass/embed.scss */
+#logout-button:active {
+  background-image: url("/img/logoutBtnWeb_on.png");
+}
 
+/* line 106, ../sass/embed.scss */
 #tabs-embed-player {
   width: 100%;
-  height: 100%; }
+  height: 100%;
+}
 
+/* line 110, ../sass/embed.scss */
 .embed-player {
   width: 100%;
-  height: 100%; }
+  height: 100%;
+}
 
+/* line 114, ../sass/embed.scss */
 #chart-container {
   padding-top: 16px;
-  text-align: center; }
+  text-align: center;
+}
 
+/* line 118, ../sass/embed.scss */
 #zap-chart {
-  vertical-align: center; }
+  vertical-align: center;
+}
 
+/* line 123, ../sass/embed.scss */
 #zapper-icons {
   height: 32px;
   padding: 4px 0;
@@ -148,10 +250,15 @@ body {
   top: -8px;
   margin: 0;
   overflow: hidden;
-  list-style-type: none; }
-  #zapper-icons li {
-    float: left; }
-    #zapper-icons li .icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 4px; }
+  list-style-type: none;
+}
+/* line 133, ../sass/embed.scss */
+#zapper-icons li {
+  float: left;
+}
+/* line 135, ../sass/embed.scss */
+#zapper-icons li .icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+}

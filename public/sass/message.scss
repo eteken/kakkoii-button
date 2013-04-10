@@ -9,6 +9,15 @@
     font-size: 14px;
     line-height: 20px;
     color: #333;
+    position: relative;
+
+    -webkit-animation-name: slidedown;
+    -webkit-animation-duration: 1s;
+    -moz-animation-name: slidedown;
+    -moz-animation-duration: 1s;
+    animation-name: slidedown;
+    animation-duration: 1s;
+
     :before, :after {
         display: table;
         line-height: 0;
@@ -17,8 +26,6 @@
     :after {
         clear: both;
     }
-    // end clearfix
-    
     $author-icon-column-width: 40px;
     $timestamp-column-width: 60px;
     .author-icon-column {
@@ -50,5 +57,29 @@
         width: $timestamp-column-width;
         margin-left: -$timestamp-column-width;
         float: left;
+    }
+}
+@-webkit-keyframes slidedown {
+    from {
+        top: -6em;
+    }
+    to {
+        top: 0;
+    }
+}
+@-moz-keyframes slidedown {
+    from {
+        top: -6em;
+    }
+    to {
+        top: 0;
+    }
+}
+@keyframes slidedown {
+    from {
+        top: -6em;
+    }
+    to {
+        top: 0;
     }
 }

@@ -1,0 +1,101 @@
+/* line 1, ../sass/message.scss */
+.message {
+  padding: 4px;
+  border: 1px solid lightgray;
+  border-bottom: 0;
+  background-color: white;
+  *zoom: 1;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  color: #333;
+  position: relative;
+  -webkit-animation-name: slidedown;
+  -webkit-animation-duration: 1s;
+  -moz-animation-name: slidedown;
+  -moz-animation-duration: 1s;
+  animation-name: slidedown;
+  animation-duration: 1s;
+}
+/* line 21, ../sass/message.scss */
+.message :before, .message :after {
+  display: table;
+  line-height: 0;
+  content: "";
+}
+/* line 26, ../sass/message.scss */
+.message :after {
+  clear: both;
+}
+/* line 31, ../sass/message.scss */
+.message .author-icon-column {
+  width: 40px;
+  text-align: center;
+  margin-right: -40px;
+  float: left;
+}
+/* line 37, ../sass/message.scss */
+.message .author-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  display: block;
+}
+/* line 43, ../sass/message.scss */
+.message .author {
+  float: left;
+  width: 100%;
+}
+/* line 47, ../sass/message.scss */
+.message .author-inner {
+  margin: 0 60px 0 40px;
+}
+/* line 50, ../sass/message.scss */
+.message .author-displayName {
+  font-size: 1.0em;
+  line-height: 1.1em;
+  margin: 0;
+  padding: 0;
+}
+/* line 56, ../sass/message.scss */
+.message .timestamp {
+  width: 60px;
+  margin-left: -60px;
+  float: left;
+}
+
+@-webkit-keyframes slidedown {
+  /* line 63, ../sass/message.scss */
+  from {
+    top: -6em;
+  }
+
+  /* line 66, ../sass/message.scss */
+  to {
+    top: 0;
+  }
+}
+
+@-moz-keyframes slidedown {
+  /* line 71, ../sass/message.scss */
+  from {
+    top: -6em;
+  }
+
+  /* line 74, ../sass/message.scss */
+  to {
+    top: 0;
+  }
+}
+
+@keyframes slidedown {
+  /* line 79, ../sass/message.scss */
+  from {
+    top: -6em;
+  }
+
+  /* line 82, ../sass/message.scss */
+  to {
+    top: 0;
+  }
+}
