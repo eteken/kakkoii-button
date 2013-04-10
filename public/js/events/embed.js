@@ -102,7 +102,24 @@ $(function() {
         };
     })();
 
-
+    var playAudio = (function() {
+        var audioFiles = [
+            'arrived.mp3'
+        ];
+        var audioElems = {
+        };
+        for (var i = 0; i < audioFiles.length; i++) {
+            var audioFileName = audioFiles[i];
+            var audio = new Audio();
+            audio.src = '/media/' + audioFileName;
+            audioElems[audioFileName] = audio;
+        }
+        return function(audioFileName) {
+            var audioElem = audioElems[audioFileName];
+            audioElem.play();
+        };
+    })();
+    
     function init() {
         zapper.connect(function(err) {
             if (err) {
@@ -117,6 +134,7 @@ $(function() {
             currentEvent.subscribe('zap', function(zap) {
                 $zapButton.removeAttr('disabled');
                 zaps.push(zap);
+                playAudio('arrived.mp3');
             });
             currentEvent.subscribe('message', function(message) {
                 messages.push(message);
@@ -185,6 +203,7 @@ $(function() {
     var onMessageArrived = function(message) {
         var html = common.renderMessage(message);
         $('.message:first').before(html);
+        playAudio('arrived.mp3');
     };
     
     $zapButton.click(function() {
