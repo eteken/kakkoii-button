@@ -495,12 +495,14 @@ app.get('/events/embed', function(req, res) {
         res.send(404);
         return;
     }
+    var showSlide = req.param('slide') === '1';
     collectInitialData(eventId, function(err, result) {
         res.render('events/embed', {
             event: result.event.toObject({getters: true}),
 //            zaps: result.zaps,
             messages: result.messages,
-            user: req.user
+            user: req.user,
+            showSlide: showSlide
         });
     });
 });

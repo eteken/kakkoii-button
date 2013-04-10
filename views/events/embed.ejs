@@ -4,11 +4,7 @@
     <meta charset="UTF-8">
     <title>埋め込み視聴画面</title>
     <link rel=stylesheet href="/css/embed.css">
-    <!--
-        <link rel="stylesheet" href="/css/lib/bootstrap.min.css">
-        <link rel="stylesheet" href="/css/lib/bootstrap-responsive.min.css">
-        -->
-    <!--    <script src="/js/lib/bootstrap.min.js"></script> -->
+
     <script>
       var __lt_event__ = <%- JSON.stringify(event) %>;
       var __lt_messages__ = <%- JSON.stringify(messages) %>;
@@ -25,24 +21,15 @@
   <body class="clearfix">
     <div id="left">
       <div id="embed-player-container">
-        <div id="tabs-embed-player">
-          <ul>
-            <li><a href="#tab-ustream">Ustream</a></li>
-            <li><a href="#tab-slide">Slide</a></li>
-          </ul>
-          <div class="tabs-spacer"></div>
-          <div id="tab-ustream">
-            <iframe class="embed-player" src="http://www.ustream.tv/embed/13924849" scrolling="no" frameborder="0" style="border: 0px none transparent;"></iframe>
-          </div>
-          <div id="tab-ustream">
-            <iframe class="embed-player" src="http://www.slideshare.net/slideshow/embed_code/18530079" scrolling="no" frameborder="0" style="border: 0px none transparent;"></iframe>
-          </div>
-        </div>
-                <!--
-
-        <iframe id="live-player" src="http://www.ustream.tv/embed/13924849" scrolling="no" frameborder="0" style="border: 0px none transparent;"></iframe>
-        -->
-        <iframe id="live-player" src="http://www.slideshare.net/slideshow/embed_code/18530079" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+        <%
+           var ustreamUrl = 'http://www.ustream.tv/embed/13924849';
+           var slideUrl = 'http://www.slideshare.net/slideshow/embed_code/18530079';
+           var iframeUrl = ustreamUrl;
+           if (showSlide) {
+             iframeUrl = slideUrl;
+           }
+           %>
+        <iframe class="embed-player" src="<%= iframeUrl %>" scrolling="no" frameborder="0" style="border: 0px none transparent;"></iframe>
       </div>
       <div id="chart-container">
         <canvas id="zap-chart"></canvas>
