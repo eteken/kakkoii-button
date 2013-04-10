@@ -35,6 +35,10 @@ $(function() {
             init();
         }
     })();
+    (function hideAddressbar() {
+        if(window.scrollY === 0)
+            setTimeout(function(){window.scrollTo(0,1);}, 100);
+    })();
     $('#login-command').fastClick(function(){
         zapper.login(null, function(err, user) {
             if (err) {
