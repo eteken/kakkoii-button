@@ -57,9 +57,9 @@ $(function() {
                 width: leftWidth - 16,
                 height: chartContainerHeight - 16
             });
-            var ustreamContainerHeight = windowHeight - chartContainerHeight;
-            $('#ustream-player-container').css({
-                height: ustreamContainerHeight - 40
+            var embedPlayerContainerHeight = windowHeight - chartContainerHeight;
+            $('#embed-player-container').css({
+                height: embedPlayerContainerHeight - 40
             });
         };
         layout();

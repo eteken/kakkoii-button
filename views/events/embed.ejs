@@ -24,8 +24,25 @@
   </head>
   <body class="clearfix">
     <div id="left">
-      <div id="ustream-player-container">
-        <iframe id="ustream-player" src="http://www.ustream.tv/embed/13924849" scrolling="no" frameborder="0" style="border: 0px none transparent;"></iframe>
+      <div id="embed-player-container">
+        <div id="tabs-embed-player">
+          <ul>
+            <li><a href="#tab-ustream">Ustream</a></li>
+            <li><a href="#tab-slide">Slide</a></li>
+          </ul>
+          <div class="tabs-spacer"></div>
+          <div id="tab-ustream">
+            <iframe class="embed-player" src="http://www.ustream.tv/embed/13924849" scrolling="no" frameborder="0" style="border: 0px none transparent;"></iframe>
+          </div>
+          <div id="tab-ustream">
+            <iframe class="embed-player" src="http://www.slideshare.net/slideshow/embed_code/18530079" scrolling="no" frameborder="0" style="border: 0px none transparent;"></iframe>
+          </div>
+        </div>
+                <!--
+
+        <iframe id="live-player" src="http://www.ustream.tv/embed/13924849" scrolling="no" frameborder="0" style="border: 0px none transparent;"></iframe>
+        -->
+        <iframe id="live-player" src="http://www.slideshare.net/slideshow/embed_code/18530079" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>
       </div>
       <div id="chart-container">
         <canvas id="zap-chart"></canvas>

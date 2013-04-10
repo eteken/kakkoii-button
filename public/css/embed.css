@@ -126,7 +126,11 @@ body {
   #logout-button:active {
     background-image: url("/img/logoutBtnWeb_on.png"); }
 
-#ustream-player {
+#tabs-embed-player {
+  width: 100%;
+  height: 100%; }
+
+.embed-player {
   width: 100%;
   height: 100%; }
 
