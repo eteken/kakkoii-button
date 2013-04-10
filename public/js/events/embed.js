@@ -22,6 +22,50 @@ $(function() {
     , chartCtx
     , zapChart;
 
+
+    (function() {
+        function layout() {
+            var $messageArea = $('#message-area');
+            
+            var windowWidth = $(window).width();
+            var windowHeight = $(window).innerHeight();
+
+            var postFormHeight = $('#post-form').outerHeight();
+            var buttonContainerHeight = $('#buttons').outerHeight();
+
+            var logoutButtonPaddingTop = 16;
+            var zapButtonPaddingTop = 8;
+            var messageAreaPaddingBottom = 8;
+            var postButtonPaddingTop = 8;
+            var messageInputPaddingTop = 8;
+
+            var messageAreaHeight = windowHeight - buttonContainerHeight - logoutButtonPaddingTop - zapButtonPaddingTop;
+            
+            $messageArea.css({
+                height: messageAreaHeight
+            });
+            $('#messages').css({
+                height: messageAreaHeight - postFormHeight - messageAreaPaddingBottom
+            });
+            var rightWidth = $('#right').outerWidth();
+            var leftWidth = windowWidth - rightWidth;
+            $('#left').css({
+                width: leftWidth - 16
+            });
+            var chartContainerHeight = $('#chart-container').outerHeight();
+            $('#zap-chart').css({
+                width: leftWidth - 16,
+                height: chartContainerHeight - 16
+            });
+            var ustreamContainerHeight = windowHeight - chartContainerHeight;
+            $('#ustream-player-container').css({
+                height: ustreamContainerHeight - 40
+            });
+        };
+        layout();
+        $(window).resize(layout);
+    })();
+
     var renderChart = (function() {
         var CHART_HEIGHT_UNIT = 50;
         return function(counts) {
@@ -85,7 +129,7 @@ $(function() {
                 var $chart = $(chart);
                 $chart.attr($chart.css(['width', 'height']));
                 // 外部スコープの変数に保存
-                chartCtx = $chart[0].getContext('2d')
+                chartCtx = $chart[0].getContext('2d');
                 zapChart = new Chart(chartCtx);
                 
                 // とりあえずオール0のデータで書きだしておく
@@ -105,7 +149,7 @@ $(function() {
                     var message = messages[i];
                     buf.push(common.renderMessage(message));
                 }
-                $('.messages').html(buf.join(''));
+                $('#messages').html(buf.join(''));
             })();
         });
     }
@@ -129,18 +173,13 @@ $(function() {
                 return;
             }
             location.reload(true);
-            /*
-            $('#login-button-container').hide();
-            if (!zapper.connected) {
-                init();
-            }
-            */
         });
     });
+    /*
     if (!zapper.loggedIn) {
         hideControls();
     }
-    
+    */
     var onMessageArrived = function(message) {
         var html = common.renderMessage(message);
         $('.message:first').before(html);
@@ -148,7 +187,13 @@ $(function() {
     
     $zapButton.click(function() {
         if (!zapper.loggedIn) {
-            return alert('ログインしていません');
+            zapper.login(null, function(err, user) {
+                if (err) {
+                    return;
+                }
+                location.reload(true);
+            });
+            return;
         }
         var zap = currentEvent.zap();
         if (zap.count === zapper.maxZapCount) {
@@ -157,7 +202,13 @@ $(function() {
     });
     $postMessageButton.click(function() {
         if (!zapper.loggedIn) {
-            return alert('ログインしていません');
+            zapper.login(null, function(err, user) {
+                if (err) {
+                    return;
+                }
+                location.reload(true);
+            });
+            return;
         }
         var message = $messageInput.val();
         if (message.length === 0) {
@@ -166,13 +217,17 @@ $(function() {
         }
         currentEvent.sendMessage(message);
         $messageInput.val('');
+        return false;
     });
     $('#logout-button').click(function() {
-        $.get('/logout', function() {
-            location.reload();
-//            zapper.logout();
-//            hideControls();
-        });
+        if (!zapper.loggedIn) {
+            return;
+        }
+        if (confirm('ログアウトしますか？')) {
+            $.get('/logout', function() {
+                location.reload();
+            });
+        }
     });
     var renderZapsOnLive = (function() {
         var $zapperIcons = $('#zapper-icons');
@@ -200,7 +255,7 @@ $(function() {
                 zappers[zap.author._id] = zap.author;
                 // どこのスロットに入るかを計算する
                 var delta = timestamp - startTime;
-                var slotIdx = Math.floor(delta / ZAP_CHART_REFRESH_INTERVAL_MILLIS);
+                var slotIdx = ZAP_CHART_COUNT_OF_POINTS - Math.floor(delta / ZAP_CHART_REFRESH_INTERVAL_MILLIS);
                 slots[slotIdx] += zap.count;
                 rendered.push(zap);
             });
@@ -220,4 +275,5 @@ $(function() {
             });
         };
     })();
+
 });

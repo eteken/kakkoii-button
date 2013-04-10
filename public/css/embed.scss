@@ -4,82 +4,135 @@
 @import 'message.scss';
 
 html, body {
+    margin: 0;
+    padding: 0;
     width: 100%;
     height: 100%;
 }
-
 body {
-    background-color: white;
-    padding-top: 8px;
+    background-color: #1f1f1f;
 }
+$messages-width: 280px;
+
+$post-button-img-aspect: 42 / 274;
+$post-button-width: $messages-width;
+$post-button-height: $post-button-width * $post-button-img-aspect;
+
+$zap-button-img-aspect: 64 / 276;
+$zap-button-width: 276px;
+$zap-button-height: $zap-button-width * $zap-button-img-aspect;
+
+$logout-button-img-aspect: 25 / 176;
+$logout-button-width: 176px;
+$logout-button-height: $logout-button-width * $logout-button-img-aspect;
+
+$right-width: $messages-width + 16px;
+
+
+#left {
+    float: left;
+    height: 100%;
+    padding-right: 16px;
+}
+#right {
+    width: $right-width;
+    float: left;
+    height: 100%;
+}
+
+#message-area {
+    height: 100%;
+    background-color: #525252;
+    padding: 8px;
+}
+#messages {
+    width: $messages-width;
+    height: 100%;
+    overflow-y: scroll;
+    margin: 0 auto;
+//    box-sizing: border-box;
+//    padding: 1px;
+}
+#message-input {
+    width: $messages-width - 6;
+    height: 48px;
+    display: block;
+    margin: 8px auto;
+}
+#post-message-button {
+    width: $post-button-width;
+    height: $post-button-height;
+    background: url('/img/postBtnWeb_on.png') no-repeat center center;
+    background-size: 100% 100%;
+    border: 0;
+    text-indent: -9999px;
+    display: block;
+    margin: 8px auto;
+    padding-bottom: 8px;
+    &:active {
+        background-image: url('/img/postBtnWeb_on.png');
+    }}
+#zap-button {
+    width: $zap-button-width;
+    height: $zap-button-height;
+    background: url('/img/zapBtnWeb_off.png') no-repeat center center;
+    background-size: 100% 100%;
+    border: 0;
+    text-indent: -9999px;
+    display: block;
+    margin: 8px auto 0;
+    &:active {
+        background-image: url('/img/zapBtnWeb_on.png');
+    }
+}
+#logout-button {
+    width: $logout-button-width;
+    height: $logout-button-height;
+    background: url('/img/logoutBtnWeb_off.png') no-repeat center center;
+    background-size: 100% 100%;
+    border: 0;
+    text-indent: -9999px;
+    display: block;
+    margin: 16px auto 0;
+    &:active {
+        background-image: url('/img/logoutBtnWeb_on.png');
+    }
+}
+
+//$ustream-player-width: 608px;
 $ustream-player-width: 608px;
 $ustream-player-height: 368px;
 
 #ustream-player {
-    width: $ustream-player-width;
-    height: $ustream-player-height;
+    width: 100%;
+    height: 100%;
 }
-.messages {
-    height: $ustream-player-height;
-    overflow-y: scroll;
-}
-#chart-wrapper {
+#chart-container {
+    padding-top: 16px;
     text-align: center;
 }
-
+#zap-chart {
+    vertical-align: center;
+    background-color: white;
+}
 $zapper-icon-size: 32px;
 
-#zap-chart {
-    width: $ustream-player-width;
-    height: 220px - $zapper-icon-size - 4;
-    vertical-align: center;
-    border: 1px solid gray;
-}
 
 #zapper-icons {
     @extend .clearfix;
-    padding: 0;
+    height: $zapper-icon-size;
+    padding: 4px 0;
+    position: relative;
+    top: -8px;
     margin: 0;
+    background-color: white;
     list-style-type: none;
     li {
-        float: right;
+        float: left;
         .icon {
             width: $zapper-icon-size;
             height: $zapper-icon-size;
             border-radius: 4px;
         }
     }
-}
-$controls-width: 90%;
-#message-input {
-    width: $controls-width;
-}
-
-#zap-button, #post-message-button {
-    width: $controls-width;
-    margin-bottom: 8px;
-}
-#zap-button {
-    height: 60px;
-    background-color: #c10000;
-    color: white;
-    border: 0;
-}
-#post-message-button {
-    height: 40px;
-    border: 0;
-}
-#control-panel {
-    text-align: center;
-}
-
-#login-button-container {
-    display: none;
-    background-color: rgba(255, 255, 255, .7);
-    position: absolute;
-    text-align: center;
-    padding-top: 50px;
-}
-#login-button {
-    vertical-align: center;
 }
