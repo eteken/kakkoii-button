@@ -51,7 +51,7 @@ body {
     line-height: $h;
     width: 100%;
 }
-$title-row-height: 52px;
+$title-row-height: 66px;
 $icons-row-height: 34px;
 $header-height: $title-row-height + $icons-row-height;
 
@@ -154,8 +154,9 @@ $header-height: $title-row-height + $icons-row-height;
 }
 #zapper-main-header {
     z-index: 1;
-    background: url('/img/headBg.png') no-repeat center center;
-    background-size: 320px
+    background: url('/img/headBg.png') no-repeat top center;
+    background-size: 320px;
+    height:104px;
 }
 #zapper-main .main {
     position: absolute;

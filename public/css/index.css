@@ -46,8 +46,8 @@ body {
   background: url("/img/bodyBg.png") top center repeat-x black; }
 
 #title-row {
-  height: 52px;
-  line-height: 52px;
+  height: 66px;
+  line-height: 66px;
   width: 100%; }
   #title-row #zapper-header-container {
     margin: 0;
@@ -127,12 +127,13 @@ body {
 
 #zapper-main-header {
   z-index: 1;
-  background: url("/img/headBg.png") no-repeat center center;
-  background-size: 320px; }
+  background: url("/img/headBg.png") no-repeat top center;
+  background-size: 320px;
+  height: 104px; }
 
 #zapper-main .main {
   position: absolute;
-  top: 86px;
+  top: 100px;
   left: 0;
   right: 0;
   bottom: 0;
