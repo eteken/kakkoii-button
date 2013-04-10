@@ -1,17 +1,1 @@
-/* line 1, ../sass/common.scss */
-.clearfix {
-  *zoom: 1;
-}
-
-/* line 6, ../sass/common.scss */
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  line-height: 0;
-  content: "";
-}
-
-/* line 12, ../sass/common.scss */
-.clearfix:after {
-  clear: both;
-}
+.clearfix{*zoom:1}.clearfix:before,.clearfix:after{display:table;line-height:0;content:""}.clearfix:after{clear:both}

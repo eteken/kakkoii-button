@@ -252,13 +252,98 @@ body {
   overflow: hidden;
   list-style-type: none;
 }
-/* line 133, ../sass/embed.scss */
+/* line 135, ../sass/embed.scss */
 #zapper-icons li {
   float: left;
+  position: relative;
+  -webkit-animation-name: slidein;
+  -webkit-animation-duration: 6s;
+  -moz-animation-name: slidein;
+  -moz-animation-duration: 6s;
+  animation-name: slidein;
+  animation-duration: 6s;
 }
-/* line 135, ../sass/embed.scss */
+/* line 146, ../sass/embed.scss */
 #zapper-icons li .icon {
   width: 32px;
   height: 32px;
   border-radius: 4px;
+}
+
+@-webkit-keyframes slidein {
+  /* line 155, ../sass/embed.scss */
+  0% {
+    left: -100%;
+    opacity: 1;
+  }
+
+  /* line 159, ../sass/embed.scss */
+  20% {
+    left: 0;
+    opacity: 1;
+  }
+
+  /* line 163, ../sass/embed.scss */
+  80% {
+    left: 0;
+    opacity: 1;
+  }
+
+  /* line 167, ../sass/embed.scss */
+  100% {
+    left: 0;
+    opacity: 0;
+  }
+}
+
+@-moz-keyframes slidein {
+  /* line 173, ../sass/embed.scss */
+  0% {
+    left: -100%;
+    opacity: 1;
+  }
+
+  /* line 177, ../sass/embed.scss */
+  20% {
+    left: 0;
+    opacity: 1;
+  }
+
+  /* line 181, ../sass/embed.scss */
+  80% {
+    left: 0;
+    opacity: 1;
+  }
+
+  /* line 185, ../sass/embed.scss */
+  100% {
+    left: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes slidein {
+  /* line 191, ../sass/embed.scss */
+  0% {
+    left: -100%;
+    opacity: 1;
+  }
+
+  /* line 195, ../sass/embed.scss */
+  20% {
+    left: 0;
+    opacity: 1;
+  }
+
+  /* line 199, ../sass/embed.scss */
+  80% {
+    left: 0;
+    opacity: 1;
+  }
+
+  /* line 203, ../sass/embed.scss */
+  100% {
+    left: 0;
+    opacity: 0;
+  }
 }

@@ -23,4 +23,6 @@ javascripts_dir = "public/js"
 # and then run:
 # sass-convert -R --from scss --to sass sass scss && rm -rf sass && mv scss sass
 
-require "animate"
+# require "animate"
+# output_style = :compressed
+environment = :production

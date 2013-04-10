@@ -6,6 +6,7 @@ $(function() {
     , $messageInput = $('#message-input')
     , $zapButton = $('#zap-button')
     , $postMessageButton = $('#post-message-button')
+    , $zapperIcons = $('#zapper-icons')
     , ZAP_CHART_REFRESH_INTERVAL = 1 //seconds
     , ZAP_CHART_REFRESH_INTERVAL_MILLIS = ZAP_CHART_REFRESH_INTERVAL * 1000 //seconds
     , ZAP_CHART_COUNT_OF_POINTS = 20
@@ -135,6 +136,30 @@ $(function() {
                 $zapButton.removeAttr('disabled');
                 zaps.push(zap);
                 playAudio('arrived.mp3');
+
+                (function() {
+                    var zapAuthor = zap.author;
+                    var authorId = zapAuthor._id;
+                    console.log(authorId);
+                    var $listItems = $zapperIcons.children();
+                    for (var i = 0, n = $listItems.length; i < n; i++) {
+                        var $li = $($listItems[i]);
+                        if ($li.data('author')._id === authorId) {
+                            $li.data('timestamp', new Date());
+                            return;
+                        }
+                    }
+                    var $li = $(document.createElement('li'));
+                    $li.data('author', zapAuthor);
+                    $li.data('timestamp', new Date());
+                    $li.on('webkitAnimationEnd mozAnimationEnd oAnimationEnd msAnimationEnd animationend', function() {
+                        $(this).remove();
+                    });
+                    var $img = $(document.createElement('img'));
+                    $img.attr('src', zapAuthor.photo);
+                    $img.addClass('icon').appendTo($li);
+                    $zapperIcons.append($li);
+                })();
             });
             currentEvent.subscribe('message', function(message) {
                 messages.push(message);
@@ -266,14 +291,12 @@ $(function() {
                 now.getHours(), now.getMinutes(), now.getSeconds() + 1).getTime();
             var startTime = new Date(endTime - chartRangeInMillis).getTime();
 
-            var zappers = {};
             var rendered = [];
             _.each(zaps, function(zap) {
                 var timestamp = Date.parse(zap.timestamp);
                 if (timestamp < startTime || timestamp > endTime) {
                     return;
                 }
-                zappers[zap.author._id] = zap.author;
                 // どこのスロットに入るかを計算する
                 var delta = timestamp - startTime;
                 var slotIdx = ZAP_CHART_COUNT_OF_POINTS - Math.floor(delta / ZAP_CHART_REFRESH_INTERVAL_MILLIS);
@@ -285,15 +308,6 @@ $(function() {
             zaps = rendered;
 //            console.log(slots.join(','));
             renderChart(slots);
-            $zapperIcons.empty();
-            // アイコンを出す
-            _.each(zappers, function(author) {
-                var $li = $(document.createElement('li'));
-                var $img = $(document.createElement('img'));
-                $img.attr('src', author.photo);
-                $img.addClass('icon').appendTo($li);
-                $zapperIcons.append($li);
-            });
         };
     })();
 

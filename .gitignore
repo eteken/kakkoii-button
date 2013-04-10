@@ -4,3 +4,4 @@ data
 .DS_Store
 *-ck.js
 *.log
+.sass-cache

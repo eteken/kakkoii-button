@@ -130,12 +130,78 @@ $zapper-icon-size: 32px;
     overflow: hidden;
 //    background-color: white;
     list-style-type: none;
+
+
     li {
         float: left;
+        position: relative;
+
+        -webkit-animation-name: slidein;
+        -webkit-animation-duration: 6s;
+        -moz-animation-name: slidein;
+        -moz-animation-duration: 6s;
+        animation-name: slidein;
+        animation-duration: 6s;
+
         .icon {
             width: $zapper-icon-size;
             height: $zapper-icon-size;
             border-radius: 4px;
         }
+    }
+}
+
+@-webkit-keyframes slidein {
+    0% {
+        left: -100%;
+        opacity: 1;
+    }
+    20% {
+        left: 0;
+        opacity: 1;
+    }
+    80% {
+        left: 0;
+        opacity: 1;
+    }
+    100% {
+        left: 0;
+        opacity: 0;
+    }
+}
+@-moz-keyframes slidein {
+    0% {
+        left: -100%;
+        opacity: 1;
+    }
+    20% {
+        left: 0;
+        opacity: 1;
+    }
+    80% {
+        left: 0;
+        opacity: 1;
+    }
+    100% {
+        left: 0;
+        opacity: 0;
+    }
+}
+@keyframes slidein {
+    0% {
+        left: -100%;
+        opacity: 1;
+    }
+    20% {
+        left: 0;
+        opacity: 1;
+    }
+    80% {
+        left: 0;
+        opacity: 1;
+    }
+    100% {
+        left: 0;
+        opacity: 0;
     }
 }
