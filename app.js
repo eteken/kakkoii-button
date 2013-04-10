@@ -284,7 +284,7 @@ app.get('/auth/twitter/callback',
             req.session.user = req.user;
             console.log('User object is persisted to session:' + JSON.stringify(req.session.user));
             if (req.session.mobileAuth) {
-                res.redirect('/?eventId=' + encodeURIComponent(req.session.eventId) + '#zapper-main');
+                res.redirect('/?eventId=' + encodeURIComponent(req.session.eventId));
                 delete req.session.mobileAuth;
                 delete req.session.eventId;
             } else {
@@ -299,8 +299,15 @@ app.get('/auth/twitter/callback',
         });
 app.get('/auth/failed',
         function(req, res) {
-            res.end('<script>opener.__lt_oauth_succeeded__=false;window.close();</script>');
+            if (req.session.mobileAuth) {
+                res.redirect('/?eventId=' + encodeURIComponent(req.session.eventId));
+                delete req.session.mobileAuth;
+                delete req.session.eventId;
+            } else {
+                res.end('<script>opener.__lt_oauth_succeeded__=false;window.close();</script>');
+            }
         });
+        
 
 app.get('/logout', function (req, res) {
     req.session.destroy();
