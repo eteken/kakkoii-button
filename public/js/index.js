@@ -73,8 +73,8 @@ $(function() {
                 })();
                 
 
-                $('#zap-button').text('(いいね!)').removeAttr('disabled');
-                showMessageDialog('#zap-button', { relatedZapUUID: zap.uuid, autoCloseSeconds: 3 });
+                $('#zap-button').removeAttr('disabled');
+//                showMessageDialog('#zap-button', { relatedZapUUID: zap.uuid, autoCloseSeconds: 3 });
             };
             /*
               currentEvent.subscribe('zap', function(zap) {
