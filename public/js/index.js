@@ -18,7 +18,8 @@ $(function() {
     , $messageDialog = $('#message-dialog')
     , $messageInput = $messageDialog.find('.message-input')
     , $autoCloseCount = $messageDialog.find('.count')
-    , $buttonsContainer = $('#buttons-container');
+    , $buttonsContainer = $('#buttons-container')
+    , buttonsContainerWidth = $buttonsContainer.outerWidth();
 
     function switchScreen(next, callback) {
         setTimeout(function() {
@@ -61,8 +62,17 @@ $(function() {
             $('#user-icon img').attr('src', user.photos[0]);
             $('#zapper-main h1:first').text(currentEvent.title);
             currentEvent.onZapSent = function(zap) {
-                var backgroundUrl = 'url("/img/btnBg_00.png")';
-                $buttonsContainer.css('backgroundImage', backgroundUrl);
+                var zapCount = zap.count;
+                (function decrementZapCount() {
+                    var pos = -(buttonsContainerWidth * zapCount);
+                    $buttonsContainer.css('backgroundPosition',  pos + 'px 0');
+                    zapCount--;
+                    if (zapCount >= 0) {
+                        setTimeout(decrementZapCount, 40);
+                    }
+                })();
+                
+
                 $('#zap-button').text('(いいね!)').removeAttr('disabled');
                 showMessageDialog('#zap-button', { relatedZapUUID: zap.uuid, autoCloseSeconds: 3 });
             };
@@ -122,6 +132,7 @@ $(function() {
         });
     })();
 
+    
     function onZapButtonClicked() {
         if (!zapper.loggedIn) {
             return alert('ログインしていません');
@@ -131,8 +142,11 @@ $(function() {
         if (zapCount === currentEvent.maxZapCount) {
             $(this).attr('disabled', 'disabled');
         }
-        var backgroundUrl = 'url("/img/btnBg_' + _.str.lpad(String(zapCount), 2, '0') + '.png")';
-        $buttonsContainer.css('backgroundImage', backgroundUrl);
+        var position = -buttonsContainerWidth * zapCount;
+        $buttonsContainer.css('backgroundPosition', position + 'px 0');
+//        zapButtonWidth
+//        var backgroundUrl = 'url("/img/btnBg_' + _.str.lpad(String(zapCount), 2, '0') + '.png")';
+//        $buttonsContainer.css('backgroundImage', backgroundUrl);
     }
     $zapButton.fastClick(onZapButtonClicked);
     /*
@@ -184,6 +198,7 @@ $(function() {
     });
     var autoCloseTimer;
     function autoCloseMessageDialog(seconds) {
+        clearTimeout(autoCloseTimer);
         var start = Date.now();
         
         (function updateCount() {

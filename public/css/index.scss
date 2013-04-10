@@ -176,9 +176,8 @@ $header-height: $title-row-height + $icons-row-height;
     position: absolute;
     left: 50%;
 //    bottom: 20px;
-    background: url('/img/btnBg_00.png') no-repeat {
-        size: contain;
-    }
+    background: url('/img/btnBg_sprite.png') no-repeat;
+    background-position: 0 0;
 }
 // ボタンの元画像の縦横比
 $zap-button-original-aspect: 227 / 360;

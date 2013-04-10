@@ -146,8 +146,8 @@ body {
   margin-left: -137.5px;
   position: absolute;
   left: 50%;
-  background: url("/img/btnBg_00.png") no-repeat;
-    background-size: contain; }
+  background: url("/img/btnBg_sprite.png") no-repeat;
+  background-position: 0 0; }
 
 #zap-button-container {
   background: url("/img/zapBtn_off.png") no-repeat;
