@@ -254,6 +254,13 @@ function collectInitialData(eventId, done) {
   res.render('login', { user: req.user });
   });
 */
+
+app.get('/auth/mobile/twitter', function(req, res) {
+    req.session.mobileAuth = true;
+    req.session.eventId = req.param('eventId');
+    res.redirect('/auth/twitter');
+});
+
 // GET /auth/twitter
 //   Use passport.authenticate() as route middleware to authenticate the
 //   request.  The first step in Twitter authentication will involve redirecting
@@ -276,13 +283,19 @@ app.get('/auth/twitter/callback',
         function(req, res) {
             req.session.user = req.user;
             console.log('User object is persisted to session:' + JSON.stringify(req.session.user));
-            // セッション内のuserオブジェクトには、OAuthのトークン情報が含まれてしまっているので除去する
-            var clone = _.clone(req.session.user);
-            delete clone.oauthToken;
-            var userStr = JSON.stringify(clone);
-            res.end('<script>opener.__lt_oauth_succeeded__=true;' +
-                    'opener.__lt_logged_in_user__=' + userStr + ';' +
-                    'window.close();</script>');
+            if (req.session.mobileAuth) {
+                res.redirect('/?eventId=' + encodeURIComponent(req.session.eventId) + '#zapper-main');
+                delete req.session.mobileAuth;
+                delete req.session.eventId;
+            } else {
+                // セッション内のuserオブジェクトには、OAuthのトークン情報が含まれてしまっているので除去する
+                var clone = _.clone(req.session.user);
+                delete clone.oauthToken;
+                var userStr = JSON.stringify(clone);
+                res.end('<script>opener.__lt_oauth_succeeded__=true;' +
+                        'opener.__lt_logged_in_user__=' + userStr + ';' +
+                        'window.close();</script>');
+            }
         });
 app.get('/auth/failed',
         function(req, res) {

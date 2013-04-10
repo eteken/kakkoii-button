@@ -111,6 +111,11 @@
         login: function(options, callback) {
             var self = this;
             options = options || {};
+            if (options.mobileAuth) {
+                location.href = '/auth/mobile/twitter?eventId=' + encodeURIComponent(options.eventId);
+                return;
+            }
+            
             var windowOptions = options.windowOptions || 'location=0,status=0,width=600,height=400';
             var windowName = options.windowName || 'OAuthPopupWindow';
             var watchInterval = options.watchInterval || 500;

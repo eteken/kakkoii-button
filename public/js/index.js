@@ -5,8 +5,8 @@ $(function() {
             setTimeout(callback, 0);
         };
     }
-    var currentEvent
-    , zapper = new Zapper()
+    var zapper = new Zapper()
+    , currentEvent = zapper.event(__lt_event__)
     , user
     , messages
     , messagesShown
@@ -36,11 +36,13 @@ $(function() {
         }
     })();
     (function hideAddressbar() {
-        if(window.scrollY === 0)
-            setTimeout(function(){window.scrollTo(0,1);}, 100);
+        setTimeout(function(){window.scrollTo(0,1);}, 100);
     })();
     $('#login-command').fastClick(function(){
-        zapper.login(null, function(err, user) {
+        zapper.login({
+            mobileAuth: true,
+            eventId: currentEvent._id,
+        }, function(err, user) {
             if (err) {
                 return;
             }
@@ -56,7 +58,6 @@ $(function() {
                 return alert('サーバとの接続に失敗しました。アプリケーションはご利用頂けません。');
             }
             user = zapper.user;
-            currentEvent = zapper.event(__lt_event__);
             $('#user-icon img').attr('src', user.photos[0]);
             $('#zapper-main h1:first').text(currentEvent.title);
             currentEvent.onZapSent = function(zap) {
