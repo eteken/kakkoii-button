@@ -66,9 +66,9 @@ $(function() {
                 showMessageDialog('#zap-button', { relatedZapUUID: zap.uuid, autoCloseSeconds: 3 });
             };
             /*
-            currentEvent.subscribe('zap', function(zap) {
-                zaps.push(zap);
-            });
+              currentEvent.subscribe('zap', function(zap) {
+              zaps.push(zap);
+              });
             */
             currentEvent.subscribe('message', function(message) {
                 messages.push(message);
@@ -134,8 +134,12 @@ $(function() {
         $buttonsContainer.css('backgroundImage', backgroundUrl);
     }
     $zapButton.fastClick(onZapButtonClicked);
-    $(window).on('shake', onZapButtonClicked);
-    
+    /*
+    $(window).on('shake', function() {
+        shaked = true;
+        onZapButtonClicked();
+    });
+    */
     $('#msg-notifier').fastClick(function() {
         if (messagesShown) {
             hideMessages();
