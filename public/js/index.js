@@ -71,9 +71,8 @@ $(function() {
             messages = __lt_messages__;
             messageCount = messages.length;
             updateMessageCount();
-            delete window.__lt_messages__;
 
-//            renderMessages(messages);
+            //            renderMessages(messages);
         });
     }
     function updateMessageCount() {
@@ -156,12 +155,10 @@ $(function() {
                 var elapsedSeconds = Math.floor(elapsedTime / 1000);
                 $autoCloseCount.text(seconds - elapsedSeconds);
                 autoCloseTimer = setTimeout(updateCount, 200);
-                console.log(autoCloseTimer);
             }
         })();
     }
     $messageInput.on('focus', function() {
-        console.log(autoCloseTimer);
         clearTimeout(autoCloseTimer);
         $autoCloseCount.text('');
     });
@@ -169,9 +166,11 @@ $(function() {
         showMessageDialog(this);
     });
     $('#logout-button').fastClick(function() {
-        $.get('/logout', function() {
-            location.reload();
-        });
+        if (confirm('ログアウトしますか?')) {
+            $.get('/logout', function() {
+                location.reload();
+            });
+        }
     });
     function showMessageDialog(target, options) {
         $messageDialog.addClass('active');
