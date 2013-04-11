@@ -34,7 +34,7 @@ body {
 /* line 16, ../sass/index.scss */
 #splash-screen {
   background: url("/img/splash-bg.png") no-repeat center center;
-  background-size: contain;
+  background-size: cover;
   width: 100%;
   height: 100%;
 }
@@ -210,8 +210,14 @@ body {
   background: url("/img/btnBg_sprite.png") no-repeat;
   background-position: 0 0;
 }
+@media screen and (min-device-height: 480px) {
+  /* line 171, ../sass/index.scss */
+  #buttons-container {
+    bottom: 20px;
+  }
+}
 
-/* line 196, ../sass/index.scss */
+/* line 198, ../sass/index.scss */
 #zap-button-container {
   background: url("/img/zapBtn_off.png") no-repeat;
   width: 180px;
@@ -219,11 +225,11 @@ body {
   background-size: contain;
   margin: 56px auto 0;
 }
-/* line 202, ../sass/index.scss */
+/* line 204, ../sass/index.scss */
 #zap-button-container:active {
   background-image: url("/img/zapBtn_on.png");
 }
-/* line 205, ../sass/index.scss */
+/* line 207, ../sass/index.scss */
 #zap-button-container #zap-button {
   margin-top: 26.05px;
   text-indent: -9999px;
@@ -233,7 +239,7 @@ body {
   height: 79.45px;
 }
 
-/* line 217, ../sass/index.scss */
+/* line 219, ../sass/index.scss */
 #msg-button-container {
   background: url("/img/msgBtn_off.png") no-repeat;
   width: 180px;
@@ -241,11 +247,11 @@ body {
   background-size: contain;
   margin: 0 auto;
 }
-/* line 223, ../sass/index.scss */
+/* line 225, ../sass/index.scss */
 #msg-button-container:active {
   background-image: url("/img/msgBtn_on.png");
 }
-/* line 226, ../sass/index.scss */
+/* line 228, ../sass/index.scss */
 #msg-button-container #msg-button {
   text-indent: -9999px;
   border: 0 solid transparent;
@@ -254,7 +260,7 @@ body {
   height: 37.8px;
 }
 
-/* line 238, ../sass/index.scss */
+/* line 240, ../sass/index.scss */
 #message-dialog {
   box-sizing: border-box;
   position: absolute;
@@ -271,18 +277,18 @@ body {
   display: none;
   clear: both;
 }
-/* line 257, ../sass/index.scss */
+/* line 259, ../sass/index.scss */
 #message-dialog .message-input {
   height: 48px;
   width: 100%;
   border-radius: 3px;
   display: block;
 }
-/* line 263, ../sass/index.scss */
+/* line 265, ../sass/index.scss */
 #message-dialog.active {
   display: block;
 }
-/* line 266, ../sass/index.scss */
+/* line 268, ../sass/index.scss */
 #message-dialog:after {
   content: '';
   position: absolute;
@@ -292,7 +298,7 @@ body {
   bottom: -8px;
   left: 150px;
 }
-/* line 276, ../sass/index.scss */
+/* line 278, ../sass/index.scss */
 #message-dialog:before {
   content: '';
   position: absolute;
@@ -302,30 +308,30 @@ body {
   bottom: -12px;
   left: 150px;
 }
-/* line 285, ../sass/index.scss */
+/* line 287, ../sass/index.scss */
 #message-dialog .send-message-button {
   background-color: #1aafe7;
   color: white;
   border: 2px solid #149cd0;
   border-radius: 3px;
 }
-/* line 291, ../sass/index.scss */
+/* line 293, ../sass/index.scss */
 #message-dialog .cancel-button {
   background-color: black;
   color: white;
   border: 2px solid #5c5c5c;
   border-radius: 3px;
 }
-/* line 297, ../sass/index.scss */
+/* line 299, ../sass/index.scss */
 #message-dialog .dialog-buttons {
   text-align: right;
 }
-/* line 300, ../sass/index.scss */
+/* line 302, ../sass/index.scss */
 #message-dialog .remained-chars {
   color: white;
   font-size: .9em;
 }
-/* line 304, ../sass/index.scss */
+/* line 306, ../sass/index.scss */
 #message-dialog .count {
   color: lightgray;
   float: left;
@@ -335,7 +341,7 @@ body {
   font-family: serif;
 }
 
-/* line 316, ../sass/index.scss */
+/* line 318, ../sass/index.scss */
 #messages {
   overflow-y: scroll;
   height: 360px;
@@ -353,7 +359,7 @@ body {
   clear: both;
   display: none;
 }
-/* line 336, ../sass/index.scss */
+/* line 338, ../sass/index.scss */
 #messages:after {
   content: '';
   position: absolute;
@@ -363,7 +369,7 @@ body {
   top: -8px;
   left: 10px;
 }
-/* line 346, ../sass/index.scss */
+/* line 348, ../sass/index.scss */
 #messages:before {
   content: '';
   position: absolute;
