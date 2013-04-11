@@ -13,7 +13,8 @@ var Zap = new mongoose.Schema({
         displayName: { type: String, required: true },
         photo: { type: String, required: true }
     },
-    uuid: { type: String, index: { unique: true }, required: true }
+    uuid: { type: String, index: { unique: true }, required: true },
+    from: { type: Number, required: true, 'default': 0 }
 }, {
     'autoIndex': false
 });
@@ -28,7 +29,8 @@ var Message = new mongoose.Schema({
         photo: { type: String, required: true }
     },
     relatedZapUUID: { type: String, index: true },
-    seq: { type: Number, index: { unique: true }, 'default': 1 }
+    seq: { type: Number, index: { unique: true }, 'default': 1 },
+    from: { type: Number, required: true, 'default': 0 }
 }, {
     'autoIndex': false
 });

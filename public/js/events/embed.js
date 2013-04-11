@@ -1,5 +1,5 @@
 $(function() {
-    var zapper = new Zapper()
+    var zapper = new Zapper({ from: 1 }) // PCからの利用
     , currentEvent
     , zaps = []
     , messages = []

@@ -47,7 +47,8 @@
                 var zap = {
                     eventId: self._id,
                     count: self._currentZapCount,
-                    uuid: uuid
+                    uuid: uuid,
+                    from: self.zapper.options.from
                 };
                 sock.emit('zap', zap);
                 if (typeof self.onZapSent === 'function') {
@@ -66,6 +67,7 @@
             sock.emit('message', {
                 eventId: self._id,
                 text: message,
+                from: self.zapper.options.from,
                 relatedZapUUID: relatedZapUUID
             });
         },
@@ -74,7 +76,10 @@
         }
     };
 
-    var Zapper = function() {
+    var Zapper = function(options) {
+        this.options = options || {
+            from: 0
+        };
         this._prepareAuthInfo();
     };
     Zapper.prototype = {
