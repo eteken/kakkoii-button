@@ -185,9 +185,11 @@ body {
   background: url("/img/headBg.png") no-repeat top center;
   background-size: 320px;
   height: 104px;
+  width: 320px;
+  margin: 0 auto;
 }
 
-/* line 161, ../sass/index.scss */
+/* line 163, ../sass/index.scss */
 #zapper-main .main {
   position: absolute;
   top: 100px;
@@ -197,7 +199,7 @@ body {
   overflow: auto;
 }
 
-/* line 169, ../sass/index.scss */
+/* line 171, ../sass/index.scss */
 #buttons-container {
   text-align: center;
   height: 275px;
@@ -209,7 +211,7 @@ body {
   background-position: 0 0;
 }
 
-/* line 194, ../sass/index.scss */
+/* line 196, ../sass/index.scss */
 #zap-button-container {
   background: url("/img/zapBtn_off.png") no-repeat;
   width: 180px;
@@ -217,11 +219,11 @@ body {
   background-size: contain;
   margin: 56px auto 0;
 }
-/* line 200, ../sass/index.scss */
+/* line 202, ../sass/index.scss */
 #zap-button-container:active {
   background-image: url("/img/zapBtn_on.png");
 }
-/* line 203, ../sass/index.scss */
+/* line 205, ../sass/index.scss */
 #zap-button-container #zap-button {
   margin-top: 26.05px;
   text-indent: -9999px;
@@ -231,7 +233,7 @@ body {
   height: 79.45px;
 }
 
-/* line 215, ../sass/index.scss */
+/* line 217, ../sass/index.scss */
 #msg-button-container {
   background: url("/img/msgBtn_off.png") no-repeat;
   width: 180px;
@@ -239,11 +241,11 @@ body {
   background-size: contain;
   margin: 0 auto;
 }
-/* line 221, ../sass/index.scss */
+/* line 223, ../sass/index.scss */
 #msg-button-container:active {
   background-image: url("/img/msgBtn_on.png");
 }
-/* line 224, ../sass/index.scss */
+/* line 226, ../sass/index.scss */
 #msg-button-container #msg-button {
   text-indent: -9999px;
   border: 0 solid transparent;
@@ -252,7 +254,7 @@ body {
   height: 37.8px;
 }
 
-/* line 236, ../sass/index.scss */
+/* line 238, ../sass/index.scss */
 #message-dialog {
   box-sizing: border-box;
   position: absolute;
@@ -269,18 +271,18 @@ body {
   display: none;
   clear: both;
 }
-/* line 255, ../sass/index.scss */
+/* line 257, ../sass/index.scss */
 #message-dialog .message-input {
   height: 48px;
   width: 100%;
   border-radius: 3px;
   display: block;
 }
-/* line 261, ../sass/index.scss */
+/* line 263, ../sass/index.scss */
 #message-dialog.active {
   display: block;
 }
-/* line 264, ../sass/index.scss */
+/* line 266, ../sass/index.scss */
 #message-dialog:after {
   content: '';
   position: absolute;
@@ -290,7 +292,7 @@ body {
   bottom: -8px;
   left: 150px;
 }
-/* line 274, ../sass/index.scss */
+/* line 276, ../sass/index.scss */
 #message-dialog:before {
   content: '';
   position: absolute;
@@ -300,30 +302,30 @@ body {
   bottom: -12px;
   left: 150px;
 }
-/* line 283, ../sass/index.scss */
+/* line 285, ../sass/index.scss */
 #message-dialog .send-message-button {
   background-color: #1aafe7;
   color: white;
   border: 2px solid #149cd0;
   border-radius: 3px;
 }
-/* line 289, ../sass/index.scss */
+/* line 291, ../sass/index.scss */
 #message-dialog .cancel-button {
   background-color: black;
   color: white;
   border: 2px solid #5c5c5c;
   border-radius: 3px;
 }
-/* line 295, ../sass/index.scss */
+/* line 297, ../sass/index.scss */
 #message-dialog .dialog-buttons {
   text-align: right;
 }
-/* line 298, ../sass/index.scss */
+/* line 300, ../sass/index.scss */
 #message-dialog .remained-chars {
   color: white;
   font-size: .9em;
 }
-/* line 302, ../sass/index.scss */
+/* line 304, ../sass/index.scss */
 #message-dialog .count {
   color: lightgray;
   float: left;
@@ -333,7 +335,7 @@ body {
   font-family: serif;
 }
 
-/* line 314, ../sass/index.scss */
+/* line 316, ../sass/index.scss */
 #messages {
   overflow-y: scroll;
   height: 360px;
@@ -351,7 +353,7 @@ body {
   clear: both;
   display: none;
 }
-/* line 334, ../sass/index.scss */
+/* line 336, ../sass/index.scss */
 #messages:after {
   content: '';
   position: absolute;
@@ -361,7 +363,7 @@ body {
   top: -8px;
   left: 10px;
 }
-/* line 344, ../sass/index.scss */
+/* line 346, ../sass/index.scss */
 #messages:before {
   content: '';
   position: absolute;

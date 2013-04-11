@@ -157,6 +157,8 @@ $header-height: $title-row-height + $icons-row-height;
     background: url('/img/headBg.png') no-repeat top center;
     background-size: 320px;
     height:104px;
+    width: 320px;
+    margin: 0 auto;
 }
 #zapper-main .main {
     position: absolute;
