@@ -145,13 +145,12 @@ $(function() {
                     for (var i = 0, n = $listItems.length; i < n; i++) {
                         var $li = $($listItems[i]);
                         if ($li.data('author')._id === authorId) {
-                            $li.data('timestamp', new Date());
-                            return;
+                            $li.remove();
+                            break;
                         }
                     }
                     var $li = $(document.createElement('li'));
                     $li.data('author', zapAuthor);
-                    $li.data('timestamp', new Date());
                     $li.on('webkitAnimationEnd mozAnimationEnd oAnimationEnd msAnimationEnd animationend', function() {
                         $(this).remove();
                     });
