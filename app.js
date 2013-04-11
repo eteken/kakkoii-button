@@ -193,8 +193,35 @@ app.get('/', function (req, res) {
         });
     });
 });
+app.get('/result', function (req, res) {
+    var eventId = req.param('eventId');
+    if (!eventId) {
+        //TODO
+        res.send(404);
+        return;
+    }
+    collectInitialData(eventId, function(err, result) {
+        var zapTotal = 0
+        , users = {};
+        result.zaps.forEach(function(zap) {
+            zapTotal += zap.count;
+            users[zap.author._id] = zap.author;
+        });
+        result.messages.forEach(function(msg) {
+            users[msg.author._id] = msg.author;
+        });
+        users = _.values(users);
+        res.render('result', {
+            event: result.event.toObject({getters: true}),
+            zaps: result.zaps,
+            messages: result.messages,
+            zapTotal: zapTotal,
+            users: users
+        });
+    }, true);
+});
 
-function collectInitialData(eventId, done) {
+function collectInitialData(eventId, done, includeZap) {
     async.waterfall([
         function(callback) {
             models.Event.findById(eventId).exec(callback);
@@ -205,23 +232,22 @@ function collectInitialData(eventId, done) {
             }
             async.parallel([
                 // zapの取得（最新のN分ぶんのみ）
-                /*
                 function(callback) {
-                    var to = Date.now();
-                    var from = to - (ZAP_INITIAL_LOAD_MINUTES * 60 * 1000);
+                    if (!includeZap) {
+                        return callback(null, []);
+                    }
                     models.Zap.find(
                         {
-                            eventId: event.id,
+                            eventId: event.id/*,
                             timestamp: {
-                                $gt: from,
-                                $lte: to
-                            }
+                                $gt: event.start,
+                                $lte: event.end
+                            }*/
                         },
                         'count timestamp author',
                         { sort: 'timestamp' },
                         callback);
                 },
-                */
                 // メッセージの取得（最新のN件のみ）
                 function(callback) {
                     models.Message.find({ eventId: event._id })
@@ -237,14 +263,15 @@ function collectInitialData(eventId, done) {
                 } else {
                     done(null, {
                         event: event,
-//                        zaps: results[0],
-                        messages: results[0]
+                        zaps: results[0],
+                        messages: results[1]
                     });
                 }
             });
         }
     ]);
 }
+
 /*
   app.get('/account', ensureAuthenticated, function (req, res) {
   res.render('account', { user: req.user });
