@@ -161,6 +161,8 @@ $header-height: $title-row-height + $icons-row-height;
     margin: 0 auto;
 }
 #zapper-main .main {
+    width: 320px;
+    margin: 0 auto;
     position: absolute;
     top: $header-height;
     left: 0;
@@ -250,7 +252,8 @@ $msg-button-margin-top: $zap-button-margin-top + $zap-button-container-height;
     border: 2px solid $border-color {
         radius: 2px;
     };
-    top: 20px;
+//    top: 20px;
+    bottom: 120px;
     left: 50%;
     z-index: 10000000;
     padding: 8px;
