@@ -20,16 +20,27 @@
   </head>
   <body class="clearfix">
     <div id="left">
-      <div id="embed-player-container">
+      <div id="embedded-player-container">
         <%
            var ustreamUrl = 'http://www.ustream.tv/embed/13924849';
-           var slideUrl = 'http://www.slideshare.net/slideshow/embed_code/18530079';
-           var iframeUrl = ustreamUrl;
-           if (showSlide) {
-             iframeUrl = slideUrl;
+//           var slideUrl = 'http://www.slideshare.net/slideshow/embed_code/18530079';
+           var slideId = 'webcomponents-130419205426-phpapp02';
+           %>
+        <input type="hidden" id="ustreamUrl" value="<%= ustreamUrl %>">
+        <input type="hidden" id="slideId" value="<%= slideId %>">
+        <input type="hidden" id="showSlide" value="<%= showSlide %>">
+        <%
+           if (!showSlide) {
+             var iframeUrl = ustreamUrl;
+           %>
+        <iframe id="embedded-player" src="<%= iframeUrl %>" scrolling="no" frameborder="0" style="border: 0px none transparent;"></iframe>
+        <%
+           } else {
+           %>
+        <div id="embedded-player"></div>
+        <%
            }
            %>
-        <iframe class="embed-player" src="<%= iframeUrl %>" scrolling="no" frameborder="0" style="border: 0px none transparent;"></iframe>
       </div>
       <div id="chart-container">
         <ul id="zapper-icons"></ul>
@@ -60,6 +71,7 @@
       </p>
     </div>
     <script src="/js/lib/jquery-1.9.1.min.js"></script>
+    <script src="/js/lib/swfobject.js"></script>
     <script src="/js/lib/underscore-min.js"></script>
     <script src="/js/lib/underscore.string.min.js"></script>
     <script src="/js/lib/Chart.min.js"></script>

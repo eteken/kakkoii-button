@@ -60,7 +60,7 @@ $(function() {
                 height: chartContainerHeight - 16
             });
             var embedPlayerContainerHeight = windowHeight - chartContainerHeight;
-            $('#embed-player-container').css({
+            $('#embedded-player-container').css({
                 height: embedPlayerContainerHeight - 40
             });
         };
@@ -310,4 +310,26 @@ $(function() {
         };
     })();
 
+    (function() {
+        if ($('#showSlide').val() === 'true') {
+            var slideId = $('#slideId').val();
+            
+            //allowScriptAccess from other domains
+            var params = { allowScriptAccess: "always" };
+            var atts = { id: "embedded-player" };
+
+            //doc: The path of the file to be used
+            //startSlide: The number of the slide to start from
+            //rel: Whether to show a screen with related slideshows at the end or not. 0 means false and 1 is true..
+            var flashvars = { doc : slideId, startSlide : 1, rel : 0 };
+
+            var width = $('#embedded-player-container').width();
+            var height = $('#embedded-player-container').height();
+            //Generate the embed SWF file
+            swfobject.embedSWF("http://static.slidesharecdn.com/swf/ssplayer2.swf", "embedded-player", width, height, "8", null, flashvars, params, atts);
+
+            //Get a reference to the player
+            var flashMovie = document.getElementById("embedded-player");
+        }
+    })();
 });
