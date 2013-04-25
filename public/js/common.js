@@ -88,7 +88,48 @@ var common = (function() {
         return messageTemplate(message);
     };
 
+
+
+    function embedSlide(options) {
+        options = _.extend({
+            elemId: null,
+            slideId: null,
+            width: '400',
+            height: '300',
+            startSlide: 1,
+            rel: 0
+        }, options);
+        var params = { allowScriptAccess: "always" };
+        var atts = { id: options.elemId };
+
+        //doc: The path of the file to be used
+        //startSlide: The number of the slide to start from
+        //rel: Whether to show a screen with related slideshows at the end or not. 0 means false and 1 is true..
+        var flashvars = { doc : options.slideId, startSlide : options.startSlide, rel : options.rel };
+
+        //Generate the embed SWF file
+        swfobject.embedSWF(
+            "http://static.slidesharecdn.com/swf/ssplayer2.swf",
+            options.elemId,
+            options.width,
+            options.height,
+            "8",
+            null,
+            flashvars,
+            params,
+            atts,
+            function(e) {
+                if (e.success) {
+                    options.onsuccess(e.ref);
+                } else {
+                    options.onerror();
+                }
+            });
+        
+    }
+
     return {
-        renderMessage: renderMessage
+        renderMessage: renderMessage,
+        embedSlide: embedSlide
     };
 })();

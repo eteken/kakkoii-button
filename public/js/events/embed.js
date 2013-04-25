@@ -21,7 +21,8 @@ $(function() {
     })()
     , chart = document.getElementById('zap-chart')
     , chartCtx
-    , zapChart;
+    , zapChart
+    , slidePlayer;
 
 
     (function() {
@@ -163,6 +164,10 @@ $(function() {
             currentEvent.subscribe('message', function(message) {
                 messages.push(message);
                 onMessageArrived(message);
+            });
+            currentEvent.subscribe('sync-slide', function(e) {
+                if (slidePlayer)
+                    slidePlayer.jumpTo(e.slide);
             });
             //            zaps = __lt_zaps__;
             messages = __lt_messages__;
@@ -312,24 +317,18 @@ $(function() {
 
     (function() {
         if ($('#showSlide').val() === 'true') {
-            var slideId = $('#slideId').val();
-            
-            //allowScriptAccess from other domains
-            var params = { allowScriptAccess: "always" };
-            var atts = { id: "embedded-player" };
-
-            //doc: The path of the file to be used
-            //startSlide: The number of the slide to start from
-            //rel: Whether to show a screen with related slideshows at the end or not. 0 means false and 1 is true..
-            var flashvars = { doc : slideId, startSlide : 1, rel : 0 };
-
-            var width = $('#embedded-player-container').width();
-            var height = $('#embedded-player-container').height();
-            //Generate the embed SWF file
-            swfobject.embedSWF("http://static.slidesharecdn.com/swf/ssplayer2.swf", "embedded-player", width, height, "8", null, flashvars, params, atts);
-
-            //Get a reference to the player
-            var flashMovie = document.getElementById("embedded-player");
+            common.embedSlide({
+                elemId: 'embedded-player',
+                slideId: $('#slideId').val(),
+                width: $('#embedded-player-container').width(),
+                height: $('#embedded-player-container').height(),
+                onsuccess: function(elem) {
+                    slidePlayer = elem;
+                },
+                onerror: function() {
+                    alert('エラー');
+                }
+            });
         }
     })();
 });

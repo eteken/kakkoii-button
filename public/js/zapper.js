@@ -62,6 +62,9 @@
                 count: self._currentZapCount
             };
         },
+        send: function(type, arg, callback) {
+            sock.emit(type, arg, callback);
+        },
         sendMessage: function(message, relatedZapUUID) {
             var self = this;
             sock.emit('message', {

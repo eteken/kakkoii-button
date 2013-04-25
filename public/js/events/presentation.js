@@ -87,35 +87,27 @@ $(function() {
         $('.message:first').before(html);
         playAudio('arrived.mp3');
     };
+    
     (function() {
-        var slideId = $('#slideId').val();
-        
-        var params = { allowScriptAccess: "always" };
-        var atts = { id: "slide" };
-
-        //doc: The path of the file to be used
-        //startSlide: The number of the slide to start from
-        //rel: Whether to show a screen with related slideshows at the end or not. 0 means false and 1 is true..
-        var flashvars = { doc : slideId, startSlide : 1, rel : 0 };
-
-        var width = $('#slide-container').width();
-        var height = $('#slide-container').height();
-        //Generate the embed SWF file
-        swfobject.embedSWF(
-            "http://static.slidesharecdn.com/swf/ssplayer2.swf", "slide", width, height, "8", null, flashvars, params, atts,
-            function(e) {
-                if (e.success) {
-                    slidePlayer = e.ref;
-                    var prevSlide;
-                    setInterval(function() {
-                        var currentSlide = slidePlayer.getCurrentSlide();
-                        if (currentSlide !== prevSlide) {
-                            console.log(currentSlide);
-                            prevSlide = currentSlide;
-                            //
-                        }
-                    }, 500);
-                }
-            });
+        common.embedSlide({
+            elemId: 'slide',
+            slideId: $('#slideId').val(),
+            width: $('#slide-container').width(),
+            height: $('#slide-container').height(),
+            onsuccess: function(elem) {
+                slidePlayer = elem;
+                var prevSlide;
+                setInterval(function() {
+                    var currentSlide = slidePlayer.getCurrentSlide();
+                    if (currentSlide !== prevSlide) {
+                        prevSlide = currentSlide;
+                        currentEvent.send('sync-slide', { slide: currentSlide });
+                    }
+                }, 500);
+            },
+            onerror: function() {
+                alert('エラー');
+            }
+        });
     })();
 });

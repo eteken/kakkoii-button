@@ -633,7 +633,10 @@ io.sockets.on('connection', function(socket) {
     }
     var oauthToken = user.oauthTokens.twitter;
     */
-
+    socket.on('sync-slide', function(slide) {
+        io.sockets.json.emit('sync-slide', slide);
+    });
+    
     socket.on('zap', function (z) {
         if (!loggedIn) {
             console.warn('Zapped on unauthorized connection.ID:' + socket.id);
