@@ -1,9 +1,10 @@
 $(function() {
     var zapper = new Zapper({ from: 1 }) // PCからの利用
     , currentEvent
-    , zaps = []
-    , messages = []
-    , $zapperIcons = $('#zapper-icons')
+//    , zaps = []
+//    , messages = []
+    , notifications = []
+    , $notifications = $('#notifications')
     , slidePlayer;
 
     var playAudio = (function() {
@@ -33,14 +34,15 @@ $(function() {
             }
             currentEvent = zapper.event(__lt_event__);
             currentEvent.subscribe('zap', function(zap) {
-                $zapButton.removeAttr('disabled');
-                zaps.push(zap);
-                playAudio('arrived.mp3');
-
+//                playAudio('arrived.mp3');
+                notifications.push({
+                    type: 'zap',
+                    value: zap
+                });
+                /*
                 (function() {
                     var zapAuthor = zap.author;
                     var authorId = zapAuthor._id;
-                    console.log(authorId);
                     var $listItems = $zapperIcons.children();
                     for (var i = 0, n = $listItems.length; i < n; i++) {
                         var $li = $($listItems[i]);
@@ -59,35 +61,50 @@ $(function() {
                     $img.addClass('icon').appendTo($li);
                     $zapperIcons.append($li);
                 })();
+                */
             });
             currentEvent.subscribe('message', function(message) {
-                messages.push(message);
-                onMessageArrived(message);
+                notifications.push({
+                    type: 'message',
+                    value: message
+                });
             });
-            //            zaps = __lt_zaps__;
-            messages = __lt_messages__;
-            delete window.__lt_messages__;
+            setInterval(function() {
+                while (notifications.length > 0) {
+                    var data = notifications.shift();
+                    var value = data.value;
+                    var author = value.author;
+                    var $li = $(document.createElement('li'));
 
-            // メッセージを初期表示
-            /*
-              (function renderMessages() {
-              var buf = [];
-              for (var i = 0, n = messages.length; i < n; i++) {
-              var message = messages[i];
-              buf.push(common.renderMessage(message));
-              }
-              $('#messages').html(buf.join(''));
-              })();
-            */
+                    if (data.type === 'zap') {
+                        for (var i = 0, n = value.count; i < n; i++) {
+                            var $icon = $(document.createElement('img'));
+                            $icon.addClass('icon').attr({
+                                src: author.photo
+                            });
+                            $li.append($icon);
+                        }
+                    } else if (data.type === 'message') {
+                        var $icon = $(document.createElement('img'));
+                        $icon.addClass('icon').attr({
+                            src: author.photo
+                        });
+                        var $message = $(document.createElement('span'));
+                        $message
+                            .addClass('message')
+                            .text(value.text);
+                        $li.append($icon).append($message);
+                    }
+                    
+                    $li.on('webkitAnimationEnd mozAnimationEnd oAnimationEnd msAnimationEnd animationend', function() {
+                        $(this).remove();
+                    });
+                    $li.appendTo($notifications);
+                }
+            }, 300);
         });
     }
     init();
-    var onMessageArrived = function(message) {
-        var html = common.renderMessage(message);
-        $('.message:first').before(html);
-        playAudio('arrived.mp3');
-    };
-    
     (function() {
         common.embedSlide({
             elemId: 'slide',
