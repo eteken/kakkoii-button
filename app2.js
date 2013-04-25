@@ -193,94 +193,6 @@ app.get('/', function (req, res) {
         });
     });
 });
-app.get('/result', function (req, res) {
-    var eventId = req.param('eventId');
-    if (!eventId) {
-        //TODO
-        res.send(404);
-        return;
-    }
-    collectInitialData(eventId, function(err, result) {
-        var zapTotal = 0
-        , users = {};
-        result.zaps.forEach(function(zap) {
-            zapTotal += zap.count;
-            users[zap.author._id] = zap.author;
-        });
-        result.messages.forEach(function(msg) {
-            users[msg.author._id] = msg.author;
-        });
-        users = _.values(users);
-        res.render('result', {
-            event: result.event.toObject({getters: true}),
-            zaps: result.zaps,
-            messages: result.messages,
-            zapTotal: zapTotal,
-            users: users
-        });
-    }, true);
-});
-
-function collectInitialData(eventId, done, includeZap) {
-    async.waterfall([
-        function(callback) {
-            models.Event.findById(eventId).exec(callback);
-        },
-        function(event, callback) {
-            if (!event) {
-                return done(new Error('Event not found'));
-            }
-            async.parallel([
-                // zapの取得（最新のN分ぶんのみ）
-                function(callback) {
-                    if (!includeZap) {
-                        return callback(null, []);
-                    }
-                    models.Zap.find(
-                        {
-                            eventId: event.id/*,
-                            timestamp: {
-                                $gt: event.start,
-                                $lte: event.end
-                            }*/
-                        },
-                        'count timestamp author',
-                        { sort: 'timestamp' },
-                        callback);
-                },
-                // メッセージの取得（最新のN件のみ）
-                function(callback) {
-                    models.Message.find({ eventId: event._id })
-                        .select('text timestamp author zap seq')
-                        .sort('-seq')
-                        .limit(MESSAGES_PAGE_COUNT)
-                        .exec(callback);
-                    
-                }
-            ], function(err, results) {
-                if (err) {
-                    done(err);
-                } else {
-                    done(null, {
-                        event: event,
-                        zaps: results[0],
-                        messages: results[1]
-                    });
-                }
-            });
-        }
-    ]);
-}
-
-/*
-  app.get('/account', ensureAuthenticated, function (req, res) {
-  res.render('account', { user: req.user });
-  });
-
-  app.get('/login', function (req, res) {
-  res.render('login', { user: req.user });
-  });
-*/
 
 app.get('/auth/mobile/twitter', function(req, res) {
     req.session.mobileAuth = true;
@@ -340,10 +252,6 @@ app.get('/logout', function (req, res) {
     req.session.destroy();
     req.logout();
     res.end('<!DOCTYPE html><meta charset="UTF-8"><title>ログアウトに成功しました</title><h1>ログアウトに成功しました。</h1>');
-});
-
-app.get('/*.html', function(req, res) {
-    res.render(req.params[0]);
 });
 
 app.get('/events/latest', function(req, res) {
@@ -535,38 +443,6 @@ app.get('/events/:id/messages', function(req, res) {
             }
             res.json(messages);
         });
-});
-app.get('/events/embed', function(req, res) {
-    var eventId = req.param('id');
-    if (!eventId) {
-        res.send(404);
-        return;
-    }
-    var showSlide = req.param('slide') === '1';
-    collectInitialData(eventId, function(err, result) {
-        res.render('events/embed', {
-            event: result.event.toObject({getters: true}),
-//            zaps: result.zaps,
-            messages: result.messages,
-            user: req.user,
-            showSlide: showSlide
-        });
-    });
-});
-app.get('/events/presentation', function(req, res) {
-    var eventId = req.param('id');
-    if (!eventId) {
-        res.send(404);
-        return;
-    }
-    collectInitialData(eventId, function(err, result) {
-        res.render('events/presentation', {
-            event: result.event.toObject({getters: true}),
-//            zaps: result.zaps,
-            messages: result.messages,
-            user: req.user
-        });
-    });
 });
 
 var server = require('http').createServer(app);

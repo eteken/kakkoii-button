@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>プレゼン資料</title>
+    <link rel=stylesheet href="/css/presentation.css">
+
+    <script>
+      var __lt_event__ = <%- JSON.stringify(event) %>;
+      var __lt_messages__ = <%- JSON.stringify(messages) %>;
+      <%
+         if (user) {
+         %>
+      var __lt_oauth_succeeded__ = true;
+      var __lt_logged_in_user__ = <%- JSON.stringify(user) %>;
+      <%
+         }
+         %>
+    </script>
+  </head>
+  <body class="clearfix">
+    <div id="slide-container">
+      <%
+         var slideId = 'webcomponents-130419205426-phpapp02';
+         %>
+      <input type="hidden" id="slideId" value="<%= slideId %>">
+      <div id="slide"></div>
+    </div>
+
+    <script src="/js/lib/jquery-1.9.1.min.js"></script>
+    <script src="/js/lib/swfobject.js"></script>
+    <script src="/js/lib/underscore-min.js"></script>
+    <script src="/js/lib/underscore.string.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/common.js"></script>
+    <script src="/js/zapper.js"></script>
+    <script src="/js/events/presentation.js"></script>
+  </body>
+</html>

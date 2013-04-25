@@ -1,0 +1,27 @@
+クライアント側。
+
+<script src="//zapper.io/api/1"></script>
+<script src="//zapper/plugins/zapper/1"></script>
+
+var event = Zapper.current();
+
+event.sendMessage('test', function() {
+});
+event.on('message', function(message) {
+});
+// プラグインにより、以下のAPIが利用できるように
+event.zap(count, function() {
+});
+event.on('zap', function(zap) {
+});
+
+Zapper.login();
+Zapper.logout();
+Zapper.loggedIn();
+
+Zapper.connect();
+Zapper.disconnect();
+Zapper.connected();
+
+サーバ側。
+プラグイン以外の部分のみにする。
