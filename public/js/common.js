@@ -97,16 +97,21 @@ var common = (function() {
             width: '400',
             height: '300',
             startSlide: 1,
-            rel: 0
+            rel: 0,
+            autoResize: false
         }, options);
         var params = { allowScriptAccess: "always" };
         var atts = { id: options.elemId };
-
+        var parent = $(slideId).parent();
+        
         //doc: The path of the file to be used
         //startSlide: The number of the slide to start from
         //rel: Whether to show a screen with related slideshows at the end or not. 0 means false and 1 is true..
         var flashvars = { doc : options.slideId, startSlide : options.startSlide, rel : options.rel };
-
+        if (options.autoResize) {
+            options.width = String(parent.width());
+            options.height = String(parent.height());
+        }
         //Generate the embed SWF file
         swfobject.embedSWF(
             "http://static.slidesharecdn.com/swf/ssplayer2.swf",
@@ -120,7 +125,14 @@ var common = (function() {
             atts,
             function(e) {
                 if (e.success) {
-                    options.onsuccess(e.ref);
+                    var flashMovie = e.ref;
+                    if (options.autoResize) {
+                        $(window).resize(function() {
+                            flashMovie.width = parent.width();
+                            flashMovie.height = parent.height();
+                        });
+                    }
+                    options.onsuccess(flashMovie);
                 } else {
                     options.onerror();
                 }

@@ -320,8 +320,7 @@ $(function() {
             common.embedSlide({
                 elemId: 'embedded-player',
                 slideId: $('#slideId').val(),
-                width: $('#embedded-player-container').width(),
-                height: $('#embedded-player-container').height(),
+                autoResize: true,
                 onsuccess: function(elem) {
                     slidePlayer = elem;
                 },

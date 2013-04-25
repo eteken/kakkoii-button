@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>カッコいいやつら | Zapper(Beta)</title>
+    <title><%= event.title %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="stylesheet" href="/css/lib/normalize.css"/>
     <link rel="stylesheet" href="/css/lib/bootstrap.css"/>
@@ -53,7 +53,7 @@
       }
       .section {
         width: 100%;
-        height: 100%;
+        min-height: 100%;
         overflow: hidden;
       }
       #scene2 p {
@@ -69,7 +69,7 @@
     <section id="scene0" class="section">
       <header>
         <div class="content">
-          <h1><img src="/img/logo.png" width="150">「第0回 <%= event.title %>」<br>実施結果発表！</h1>
+          <h1><img src="/img/logo.png" width="150">「<%= event.title %>」<br>講演結果発表！</h1>
         </div>
       </header>
       <div class="content">
@@ -82,7 +82,7 @@
     <section id="scene1" class="section">
     <header>
       <div class="content">
-        <h1><img src="/img/logo.png" width="150">「第0回 <%= event.title %>」<br>実施結果発表！</h1>
+        <h1><img src="/img/logo.png" width="150">「<%= event.title %>」<br>講演結果発表！</h1>
       </div>
     </header>
     <div class="content">
@@ -114,16 +114,15 @@
     <section id="scene2" class="section">
       <header>
         <div class="content">
-          <h1><img src="/img/logo.png" width="150">「第0回 <%= event.title %>」<br>実施結果発表！</h1>
+          <h1><img src="/img/logo.png" width="150">「<%= event.title %>」<br>実施結果発表！</h1>
         </div>
       </header>
       <div class="content">
         <center>
         <p>
-        本日はご参加ありがとうございました！<br>
+        本日はご清聴ありがとうございました！<br>
         またお会いできるのを楽しみにしています。
         <p>
-        <span style="font-size: 0.7em">アンケートへのご協力をお願い致します！</span>
         </center>
       </div>
     </section>

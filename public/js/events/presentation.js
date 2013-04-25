@@ -109,8 +109,7 @@ $(function() {
         common.embedSlide({
             elemId: 'slide',
             slideId: $('#slideId').val(),
-            width: $('#slide-container').width(),
-            height: $('#slide-container').height(),
+            autoResize: true,
             onsuccess: function(elem) {
                 slidePlayer = elem;
                 var prevSlide;
